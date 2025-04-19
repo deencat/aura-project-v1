@@ -106,6 +106,9 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Collagen Regeneration page with detailed information
 - Added carousel components to treatment pages using shadcn/ui components
 - Implemented consistent naming conventions for placeholder images across treatment pages
+- Fixed routing conflict in the admin blog edit pages by standardizing on the [id] parameter
+- Added missing shadcn/ui Tabs component required by the admin blog edit page
+- Created .env.local file to disable Google Fonts during development for faster loading
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages

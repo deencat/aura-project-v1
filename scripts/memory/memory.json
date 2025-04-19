@@ -101,6 +101,24 @@
       ],
       "createdAt": "2025-04-19T15:24:03.948Z",
       "updatedAt": "2025-04-19T15:24:03.951Z"
+    },
+    "memory-system-conversation-1745078171475": {
+      "name": "memory-system-conversation-1745078171475",
+      "entityType": "conversation",
+      "observations": [
+        "In our recent work, we successfully fixed a routing conflict in the Next.js application. The issue was caused by conflicting dynamic route parameters between two files: src/app/admin/blog/edit/[id]/page.tsx and src/app/admin/blog/edit/[slug]/page.tsx. Next.js does not allow different slug names for the same dynamic path. We resolved this by standardizing on the [id] parameter, moving the content from the [slug] file to the [id] file with appropriate parameter updates, and then deleting the [slug] file. We also had to clear the Next.js build cache by removing the .next directory. Additionally, we encountered issues with Google Fonts failing to load, causing slow page rendering, which we addressed by creating a .env.local file to disable Google Fonts during development. These changes have streamlined the routing system and improved development performance."
+      ],
+      "createdAt": "2025-04-19T15:56:11.475Z",
+      "updatedAt": "2025-04-19T15:56:11.476Z"
+    },
+    "memory-system-conversation-1745078568875": {
+      "name": "memory-system-conversation-1745078568875",
+      "entityType": "conversation",
+      "observations": [
+        "We identified and fixed a component error in the blog edit page. The admin blog edit page was trying to use the shadcn Tabs component which wasn't installed. We resolved this by installing the Tabs component using the command 'npx shadcn@latest add tabs', which created the necessary component file at src/components/ui/tabs.tsx. After installing the component, we restarted the development server to apply the changes. This highlights the importance of ensuring all required UI components are properly installed when building with shadcn/ui."
+      ],
+      "createdAt": "2025-04-19T16:02:48.875Z",
+      "updatedAt": "2025-04-19T16:02:48.876Z"
     }
   },
   "relations": []
