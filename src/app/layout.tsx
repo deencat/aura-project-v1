@@ -1,22 +1,27 @@
-import '@/styles/globals.css'
+import './globals.css'
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ 
+// Load fonts locally with fallbacks
+const inter = Inter({
   subsets: ['latin'],
+  display: 'swap',
   variable: '--font-inter',
+  preload: true,
 })
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
+  display: 'swap',
   variable: '--font-playfair',
+  preload: true,
 })
 
 export const metadata: Metadata = {
-  title: 'Aura Project',
-  description: 'Tech-forward beauty and wellness services powered by advanced technology',
+  title: 'Aura - Tech-Forward Beauty',
+  description: 'Advanced tech-forward beauty treatments and services',
 }
 
 export default function RootLayout({
@@ -25,13 +30,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${inter.className}`}>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen font-sans">
+        <Header />
+        <main>
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )

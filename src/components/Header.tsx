@@ -95,7 +95,7 @@ export default function Header() {
                   {item.title}
                 </Link>
                 {item.submenu && (
-                  <div className="absolute left-0 top-full z-10 mt-2 hidden min-w-[240px] rounded-md bg-white p-3 shadow-lg group-hover:block">
+                  <div className="absolute left-0 top-[calc(100%+8px)] z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-[240px] rounded-md bg-white p-3 shadow-lg before:content-[''] before:absolute before:h-[20px] before:w-full before:top-[-20px] before:left-0">
                     <ul className="space-y-1">
                       {item.submenu.map((subItem) => (
                         <li key={subItem.title}>
@@ -116,7 +116,7 @@ export default function Header() {
               <Link href="#" className="text-sm font-medium hover:text-primary">
                 More
               </Link>
-              <div className="absolute right-0 top-full z-10 mt-2 hidden min-w-[200px] rounded-md bg-white p-3 shadow-lg group-hover:block">
+              <div className="absolute right-0 top-[calc(100%+8px)] z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-[200px] rounded-md bg-white p-3 shadow-lg before:content-[''] before:absolute before:h-[20px] before:w-full before:top-[-20px] before:left-0">
                 <ul className="space-y-1">
                   {menuData.slice(3).map((item) => (
                     <li key={item.title} className="group/submenu relative">
@@ -132,7 +132,7 @@ export default function Header() {
                         )}
                       </Link>
                       {item.submenu && (
-                        <div className="absolute left-full top-0 z-10 ml-2 hidden min-w-[240px] rounded-md bg-white p-3 shadow-lg group-hover/submenu:block">
+                        <div className="absolute left-[calc(100%+8px)] top-0 z-10 opacity-0 invisible group-hover/submenu:opacity-100 group-hover/submenu:visible transition-all duration-200 min-w-[240px] rounded-md bg-white p-3 shadow-lg before:content-[''] before:absolute before:h-full before:w-[20px] before:top-0 before:left-[-20px]">
                           <ul className="space-y-1">
                             {item.submenu.map((subItem) => (
                               <li key={subItem.title}>
