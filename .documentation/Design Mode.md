@@ -1,0 +1,12 @@
+- We are in prototyping mode
+- Always check the memory and project management document first
+- Always add to memory MCP by calling "npm run memory-add-conversation" after 20 tool calls or 25 conversations
+- Develop frontend only, we are mocking up the interface
+- Use dummy JSON to represent data
+- Link all components for navigation
+- Make buttons responsive
+- Don't connect to backend logic
+- Always check to make sure the project management document is up to date
+- Always add newly changes features to playwright test and the full playwright regression test after each change as regression test, address and fixes whatever negative test results.
+- Make sure to check for and terminate any lingering Playwright report server processes before running the test again
+- Always check the problems windows for problems and fix them

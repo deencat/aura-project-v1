@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "Project": {
+      "name": "Project",
+      "entityType": "project",
+      "observations": [
+        "Social Media Marketing Agent",
+        "Next.js web application",
+        "Uses Tailwind CSS for styling",
+        "Uses Shadcn UI for components"
+      ],
+      "createdAt": "2025-04-19T07:43:39.414Z",
+      "updatedAt": "2025-04-19T08:24:10.394Z"
+    },
+    "CurrentPhase": {
+      "name": "CurrentPhase",
+      "entityType": "project_phase",
+      "observations": [
+        "Phase 2: SME Dashboard & Content Management",
+        "Sprint 2: Dashboard Framework & Widgets",
+        "Development Mode: Prototyping (frontend-only with mocked data)"
+      ],
+      "createdAt": "2025-04-19T07:43:39.415Z",
+      "updatedAt": "2025-04-19T08:24:10.395Z"
+    },
+    "CompletedWork": {
+      "name": "CompletedWork",
+      "entityType": "milestone",
+      "observations": [
+        "Completed Sprint 1 and Phase 1 (Core UI Framework & Authentication Flow)",
+        "Updated project management documents",
+        "Setup authentication UI and navigation shell"
+      ],
+      "createdAt": "2025-04-19T07:43:39.416Z",
+      "updatedAt": "2025-04-19T08:24:10.405Z"
+    },
+    "CurrentFocus": {
+      "name": "CurrentFocus",
+      "entityType": "task_group",
+      "observations": [
+        "Dashboard layout with widget grid",
+        "Widget container component implementation",
+        "Drag-and-drop functionality for widgets",
+        "Core widgets: Analytics, Content Calendar, Quick Actions, Recent Activity"
+      ],
+      "createdAt": "2025-04-19T07:43:39.416Z",
+      "updatedAt": "2025-04-19T08:24:10.407Z"
+    }
+  },
+  "relations": [
+    {
+      "from": "Project",
+      "to": "CurrentPhase",
+      "relationType": "is_in",
+      "createdAt": "2025-04-19T07:43:39.417Z"
+    },
+    {
+      "from": "Project",
+      "to": "CompletedWork",
+      "relationType": "has_achieved",
+      "createdAt": "2025-04-19T07:43:39.418Z"
+    },
+    {
+      "from": "Project",
+      "to": "CurrentFocus",
+      "relationType": "is_working_on",
+      "createdAt": "2025-04-19T07:43:39.418Z"
+    }
+  ]
+}
