@@ -9,237 +9,292 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative flex min-h-[90vh] items-center bg-white text-black">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-            <div>
-              <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
-                Tech-Forward <span className="text-primary">Clarity</span>
-              </h1>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-gray-600">
-                There is a vision of the inner contour we see at life, the artistic recomposition
-                where at Soul You break all that, the energy for Clarity and Shape your 
-                transformation and going to grow your ingenuity and our clarity&apos;s future.
-              </p>
-              
-              <div className="mt-10">
-                <Button className="rounded-full bg-primary px-8 py-6 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
+      <section className="relative min-h-[80vh] bg-gray-50">
+        <div className="container mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 py-16">
+          <div className="relative z-10 mx-auto max-w-4xl text-center">
+            <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
+              <span className="block">Aura Beauty</span>
+              <span className="mt-2 block text-primary">Transform Your Skin</span>
+            </h1>
+            <p className="mt-6 text-xl leading-relaxed text-gray-600">
+              Advanced beauty treatments using cutting-edge technology to enhance your natural beauty.
+            </p>
+            <div className="mt-10 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+              <Link href="/treatments">
+                <Button className="rounded-full bg-primary px-8 py-6 text-base font-medium uppercase tracking-wide text-white transition hover:bg-primary/90">
                   Explore Treatments
                 </Button>
-              </div>
-            </div>
-            
-            <div className="relative flex items-center justify-center">
-              <div className="relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="beauty" 
-                  aspectRatio="aspect-[3/4]"
-                />
-              </div>
+              </Link>
+              <Link href="/contact">
+                <Button variant="outline" className="rounded-full border-primary px-8 py-6 text-base font-medium uppercase tracking-wide text-primary transition hover:bg-primary/10">
+                  Book a Consultation
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Key Features Section */}
-      <section className="bg-white py-16">
+      {/* Our Story Section */}
+      <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="mb-12 text-center">
-            <h2 className="font-serif text-4xl font-bold text-black md:text-5xl">
-              Tech-Forward <span className="text-primary">Clarity</span>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-serif text-3xl font-bold md:text-4xl">
+              Our <span className="text-primary">Story</span>
             </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <Card className="border border-gray-200 bg-white transition-all hover:shadow-md">
-              <CardContent className="flex flex-col items-start p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+            <div className="mt-6 text-lg leading-relaxed text-gray-600">
+              <p className="mb-4">
+                Aura Beauty is dedicated to providing diverse, effective, and safe beauty treatments. We bring together professional equipment and techniques from around the world to deliver the most caring, suitable, and optimal service experience for every client.
+              </p>
+              <p>
+                We protect and enhance every inch of your skin, inside and out, helping you achieve your beauty goals with personalized care.
+              </p>
             </div>
-                <h3 className="mb-2 text-xl font-semibold">Analyze New Contours</h3>
-                <p className="text-gray-600">
-                  Facial technology brings insight to face with the
-                  newest color techs and get balance briefly
-                  extending.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border border-gray-200 bg-white transition-all hover:shadow-md">
-              <CardContent className="flex flex-col items-start p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-semibold">Free Specialized Glowing</h3>
-                <p className="text-gray-600">
-                  Get care path to reveal skin transformation and enhance
-                  confidence you experience. Use our Tach for tech, and resonance
-                  usage.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border border-gray-200 bg-white transition-all hover:shadow-md">
-              <CardContent className="flex flex-col items-start p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-semibold">Creating a end for Aura Procedures</h3>
-                <p className="text-gray-600">
-                  The safe of self confidence about Advanced
-                  facial healing your harmony and clarity.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="mt-10">
+              <Link href="/about">
+                <Button variant="ghost" className="rounded-full text-primary hover:bg-primary/10 hover:text-primary">
+                  Learn More About Us
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Featured Treatments */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
-          <div className="mb-12 text-center">
-            <h2 className="font-serif text-4xl font-bold text-black md:text-5xl">
-              Tech-Forward <span className="text-primary">Clarity</span>
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-              There's another way about your future from the essential innovation
-              focused on giving you the best path with on-demand facials.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div className="overflow-hidden rounded-lg">
-              <AspectRatio ratio={4/3}>
+          <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
+            Signature <span className="text-primary">Treatments</span>
+          </h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {/* Treatment 1 */}
+            <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+              <div className="aspect-[4/3] w-full overflow-hidden">
                 <PlaceholderImage 
                   type="treatment" 
-                  number={1}
+                  number={1} 
                   aspectRatio="aspect-[4/3]"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-              </AspectRatio>
+              </div>
+              <div className="p-6">
+                <h3 className="mb-2 text-xl font-bold">Royal Black Scan</h3>
+                <p className="mb-4 text-gray-600">Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.</p>
+                <Link href="/treatments/royal-black-scan">
+                  <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
             </div>
-            
-            <div className="flex flex-col justify-center">
-              <div className="flex items-center space-x-4">
-                <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden">
-                  <PlaceholderImage 
-                    type="avatar" 
-                    aspectRatio=""
-                    className="h-full w-full"
-                  />
-                </div>
-                <h3 className="text-xl font-semibold">Recommended Treatments</h3>
+
+            {/* Treatment 2 */}
+            <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+              <div className="aspect-[4/3] w-full overflow-hidden">
+                <PlaceholderImage 
+                  type="treatment" 
+                  number={2} 
+                  aspectRatio="aspect-[4/3]"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
               </div>
-              
-              <div className="mt-6 space-y-4">
-                <div className="flex items-center space-x-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Long Precision</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Face Management in detail</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Skin has a problem in both a nature</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Full R&R in</span>
-                </div>
+              <div className="p-6">
+                <h3 className="mb-2 text-xl font-bold">Peeled Egg Skin</h3>
+                <p className="mb-4 text-gray-600">Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.</p>
+                <Link href="/treatments/peeled-egg-skin">
+                  <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                    Learn More
+                  </Button>
+                </Link>
               </div>
-              
-              <div className="mt-8 flex">
-                <div className="mr-6">
-                  <div className="text-3xl font-semibold text-primary">11</div>
-                  <div className="text-sm text-gray-500">total modules</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-semibold text-primary">6%</div>
-                  <div className="text-sm text-gray-500">face cleans</div>
-                </div>
+            </div>
+
+            {/* Treatment 3 */}
+            <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+              <div className="aspect-[4/3] w-full overflow-hidden">
+                <PlaceholderImage 
+                  type="treatment" 
+                  number={3} 
+                  aspectRatio="aspect-[4/3]"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
               </div>
-              
-              <div className="mt-8">
-                <Button className="rounded-full bg-primary px-8 py-6 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
-                  Find More
-                </Button>
+              <div className="p-6">
+                <h3 className="mb-2 text-xl font-bold">Collagen Regeneration</h3>
+                <p className="mb-4 text-gray-600">Boost your skin's natural collagen production for improved elasticity and youthful appearance.</p>
+                <Link href="/treatments/collagen-regeneration">
+                  <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                    Learn More
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
-          
-          <div className="mt-12 flex flex-col items-center justify-between space-y-4 rounded-lg bg-white p-6 shadow-md md:flex-row md:space-y-0">
-            <div className="flex items-center space-x-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12"/><circle cx="17" cy="7" r="5"/></svg>
-              <span>Touch to send about team</span>
-            </div>
-            <Button className="rounded-full bg-primary px-8 py-6 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
-              Getting Started
-            </Button>
+          <div className="mt-12 text-center">
+            <Link href="/treatments">
+              <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+                View All Treatments
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="bg-white py-16">
+      {/* Treatment Categories */}
+      <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-            <div className="relative overflow-hidden rounded-lg">
-              <AspectRatio ratio={3/4}>
+          <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
+            Our <span className="text-primary">Services</span>
+          </h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {/* Category 1 */}
+            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+              <div className="aspect-square w-full overflow-hidden">
                 <PlaceholderImage 
-                  type="benefits" 
-                  aspectRatio="aspect-[3/4]"
+                  type="beauty" 
+                  number={1} 
+                  aspectRatio="aspect-square"
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
-              </AspectRatio>
-            </div>
-            
-            <div className="flex flex-col justify-center">
-              <h2 className="font-serif text-4xl font-bold text-black md:text-5xl">
-                Lock festing my <span className="text-primary">Benefits</span>
-              </h2>
-              <p className="mt-6 text-lg text-gray-600">
-                Experience the power of advanced beauty technology with our comprehensive treatment solutions.
-              </p>
-              <div className="mt-8 space-y-4">
-                {[
-                  'Royal Black Scan',
-                  'Smooth Egg Skin',
-                  'Collagen Regeneration',
-                  '360 Smart Rescue',
-                  'Farewell Puffy Face',
-                  'Desert Skin Rescue'
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-white">
-                      {index + 1}
-                    </div>
-                    <span className="text-gray-800">{item}</span>
-                  </div>
-                ))}
               </div>
-              <div className="mt-10">
-                <Button className="rounded-full bg-primary px-8 py-6 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
-                  View All Treatments
-                </Button>
+              <div className="p-6 text-center">
+                <h3 className="mb-2 text-xl font-bold">Premium Beauty Treatments</h3>
+                <Link href="/treatments">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                    Explore
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Category 2 */}
+            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+              <div className="aspect-square w-full overflow-hidden">
+                <PlaceholderImage 
+                  type="beauty" 
+                  number={2} 
+                  aspectRatio="aspect-square"
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+              <div className="p-6 text-center">
+                <h3 className="mb-2 text-xl font-bold">Body Care Treatments</h3>
+                <Link href="/body-care">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                    Explore
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Category 3 */}
+            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+              <div className="aspect-square w-full overflow-hidden">
+                <PlaceholderImage 
+                  type="beauty" 
+                  number={3} 
+                  aspectRatio="aspect-square"
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+              <div className="p-6 text-center">
+                <h3 className="mb-2 text-xl font-bold">AI Facial Filters</h3>
+                <Link href="/facial-filters">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                    Explore
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Category 4 */}
+            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+              <div className="aspect-square w-full overflow-hidden">
+                <PlaceholderImage 
+                  type="beauty" 
+                  number={4} 
+                  aspectRatio="aspect-square"
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+              <div className="p-6 text-center">
+                <h3 className="mb-2 text-xl font-bold">Cell Beauty Technology</h3>
+                <Link href="/cell-beauty">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                    Explore
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
-      {/* Call to Action */}
-      <section className="bg-gray-50 py-16">
+
+      {/* Special Offers */}
+      <section className="bg-secondary/10 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-10 text-center font-serif text-3xl font-bold md:text-4xl">
+              Limited <span className="text-primary">Offers</span>
+            </h2>
+            <div className="overflow-hidden rounded-lg bg-white p-8 shadow-md">
+              <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+                <div className="w-full md:w-2/3">
+                  <h3 className="mb-4 text-2xl font-bold">New Client Special</h3>
+                  <p className="mb-4 text-lg text-gray-600">
+                    Experience our premium treatments with 20% off your first visit. Discover the difference professional care can make.
+                  </p>
+                  <ul className="mb-6 space-y-2">
+                    <li className="flex items-center">
+                      <span className="mr-2 text-primary">•</span>
+                      <span>Valid for all first-time clients</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="mr-2 text-primary">•</span>
+                      <span>Applies to any treatment over $100</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="mr-2 text-primary">•</span>
+                      <span>Includes a free skin consultation</span>
+                    </li>
+                  </ul>
+                  <Link href="/contact">
+                    <Button className="rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                      Book Now
+                    </Button>
+                  </Link>
+                </div>
+                <div className="h-40 w-full overflow-hidden rounded-lg md:w-1/3">
+                  <PlaceholderImage 
+                    type="beauty" 
+                    number={1} 
+                    aspectRatio="aspect-[1/1]"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-primary/5 py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-6 font-serif text-4xl font-bold text-black md:text-5xl">
-            Ready to experience <span className="text-primary">transformation</span>?
+          <h2 className="font-serif text-3xl font-bold md:text-4xl">
+            Ready to <span className="text-primary">Transform</span> Your Skin?
           </h2>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-600">
-            Discover our tech-forward beauty treatments and unlock your natural radiance.
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+            Schedule a consultation with our expert team to discover the perfect treatment plan for your unique needs.
           </p>
-          <Button className="rounded-full bg-primary px-10 py-6 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
-            Book Consultation
-          </Button>
+          <div className="mt-10">
+            <Link href="/contact">
+              <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
+                Book Consultation
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>

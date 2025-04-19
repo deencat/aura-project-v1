@@ -63,6 +63,11 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Run full Playwright regression tests after each change
 - Fix any negative test results
 - Terminate lingering Playwright report server processes before running tests again
+- Available test scripts:
+  - `npm test`: Run all Playwright tests
+  - `npm run test:ui`: Run tests with Playwright UI mode
+  - `npm run test:debug`: Run tests in debug mode
+  - `npm run test:report`: Show the Playwright HTML report
 
 ### Git Commit Messages
 - Follow the prefix convention:
@@ -90,17 +95,20 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Added secondary turquoise color (#5CD7C9) for accent elements
 - Created styled placeholder component for images instead of relying on static files
 - Implemented visual enhancements throughout the site with the PlaceholderImage component
+- Created "Royal Black Scan" treatment page with content from EternalCareBeauty.com
+- Fixed dropdown menu hover issue in navigation to improve UX
+- Restructured main navigation to show all menu items on the top level
+- Set up Playwright testing framework and initial tests
+- Added test scripts for different testing modes
 
 ### Pending Tasks (Prioritized)
-1. Create individual treatment pages
-2. Set up Playwright testing framework
-3. Create initial tests for core functionality
-4. Implement responsive design refinements for mobile devices
-5. Add animations and transitions for improved UX
+1. Create remaining individual treatment pages
+2. Add more comprehensive test coverage
+3. Implement responsive design refinements for mobile devices
+4. Add animations and transitions for improved UX
 
 ### Backlog Tasks
 - Implement Memory Viewer component for debugging
-- Add more comprehensive test coverage
 - Refine UI/UX based on prototype feedback
 - Document component usage patterns
 - Create storybook or component showcase
@@ -121,12 +129,14 @@ This project is a frontend prototype with a memory management component (MCP) th
 
 ### Phase 3: Feature Development (IN PROGRESS)
 - Implement individual treatment pages
+  - Royal Black Scan page (completed)
+  - Other treatment pages (pending)
 - Add authentication UI (for prototype only)
 - Create booking workflow
 - Develop user profile section
 
-### Phase 4: Testing and Refinement
-- Implement Playwright tests
+### Phase 4: Testing and Refinement (IN PROGRESS)
+- Implement Playwright tests (initial tests completed)
 - Run regression tests
 - Fix issues and refine UI
 - Document components and usage

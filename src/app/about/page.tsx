@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import PlaceholderImage from '@/components/PlaceholderImage'
 
@@ -6,14 +7,14 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative flex min-h-[40vh] items-center bg-gray-50">
+      <section className="relative flex min-h-[50vh] items-center bg-gray-50">
         <div className="container mx-auto px-4 py-16">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
-              About <span className="text-primary">Freshen Page</span>
+              About <span className="text-primary">Aura Beauty</span>
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-gray-600">
-              Discover our tech-forward beauty approach and the story behind our innovative treatments.
+              We Care. We Beautify. Eternally.
             </p>
           </div>
         </div>
@@ -22,152 +23,125 @@ export default function AboutPage() {
       {/* Our Story Section */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-black md:text-4xl">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
                 Our <span className="text-primary">Story</span>
               </h2>
-              <div className="mt-8 space-y-6 text-gray-700">
-                <p>
-                  Freshen Page Beauty has been dedicated to providing diverse, effective, and safe treatments. Our beauty center brings together professional equipment and techniques from various sources to deliver the most attentive, suitable, and optimal service experience for each client, protecting every inch of your skin from the inside out.
-                </p>
-                <p>
-                  Our primary mission at Freshen Page Beauty is to provide exceptional tech-forward beauty services to help each client achieve their beauty goals. Unlike typical beauty salons, at Freshen Page Beauty, our technicians deeply believe that each client is unique, so they design and provide personalized beauty treatments.
-                </p>
-                <p>
-                  Our technicians carefully listen to your needs and develop beauty plans tailored for you. Our mission is to showcase every woman&apos;s most beautiful side and provide the highest quality service, making us a leading beauty center.
-                </p>
-              </div>
             </div>
-            
-            <div className="flex items-center justify-center">
-              <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="about" 
-                  aspectRatio="aspect-square"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Our Values Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Our <span className="text-primary">Values</span>
-            </h2>
-            <p className="mt-4 text-gray-600">
-              We're committed to providing the best possible experience for our clients through these core values.
-            </p>
-          </div>
-          
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="rounded-lg bg-white p-8 shadow-sm">
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-              </div>
-              <h3 className="mb-4 text-xl font-bold">Safety First</h3>
-              <p className="text-gray-600">
-                We prioritize client safety and treatment quality. Our equipment is FDA-certified, maintained regularly, and our technical team receives strict professional training.
+            <div className="text-lg leading-relaxed text-gray-600">
+              <p className="mb-6">
+                Aura Beauty Medical Aesthetic Center has always been committed to providing clients with diverse, effective, and safe treatment programs. Our beauty center brings together professional treatment equipment and techniques from different places, striving to provide each client with the most attentive, suitable, and optimal service experience, protecting every inch of your skin from the inside out.
               </p>
-            </div>
-            
-            <div className="rounded-lg bg-white p-8 shadow-sm">
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-              </div>
-              <h3 className="mb-4 text-xl font-bold">Personalized Care</h3>
-              <p className="text-gray-600">
-                We believe every client is unique. Our technicians design personalized treatment plans after careful consultation, delivering results that meet your specific needs.
-              </p>
-            </div>
-            
-            <div className="rounded-lg bg-white p-8 shadow-sm">
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 22 4-10 4 10"/><path d="M12 11V2"/></svg>
-              </div>
-              <h3 className="mb-4 text-xl font-bold">Innovation</h3>
-              <p className="text-gray-600">
-                We continuously seek improvement and innovation. We listen to client feedback, enhance treatment content, and introduce the latest beauty technologies to meet client needs.
+              <p>
+                Founded with a passion for transforming the beauty industry, Aura Beauty has grown from a small clinic to a premier beauty destination. Our journey began with a simple belief: everyone deserves to feel confident and beautiful in their own skin. This philosophy has guided our approach to beauty treatments, focusing on natural enhancement rather than dramatic change.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
+      {/* Our Mission Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+                Our <span className="text-primary">Mission</span>
+              </h2>
+            </div>
+            <div className="text-lg leading-relaxed text-gray-600">
+              <p className="mb-6">
+                The primary mission of Aura Beauty Medical Aesthetic Center is to provide exceptional medical beauty services to help each client achieve their beauty goals. Unlike ordinary beauty salons, at Aura Beauty, our beauticians deeply believe that each client is unique, so they design and provide personalized beauty treatment programs. They listen carefully to your needs and formulate a beauty plan that suits you.
+              </p>
+              <p className="mb-6">
+                Our mission is to showcase the most beautiful side of every woman, providing the highest quality service, making us the leading beauty center. Our professional team of beauticians undergoes rigorous training and certification. They not only possess the most professional beauty knowledge but also have rich practical experience in beauty treatments.
+              </p>
+              <p>
+                Aura Beauty Medical Aesthetic Center is committed to introducing and applying the latest beauty technologies and the most advanced international-grade medical beauty equipment to ensure that our clients receive the highest quality beauty treatments. We continuously upgrade and update our equipment to maintain our leading position in the beauty industry.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Values Section */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-bold text-black md:text-4xl">
-              Our <span className="text-primary">Expert Team</span>
-            </h2>
-            <p className="mt-4 text-gray-600">
-              Meet our skilled professionals dedicated to helping you achieve your beauty goals.
-            </p>
-          </div>
-          
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="group overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-md">
-                <div className="aspect-[3/4] w-full bg-gray-100 relative">
-                  <PlaceholderImage 
-                    type="team" 
-                    number={item}
-                    aspectRatio="aspect-[3/4]"
-                  />
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+                Our <span className="text-primary">Values</span>
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="rounded-lg bg-gray-50 p-8 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold">Sophia Chen</h3>
-                  <p className="text-sm text-gray-500">Senior Beauty Technician</p>
-                  <p className="mt-4 text-sm text-gray-700">
-                    Certified in advanced facial treatments with 8+ years of experience in tech-forward beauty solutions.
-                  </p>
-                </div>
+                <h3 className="mb-4 text-xl font-bold">Client-Centered</h3>
+                <p className="text-gray-600">
+                  We deeply understand that client satisfaction is the key to our success, so we center our approach on your needs and expectations.
+                </p>
               </div>
-            ))}
+              
+              <div className="rounded-lg bg-gray-50 p-8 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 className="mb-4 text-xl font-bold">Safety First</h3>
+                <p className="text-gray-600">
+                  We prioritize client safety and treatment quality, using FDA-certified beauty equipment and maintaining strict quality control.
+                </p>
+              </div>
+              
+              <div className="rounded-lg bg-gray-50 p-8 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+                </div>
+                <h3 className="mb-4 text-xl font-bold">Innovation</h3>
+                <p className="text-gray-600">
+                  We continuously seek improvement and innovation, listening to client feedback and introducing the latest beauty technologies.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Our Team Section */}
       <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Frequently Asked <span className="text-primary">Questions</span>
-            </h2>
-            <p className="mt-4 text-gray-600">
-              Find answers to commonly asked questions about our services.
-            </p>
-          </div>
-          
-          <div className="mt-12 mx-auto max-w-3xl">
-            <div className="space-y-6">
-              {[
-                {
-                  question: 'Do you provide free initial consultations?',
-                  answer: 'Yes, Freshen Page Beauty provides free initial consultations to help clients understand which treatments suit their needs and requirements. You can schedule a free consultation to learn more about our beauty treatment information.'
-                },
-                {
-                  question: 'Can I specify a particular beauty technician?',
-                  answer: 'Yes, at Freshen Page Beauty you can request any available beauty technician to provide your service. Please notify us when making your appointment if you would like to specify a particular technician.'
-                },
-                {
-                  question: 'What are your operating hours?',
-                  answer: 'Our operating hours are Monday to Saturday from 12:00 – 21:00. We are closed on Sundays and public holidays.'
-                },
-                {
-                  question: 'Can I reschedule or cancel my appointment?',
-                  answer: 'Yes, if you have an appointment at Freshen Page Beauty but are unable to attend, you can change the time or cancel the service according to our change/cancellation policy by calling us in advance.'
-                }
-              ].map((faq, index) => (
-                <div key={index} className="rounded-lg border border-gray-200 bg-white p-6">
-                  <h3 className="text-lg font-bold text-gray-900">{faq.question}</h3>
-                  <p className="mt-2 text-gray-600">{faq.answer}</p>
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-12 text-center">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+                Our <span className="text-primary">Expert Team</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+                Our highly trained specialists bring years of experience and passion to every treatment
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+              {[1, 2, 3].map((num) => (
+                <div key={num} className="overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+                  <div className="aspect-[3/4] w-full">
+                    <PlaceholderImage 
+                      type="team" 
+                      number={num} 
+                      aspectRatio="aspect-[3/4]"
+                    />
+                  </div>
+                  <div className="p-6 text-center">
+                    <h3 className="text-xl font-bold">{`Dr. ${['Emma Wilson', 'Michael Chen', 'Sophia Rodriguez'][num-1]}`}</h3>
+                    <p className="mb-4 text-primary">{['Lead Aesthetician', 'Skincare Specialist', 'Beauty Technologist'][num-1]}</p>
+                    <p className="text-gray-600">
+                      {[
+                        'Specialized in advanced facial treatments with over 10 years of experience in the beauty industry.',
+                        'Expert in cellular therapy and regenerative treatments, helping clients achieve natural results.',
+                        'Pioneer in AI beauty technology, bringing cutting-edge solutions to our beauty center.'
+                      ][num-1]}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -175,19 +149,117 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Why Choose Us Section */}
+      <section className="bg-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+                Why Choose <span className="text-primary">Aura Beauty</span>
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              <div className="flex items-start">
+                <div className="mr-4 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">1</div>
+                <div>
+                  <h3 className="mb-2 text-xl font-bold">Advanced Technology</h3>
+                  <p className="text-gray-600">
+                    We invest in the latest beauty technologies to provide the most effective treatments available on the market.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="mr-4 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">2</div>
+                <div>
+                  <h3 className="mb-2 text-xl font-bold">Customized Solutions</h3>
+                  <p className="text-gray-600">
+                    We understand that each client is unique, and we tailor our treatments to meet your specific needs and concerns.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="mr-4 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">3</div>
+                <div>
+                  <h3 className="mb-2 text-xl font-bold">Expert Team</h3>
+                  <p className="text-gray-600">
+                    Our team of professionals is continuously trained on the latest techniques and technologies in the beauty industry.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="mr-4 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">4</div>
+                <div>
+                  <h3 className="mb-2 text-xl font-bold">Lasting Results</h3>
+                  <p className="text-gray-600">
+                    We focus on treatments that provide not just immediate improvements but long-lasting beauty results.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+                Frequently Asked <span className="text-primary">Questions</span>
+              </h2>
+            </div>
+            <div className="space-y-6">
+              <div className="rounded-lg border border-gray-200 p-6">
+                <h3 className="mb-3 text-xl font-bold">Do you offer consultations before treatments?</h3>
+                <p className="text-gray-600">
+                  Yes, we provide free initial consultations to help clients understand the treatments suitable for their needs and to offer personalized recommendations.
+                </p>
+              </div>
+              
+              <div className="rounded-lg border border-gray-200 p-6">
+                <h3 className="mb-3 text-xl font-bold">Are your treatments FDA-approved?</h3>
+                <p className="text-gray-600">
+                  Yes, all our beauty equipment and treatments are FDA-certified and regularly maintained to ensure client safety and optimal results.
+                </p>
+              </div>
+              
+              <div className="rounded-lg border border-gray-200 p-6">
+                <h3 className="mb-3 text-xl font-bold">How do I schedule an appointment?</h3>
+                <p className="text-gray-600">
+                  You can schedule an appointment through our website, by phone, or by visiting our center. We recommend booking in advance to secure your preferred time slot.
+                </p>
+              </div>
+              
+              <div className="rounded-lg border border-gray-200 p-6">
+                <h3 className="mb-3 text-xl font-bold">Do you offer payment plans?</h3>
+                <p className="text-gray-600">
+                  Yes, we offer various payment options, including installment plans, to make our treatments more accessible to clients.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="bg-white py-16">
+      <section className="bg-primary/5 py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-serif text-3xl font-bold md:text-4xl">
-            Ready to Experience <span className="text-primary">Transformation</span>?
+            Experience the <span className="text-primary">Aura Difference</span>
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-            Book your consultation today and discover the perfect treatment plan for your unique beauty goals.
+            Book a consultation with our expert team and discover why so many clients trust us with their beauty needs.
           </p>
           <div className="mt-10">
-            <Button className="rounded-full bg-primary px-8 py-6 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
-              Book Consultation
-            </Button>
+            <Link href="/contact">
+              <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
+                Contact Us Today
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

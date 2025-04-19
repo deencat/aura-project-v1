@@ -5,54 +5,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import PlaceholderImage from '@/components/PlaceholderImage'
 
 const treatments = [
-  {
-    id: 'royal-black-scan',
-    title: 'Royal Black Scan',
-    description: 'Deep cleansing treatment that eliminates impurities and revitalizes your skin.',
-    image: '/placeholder-treatment-1.jpg'
-  },
-  {
-    id: 'smooth-egg-skin',
-    title: 'Smooth Egg Skin',
-    description: 'Achieve smooth, radiant skin with this advanced treatment targeting dullness and texture.',
-    image: '/placeholder-treatment-2.jpg'
-  },
-  {
-    id: 'collagen-regeneration',
-    title: 'Collagen Regeneration',
-    description: 'Boost your skin&apos;s natural collagen production for firmer, more youthful-looking skin.',
-    image: '/placeholder-treatment-3.jpg'
-  },
-  {
-    id: 'smart-rescue',
-    title: '360 Smart Rescue',
-    description: 'Comprehensive treatment that addresses multiple skin concerns in one session.',
-    image: '/placeholder-treatment-4.jpg'
-  },
-  {
-    id: 'farewell-puffy',
-    title: 'Farewell Puffy Face',
-    description: 'Reduce facial puffiness and define your facial contours with this specialized treatment.',
-    image: '/placeholder-treatment-5.jpg'
-  },
-  {
-    id: 'desert-skin-rescue',
-    title: 'Desert Skin Rescue',
-    description: 'Intense hydration for dry, dehydrated skin that restores moisture balance.',
-    image: '/placeholder-treatment-6.jpg'
-  },
-  {
-    id: 'porcelain-skin',
-    title: 'Royal Porcelain Skin',
-    description: 'Achieve a flawless complexion with this premium treatment for clear, even-toned skin.',
-    image: '/placeholder-treatment-7.jpg'
-  },
-  {
-    id: 'crystal-needling',
-    title: 'Crystal Micro-Needling',
-    description: 'Advanced micro-needling treatment that stimulates collagen and improves skin texture.',
-    image: '/placeholder-treatment-8.jpg'
-  }
+  { id: 1, title: 'Royal Black Scan', slug: 'royal-black-scan', description: 'Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.' },
+  { id: 2, title: 'Peeled Egg Skin', slug: 'peeled-egg-skin', description: 'Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.' },
+  { id: 3, title: 'Collagen Regeneration', slug: 'collagen-regeneration', description: 'Boost your skin\'s natural collagen production for improved elasticity and youthful appearance.' },
+  { id: 4, title: '360 Smart Rescue', slug: 'smart-rescue', description: 'Complete skin revival treatment that addresses multiple concerns simultaneously.' },
+  { id: 5, title: 'Farewell Puffy Face', slug: 'farewell-puffy', description: 'Say goodbye to facial puffiness and bloating with this specialized treatment.' },
+  { id: 6, title: 'Desert Skin Rescue', slug: 'desert-skin-rescue', description: 'Intensive hydration therapy for extremely dry, dehydrated skin.' },
+  { id: 7, title: 'Royal Porcelain Skin', slug: 'porcelain-skin', description: 'Achieve a flawless, porcelain-like complexion with this premium treatment.' },
+  { id: 8, title: 'Crystal Micro-Needling', slug: 'crystal-needling', description: 'Advanced micro-needling enhanced with crystal technology for superior results.' },
+  { id: 9, title: 'Zero Flaw Skin', slug: 'zero-flaw-skin', description: 'Perfect your complexion and minimize imperfections with this comprehensive treatment.' },
+  { id: 10, title: 'Baby Face Contouring', slug: 'baby-face', description: 'Sculpt and define facial contours while maintaining a youthful appearance.' },
+  { id: 11, title: 'Laser Treatment', slug: 'laser-treatment', description: 'Transform your skin with our advanced laser treatments targeting wrinkles, scars, pigmentation, and more with precision and minimal downtime.' },
 ]
 
 export default function TreatmentsPage() {
@@ -66,7 +29,7 @@ export default function TreatmentsPage() {
               Premium Beauty <span className="text-primary">Treatments</span>
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-gray-600">
-              Discover our range of tech-forward beauty treatments designed to enhance your natural beauty and restore your skin's radiance.
+              Discover our range of advanced tech-forward beauty treatments designed to enhance your natural beauty.
             </p>
           </div>
         </div>
@@ -75,21 +38,21 @@ export default function TreatmentsPage() {
       {/* Treatments Grid */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {treatments.map((treatment, index) => (
-              <Card key={treatment.id} className="overflow-hidden border border-gray-200 transition-shadow hover:shadow-md">
-                <div className="relative aspect-[3/2] w-full">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {treatments.map((treatment) => (
+              <Card key={treatment.id} className="overflow-hidden transition-shadow hover:shadow-md">
+                <div className="aspect-[4/3] w-full">
                   <PlaceholderImage 
                     type="treatment" 
-                    number={index + 1}
-                    aspectRatio="aspect-[3/2]"
+                    number={treatment.id <= 8 ? treatment.id : 1}
+                    aspectRatio="aspect-[4/3]"
                   />
                 </div>
                 <CardContent className="p-6">
                   <h3 className="mb-2 text-xl font-bold">{treatment.title}</h3>
                   <p className="mb-4 text-gray-600">{treatment.description}</p>
-                  <Link href={`/treatments/${treatment.id}`}>
-                    <Button variant="outline" className="w-full rounded-full border-primary text-primary hover:bg-primary hover:text-white">
+                  <Link href={`/treatments/${treatment.slug}`}>
+                    <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
                       Learn More
                     </Button>
                   </Link>

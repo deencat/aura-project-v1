@@ -3,24 +3,40 @@
 import React from 'react'
 import Image from 'next/image'
 
-type PlaceholderImageProps = {
-  type: 'beauty' | 'treatment' | 'benefits' | 'avatar' | 'about' | 'team' | 'map'
+interface PlaceholderImageProps {
+  type?: string
   number?: number
-  className?: string
+  page?: string
+  section?: string
   aspectRatio?: string
+  className?: string
 }
 
-export default function PlaceholderImage({ 
-  type, 
-  number = 1, 
-  className = '', 
-  aspectRatio = 'aspect-square'
+type GradientType = 'beauty' | 'treatment' | 'benefits' | 'avatar' | 'about' | 'team' | 'map';
+
+export default function PlaceholderImage({
+  type = 'beauty',
+  number = 1,
+  page,
+  section,
+  aspectRatio = 'aspect-square',
+  className = '',
 }: PlaceholderImageProps) {
+  // Build image path based on provided params
+  let imagePath = '/images/placeholders/'
   
+  // If page and section are provided, use the new naming convention
+  if (page && section) {
+    imagePath += `${page}-${section}-${number}.jpg`
+  } else {
+    // Fall back to the old naming convention
+    imagePath += `${type}-${number}.jpg`
+  }
+
   // Check if a real image file exists for the specified type and number
-  const imageExists = () => {
-    // For treatment images, we'll use real images
-    if (type === 'treatment') {
+  const useRealImage = () => {
+    // For treatment images or specific page sections, we'll use real images
+    if (type === 'treatment' || (page && section)) {
       return true;
     }
     
@@ -29,7 +45,7 @@ export default function PlaceholderImage({
   }
   
   // Different background gradients for different placeholder types
-  const gradients = {
+  const gradients: Record<GradientType, string> = {
     beauty: 'bg-gradient-to-r from-rose-100 to-pink-100',
     treatment: 'bg-gradient-to-br from-amber-50 to-orange-100',
     benefits: 'bg-gradient-to-r from-violet-100 to-fuchsia-100',
@@ -39,9 +55,30 @@ export default function PlaceholderImage({
     map: 'bg-gradient-to-r from-gray-100 to-gray-200'
   }
   
+  // Get section or type for gradient
+  const getGradientType = (): GradientType => {
+    if (section) {
+      // Map section names to existing gradient types
+      const sectionToGradient: Record<string, GradientType> = {
+        hero: 'treatment',
+        benefits: 'benefits',
+        team: 'team',
+        about: 'about',
+        avatar: 'avatar',
+        map: 'map',
+      };
+      return sectionToGradient[section] || 'beauty';
+    }
+    return type as GradientType;
+  }
+  
   // Different decorative elements for different placeholder types
   const getDecorativeElements = () => {
-    switch(type) {
+    // Use section if available, otherwise fall back to type
+    const displayType = section || type;
+    
+    switch(displayType) {
+      case 'hero':
       case 'beauty':
         return (
           <>
@@ -111,49 +148,73 @@ export default function PlaceholderImage({
     }
   }
   
-  const getTreatmentLabel = () => {
-    if (type !== 'treatment' || !number) return null;
+  const getImageLabel = () => {
+    if (!useRealImage()) return null;
     
-    const treatmentLabels = [
-      'Royal Black Scan',
-      'Smooth Egg Skin',
-      'Collagen Regeneration',
-      '360 Smart Rescue',
-      'Farewell Puffy Face',
-      'Desert Skin Rescue',
-      'Royal Porcelain Skin',
-      'Crystal Micro-Needling'
-    ];
+    let label = '';
     
-    const label = number <= treatmentLabels.length ? treatmentLabels[number - 1] : 'Treatment';
+    // Handle page-section format
+    if (page && section) {
+      if (page === 'peeled-egg-skin') {
+        if (section === 'hero') {
+          label = 'Peeled Egg Skin Treatment';
+        } else if (section === 'benefits') {
+          const benefitLabels = [
+            'Before & After',
+            'Treatment Process',
+            'Skin Transformation',
+            'Client Results',
+            'Application Technique'
+          ];
+          label = number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
+        }
+      }
+    } 
+    // Handle old format
+    else if (type === 'treatment') {
+      const treatmentLabels = [
+        'Royal Black Scan',
+        'Peeled Egg Skin',
+        'Collagen Regeneration',
+        '360 Smart Rescue',
+        'Farewell Puffy Face',
+        'Desert Skin Rescue',
+        'Royal Porcelain Skin',
+        'Crystal Micro-Needling'
+      ];
+      
+      label = number <= treatmentLabels.length ? treatmentLabels[number - 1] : 'Treatment';
+    }
+    
+    if (!label) return null;
     
     return (
-      <div className="absolute top-1/2 -translate-y-1/2 w-full text-center">
-        <div className="text-center text-base font-medium text-gray-600">{label}</div>
+      <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
+        <div className="text-center text-base font-medium text-white">{label}</div>
       </div>
     );
   }
 
   // If using a real image
-  if (type === 'treatment') {
-    const imagePath = `/placeholder-treatment-${number}.jpg`;
-    
+  if (useRealImage()) {
     return (
       <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
         <Image 
           src={imagePath}
-          alt={`Treatment image ${number}`}
+          alt={page && section ? `${page} ${section} image ${number}` : `${type} image ${number}`}
           fill
           style={{objectFit: 'cover'}}
-          priority
+          priority={number === 1}
         />
+        {getImageLabel()}
       </div>
     );
   }
   
   // Otherwise use the placeholder styling
+  const gradientType = getGradientType();
   return (
-    <div className={`relative ${aspectRatio} w-full ${gradients[type]} overflow-hidden rounded-lg ${className}`}>
+    <div className={`relative ${aspectRatio} w-full ${gradients[gradientType]} overflow-hidden rounded-lg ${className}`}>
       {getDecorativeElements()}
     </div>
   )

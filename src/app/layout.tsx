@@ -4,7 +4,7 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-// Load fonts locally with fallbacks
+// Initialize the Inter font
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',

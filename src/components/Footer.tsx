@@ -55,7 +55,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 'Royal Black Scan',
-                'Smooth Egg Skin',
+                'Peeled Egg Skin',
                 'Collagen Regeneration',
                 '360 Smart Rescue',
                 'Farewell Puffy Face',
