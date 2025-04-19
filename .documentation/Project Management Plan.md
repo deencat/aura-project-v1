@@ -109,15 +109,25 @@ This project is a frontend prototype with a memory management component (MCP) th
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages
-2. Add more comprehensive test coverage
-3. Implement responsive design refinements for mobile devices
-4. Add animations and transitions for improved UX
+2. Implement CMS functionality for content management
+   - Create admin dashboard interface
+   - Implement service & pricing management
+   - Add blog & testimonial management
+   - Support multilingual content (Traditional Chinese, Simplified Chinese, English)
+   - Implement promotion & coupon code management
+   - Develop staff profile management interface
+3. Add more comprehensive test coverage
+4. Implement responsive design refinements for mobile devices
+5. Add animations and transitions for improved UX
 
 ### Backlog Tasks
 - Implement Memory Viewer component for debugging
 - Refine UI/UX based on prototype feedback
 - Document component usage patterns
 - Create storybook or component showcase
+- Add membership tier & perk management to CMS
+- Implement loyalty token configuration in CMS (earning rules, redemption options)
+- Add basic order management for online payments/retail
 
 ## Project Phases
 
@@ -140,6 +150,11 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Laser Treatment page (completed)
   - Collagen Regeneration page (completed)
   - Other treatment pages (pending)
+- Develop CMS functionality
+  - Admin interface for content management
+  - Service & pricing management
+  - Blog & testimonial management
+  - Multilingual content support
 - Add authentication UI (for prototype only)
 - Create booking workflow
 - Develop user profile section
@@ -149,6 +164,13 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Run regression tests
 - Fix issues and refine UI
 - Document components and usage
+
+### Phase 5: Advanced Features (PLANNED)
+- Implement membership & loyalty features
+- Add online shop functionality
+- Create virtual consultation interface
+- Develop AI skin analysis integration
+- Set up payment gateway integration (for prototype)
 
 ## Regular Maintenance Tasks
 - Check memory MCP health
