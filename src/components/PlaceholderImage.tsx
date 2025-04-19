@@ -169,6 +169,20 @@ export default function PlaceholderImage({
           label = number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
         }
       }
+      else if (page === 'laser-treatment') {
+        if (section === 'hero') {
+          label = 'Advanced Laser Treatment';
+        } else if (section === 'benefits') {
+          const benefitLabels = [
+            'Before & After',
+            'Treatment Process',
+            'Skin Rejuvenation',
+            'Client Results',
+            'Advanced Technology'
+          ];
+          label = number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
+        }
+      }
     } 
     // Handle old format
     else if (type === 'treatment') {
