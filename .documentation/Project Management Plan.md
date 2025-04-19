@@ -100,6 +100,12 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Restructured main navigation to show all menu items on the top level
 - Set up Playwright testing framework and initial tests
 - Added test scripts for different testing modes
+- Created individual treatment pages:
+  - Peeled Egg Skin treatment page with detailed sections and image carousel
+  - Laser Treatment page with comprehensive content
+  - Collagen Regeneration page with detailed information
+- Added carousel components to treatment pages using shadcn/ui components
+- Implemented consistent naming conventions for placeholder images across treatment pages
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages
@@ -130,6 +136,9 @@ This project is a frontend prototype with a memory management component (MCP) th
 ### Phase 3: Feature Development (IN PROGRESS)
 - Implement individual treatment pages
   - Royal Black Scan page (completed)
+  - Peeled Egg Skin page (completed)
+  - Laser Treatment page (completed)
+  - Collagen Regeneration page (completed)
   - Other treatment pages (pending)
 - Add authentication UI (for prototype only)
 - Create booking workflow
