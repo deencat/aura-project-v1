@@ -196,6 +196,15 @@ export default function PlaceholderImage({
           return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
         }
       }
+      else if (page === 'new-doublo') {
+        if (section === 'hero') {
+          return 'SD微雕拉提 (Micro-Sculpting Lift)';
+        } else if (section === 'device') {
+          return 'New Doublo™ SD Synergy Lifting';
+        } else if (section === 'results') {
+          return 'Visible Rejuvenation Results';
+        }
+      }
       return `${page} ${section}`;
     } 
     // Handle old format

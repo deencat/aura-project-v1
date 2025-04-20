@@ -23,8 +23,8 @@ const menuData = [
       { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal' },
       { title: 'Crystal Micro-Needling', href: '/treatments/crystal-needling' },
       { title: 'Mole, Wart & Skin Growth Removal', href: '/treatments/mole-wart-removal' },
-      { title: 'Radiant Defense Synergy Treatment', href: '/treatments/zero-flaw-skin' },
-      { title: 'Baby Face Contouring', href: '/treatments/baby-face' },
+      { title: 'Radiant Defense Synergy Treatment', href: '/treatments/radiant-defense-synergy' },
+      { title: 'New Doublo™', href: '/treatments/new-doublo' },
     ]
   },
   {

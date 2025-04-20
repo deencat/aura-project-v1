@@ -1,41 +1,12 @@
 "use client"
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import PlaceholderImage from '@/components/PlaceholderImage'
-import type { CarouselApi } from "@/components/ui/carousel"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
 export default function RadiantDefenseSynergyPage() {
-  const [api, setApi] = useState<CarouselApi>()
-  const [activeIndex, setActiveIndex] = useState(0)
-  const totalSlides = 5
-
-  // Set up the carousel API and event listener
-  React.useEffect(() => {
-    if (!api) return
-
-    api.on("select", () => {
-      setActiveIndex(api.selectedScrollSnap())
-    })
-  }, [api])
-
-  // Handle indicator clicks
-  const scrollTo = React.useCallback(
-    (index: number) => {
-      api?.scrollTo(index)
-    },
-    [api]
-  )
-
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -69,7 +40,7 @@ export default function RadiantDefenseSynergyPage() {
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
               <PlaceholderImage 
-                page="zero-flaw-skin"
+                page="radiant-defense-synergy"
                 section="hero"
                 number={1}
                 aspectRatio="aspect-[3/4]"
@@ -178,66 +149,6 @@ export default function RadiantDefenseSynergyPage() {
             <p className="mt-6 text-lg text-gray-600">
               Experience transformative results with our advanced skincare technology
             </p>
-          </div>
-
-          {/* Photo Gallery */}
-          <div className="mt-12 mb-16 mx-auto max-w-4xl">
-            <div className="relative rounded-xl overflow-hidden shadow-lg">
-              <Carousel 
-                className="w-full" 
-                setApi={setApi}
-              >
-                <CarouselContent>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <CarouselItem key={num} className="md:basis-1/2 lg:basis-1/3">
-                      <div className="p-2">
-                        <div className="overflow-hidden rounded-lg bg-white">
-                          <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="zero-flaw-skin"
-                              section="benefits"
-                              number={num}
-                              aspectRatio="aspect-square"
-                              className="object-cover w-full h-full transition duration-500 hover:scale-110"
-                            />
-                          </div>
-                          <div className="p-4 text-center">
-                            <h4 className="font-bold text-lg text-gray-800 mb-1">
-                              {["Before & After", "Treatment Process", "Skin Transformation", "Barrier Restoration", "Radiant Glow"][num-1]}
-                            </h4>
-                            <p className="text-gray-600 text-sm">
-                              {[
-                                "Real client transformations showing dramatic improvement",
-                                "Our specialized application technique for maximum benefits",
-                                "Watch as skin imperfections visibly diminish",
-                                "Strengthening your skin's natural defense mechanisms",
-                                "The luminous glow that comes from healthy, protected skin"
-                              ][num-1]}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-2 md:left-4 bg-white/80 hover:bg-white" />
-                <CarouselNext className="right-2 md:right-4 bg-white/80 hover:bg-white" />
-              </Carousel>
-              
-              {/* Carousel Indicators */}
-              <div className="flex justify-center gap-2 mt-4">
-                {Array.from({ length: totalSlides }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollTo(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all ${
-                      activeIndex === index ? 'bg-primary w-8' : 'bg-gray-300'
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">

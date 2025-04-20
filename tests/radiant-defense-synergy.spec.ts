@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Radiant Defense Synergy Treatment Page', () => {
   test('page loads correctly with all essential elements', async ({ page }) => {
     // Navigate to the Radiant Defense Synergy page
-    await page.goto('/treatments/zero-flaw-skin');
+    await page.goto('/treatments/radiant-defense-synergy');
 
     // Verify page title with new format
     const pageTitle = await page.locator('h1:has-text("Radiant Defense Synergy Treatment")');
@@ -44,8 +44,10 @@ test.describe('Radiant Defense Synergy Treatment Page', () => {
     const treatmentBenefitsTitle = await page.locator('h2:has-text("Benefits of")');
     await expect(treatmentBenefitsTitle).toBeVisible();
     
-    // Check for carousel
-    await expect(page.locator('[class*="carousel"]')).toBeVisible();
+    // Check for benefit icons - these replace the carousel
+    const benefitIcons = await page.locator('.mx-auto.mb-6.flex.h-16.w-16.items-center.justify-center.rounded-full.bg-primary\\/10.text-primary');
+    const count = await benefitIcons.count();
+    expect(count).toBeGreaterThan(0);
     
     // Check for FAQ section
     const faqTitle = await page.locator('h2:has-text("Frequently Asked")');
@@ -66,7 +68,7 @@ test.describe('Radiant Defense Synergy Treatment Page', () => {
     await page.locator('h3:has-text("Radiant Defense Synergy")').click();
     
     // Verify we're on the correct page
-    await expect(page).toHaveURL(/.*\/treatments\/zero-flaw-skin/);
+    await expect(page).toHaveURL(/.*\/treatments\/radiant-defense-synergy/);
     
     // Verify the page title is visible
     const pageTitle = await page.locator('h1:has-text("Radiant Defense Synergy Treatment")');
