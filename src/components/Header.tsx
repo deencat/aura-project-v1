@@ -22,7 +22,8 @@ const menuData = [
       { title: 'Ultimate Stemcell Hydrating Repair', href: '/treatments/ultimate-stemcell-hydrating-repair' },
       { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal' },
       { title: 'Crystal Micro-Needling', href: '/treatments/crystal-needling' },
-      { title: 'Zero Flaw Skin', href: '/treatments/zero-flaw-skin' },
+      { title: 'Mole, Wart & Skin Growth Removal', href: '/treatments/mole-wart-removal' },
+      { title: 'Radiant Defense Synergy Treatment', href: '/treatments/zero-flaw-skin' },
       { title: 'Baby Face Contouring', href: '/treatments/baby-face' },
     ]
   },

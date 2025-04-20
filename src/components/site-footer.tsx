@@ -84,6 +84,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/treatments/mole-wart-removal" className="hover:text-primary">
+                  Mole, Wart & Skin Growth Removal
+                </Link>
+              </li>
+              <li>
                 <Link href="/facial-filters/youth-filter" className="hover:text-primary">
                   Youth Filter
                 </Link>

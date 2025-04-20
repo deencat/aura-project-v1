@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/carousel"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
-export default function MoleWartRemovalPage() {
+export default function RadiantDefenseSynergyPage() {
   const [api, setApi] = useState<CarouselApi>()
   const [activeIndex, setActiveIndex] = useState(0)
   const totalSlides = 5
@@ -44,19 +44,20 @@ export default function MoleWartRemovalPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="font-serif text-4xl md:text-5xl font-bold leading-tight">
-                Mole, Wart & Skin Growth <span className="text-primary">Removal</span>
+                Radiant Defense Synergy Treatment: <span className="text-primary">Joint Benefits of Resveratrol & Immune Probiotics</span>
               </h1>
               <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Precision Targeting</span>
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Minimal Recovery</span>
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Advanced Laser</span>
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Visible Results</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Resveratrol</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Probiotics</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Antioxidant</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Anti-Aging</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Skin Immunity</span>
               </div>
               <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-                Utilizing advanced laser technology, we precisely target and remove various types of skin growths, including moles, warts, and other lesions. The laser energy is directed to the targeted area, where the water within skin cells rapidly absorbs the energy, generating high heat to vaporize the targeted tissue and destroy the cell structure.
+                Discover a new era of skincare with the powerful synergy of Resveratrol and Immune Probiotics. This innovative combination works on multiple levels to purify, renew, and defend your skin, revealing a naturally radiant and resilient complexion.
               </p>
               <p className="mt-4 text-lg text-gray-600 leading-relaxed">
-                The treatment parameters are adjusted according to the size and depth of each lesion, ensuring focused removal while maximally protecting the surrounding healthy tissue, minimizing redness and swelling, and promoting faster recovery.
+                Resveratrol works to instantly purify and refresh your skin's foundation, while the probiotic formula strengthens your skin's natural defense system, combating dullness, fine lines, and other imperfections. This powerful antioxidant combination fights free radicals, creating a luminous, lit-from-within glow.
               </p>
               <div className="mt-8">
                 <Link href="/contact">
@@ -68,7 +69,7 @@ export default function MoleWartRemovalPage() {
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
               <PlaceholderImage 
-                page="mole-wart-removal"
+                page="zero-flaw-skin"
                 section="hero"
                 number={1}
                 aspectRatio="aspect-[3/4]"
@@ -84,57 +85,82 @@ export default function MoleWartRemovalPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              Mole, Wart & Skin Growth Removal: <span className="text-primary">Innovative Laser Technology</span>
+              Key Joint <span className="text-primary">Benefits</span>
             </h2>
             <p className="mt-6 text-lg text-gray-600">
-              Our specialized treatment utilizes state-of-the-art laser technology that delivers precise energy to target unwanted skin growths. The laser energy is highly absorbed by the water content in the targeted cells, creating intense heat that effectively vaporizes the unwanted tissue while preserving the surrounding healthy skin.
-            </p>
-            <p className="mt-4 text-lg text-gray-600">
-              Each treatment is customized based on the specific size and characteristics of your skin concern, ensuring optimal energy levels for effective removal with minimal side effects and faster recovery times.
+              Our treatment harnesses the synergistic power of Resveratrol and Immune Probiotics to provide comprehensive skincare benefits that work on multiple levels for transformative results.
             </p>
           </div>
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Precision Targeting Technology</h3>
+                <h3 className="text-2xl font-bold text-primary">Deep Purification & Renewal</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Our advanced laser system allows for incredible accuracy, focusing energy directly on the unwanted growth while minimizing impact to surrounding tissue. This precision approach significantly reduces the risk of scarring and promotes faster healing compared to traditional removal methods.
+                  Resveratrol, a potent natural polyphenol, delivers instant skin clarity by removing impurities and promoting cellular renewal. It helps even out skin tone, smooth roughness, and enhances absorption for optimal results.
                 </p>
               </div>
             </div>
             
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Customized Treatment Parameters</h3>
+                <h3 className="text-2xl font-bold text-primary">Strengthened Skin Immunity</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Each treatment is tailored to the specific characteristics of your skin concern. Our specialists carefully adjust laser settings based on the size, depth, and location of the growth to ensure optimal results while maintaining the integrity of your skin's natural appearance.
+                  Immune Probiotics, including advanced strains of beneficial bacteria, reinforce the skin's natural barrier. This helps balance the skin's micro-ecosystem, boost self-defense against environmental aggressors, and reduce sensitivity.
                 </p>
               </div>
             </div>
             
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Minimal Discomfort Protocol</h3>
+                <h3 className="text-2xl font-bold text-primary">Antioxidant & Anti-Aging Power</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  We prioritize your comfort throughout the treatment process. Our procedure incorporates cooling technology and, when necessary, topical numbing agents to ensure you experience minimal discomfort during the removal process, making it a significantly more pleasant experience than traditional surgical methods.
+                  Both Resveratrol and Probiotics provide robust antioxidant protection, neutralizing free radicals and slowing the aging process. Together, they help diminish fine lines, improve elasticity, and maintain youthful vitality.
                 </p>
               </div>
             </div>
             
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Comprehensive Aftercare Support</h3>
+                <h3 className="text-2xl font-bold text-primary">Soothing & Repairing</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Your care doesn't end when the treatment is complete. We provide detailed aftercare instructions and medical-grade skincare products to promote optimal healing, reduce the risk of hyperpigmentation, and ensure your skin recovers beautifully with minimal downtime.
+                  The combined action soothes irritation and redness, repairs environmental damage, and supports skin recovery from daily stressors. This leads to a calmer, more balanced complexion that can better defend against future challenges.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-1 gap-8">
+            <div className="flex flex-col">
+              <div className="bg-primary/10 rounded-t-lg p-6">
+                <h3 className="text-2xl font-bold text-primary">Key Ingredients</h3>
+              </div>
+              <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
+                <ul className="list-disc pl-6 space-y-2 text-gray-600">
+                  <li><span className="font-medium">Resveratrol:</span> Potent natural polyphenol with antioxidant properties</li>
+                  <li><span className="font-medium">Probiotics:</span> Lactobacillus, Bifidobacterium, and other beneficial bacteria</li>
+                  <li><span className="font-medium">Gluconolactone/Glycolic Acid:</span> For gentle exfoliation and renewal</li>
+                  <li><span className="font-medium">Melatonin:</span> Supports overnight skin repair and regeneration</li>
+                  <li><span className="font-medium">Antioxidant & Defense Complexes:</span> Additional protection against environmental stressors</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="flex flex-col">
+              <div className="bg-primary/10 rounded-t-lg p-6">
+                <h3 className="text-2xl font-bold text-primary">Who Is It For?</h3>
+              </div>
+              <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
+                <p className="text-gray-600">
+                  Ideal for anyone seeking to improve skin texture, enhance defense against aging and environmental stress, and achieve a naturally glowing, flawless look. This treatment is suitable for all skin types, including sensitive and mature skin, as well as those concerned with early signs of aging or dealing with environmental damage.
                 </p>
               </div>
             </div>
@@ -147,10 +173,10 @@ export default function MoleWartRemovalPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              Benefits of <span className="text-primary">Mole, Wart & Skin Growth Removal</span>
+              Benefits of <span className="text-primary">Radiant Defense Synergy</span>
             </h2>
             <p className="mt-6 text-lg text-gray-600">
-              Experience transformative results with our advanced laser technology
+              Experience transformative results with our advanced skincare technology
             </p>
           </div>
 
@@ -168,7 +194,7 @@ export default function MoleWartRemovalPage() {
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
                             <PlaceholderImage 
-                              page="mole-wart-removal"
+                              page="zero-flaw-skin"
                               section="benefits"
                               number={num}
                               aspectRatio="aspect-square"
@@ -177,15 +203,15 @@ export default function MoleWartRemovalPage() {
                           </div>
                           <div className="p-4 text-center">
                             <h4 className="font-bold text-lg text-gray-800 mb-1">
-                              {["Before & After", "Treatment Process", "Precision Technology", "Healing Process", "Final Results"][num-1]}
+                              {["Before & After", "Treatment Process", "Skin Transformation", "Barrier Restoration", "Radiant Glow"][num-1]}
                             </h4>
                             <p className="text-gray-600 text-sm">
                               {[
-                                "Real client transformations with our treatment",
-                                "See how our advanced laser technology works",
-                                "Targeted removal with minimal surrounding impact",
-                                "Natural healing progression after treatment",
-                                "Beautiful, clear skin after complete recovery"
+                                "Real client transformations showing dramatic improvement",
+                                "Our specialized application technique for maximum benefits",
+                                "Watch as skin imperfections visibly diminish",
+                                "Strengthening your skin's natural defense mechanisms",
+                                "The luminous glow that comes from healthy, protected skin"
                               ][num-1]}
                             </p>
                           </div>
@@ -219,59 +245,59 @@ export default function MoleWartRemovalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Precise Targeting</h3>
+              <h3 className="text-xl font-bold mb-4">Instant Purification</h3>
               <p className="text-gray-600">
-                Advanced laser technology accurately targets specific growths while protecting surrounding healthy tissue
+                Immediate removal of dead skin cells and impurities for a cleaner, clearer complexion
               </p>
             </div>
             
             <div className="bg-white rounded-lg p-8 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4"></path><path d="M6 12H2"></path><path d="M12 6V2"></path><path d="M12 22v-4"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Minimal Downtime</h3>
+              <h3 className="text-xl font-bold mb-4">Enhanced Protection</h3>
               <p className="text-gray-600">
-                Brief recovery period with most clients resuming normal activities within 1-2 days
+                Strengthened skin barrier function to defend against environmental aggressors
               </p>
             </div>
             
             <div className="bg-white rounded-lg p-8 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44l2.45-5.44H6a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3.5a2.5 2.5 0 0 0 0-5Z"></path><path d="M16 2a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 1 2.5 2.5v7.5a2.5 2.5 0 0 0 5 0v-7.5A7.5 7.5 0 0 0 16 2Z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6c0 2-2 4-4 4s-4-2-4-4 2-4 4-4 4 2 4 4z"></path><path d="M18 15v3m-3-3v3m-3-3v3m-3-3v3"></path><path d="M18 22H3a2 2 0 0 1-2-2V10h19.5"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Reduced Scarring</h3>
+              <h3 className="text-xl font-bold mb-4">Radiant, Dewy Glow</h3>
               <p className="text-gray-600">
-                Superior cosmetic results with significantly less scarring than traditional surgical methods
+                A lit-from-within radiance that gives your skin a luminous, supple, and healthy appearance
               </p>
             </div>
             
             <div className="bg-white rounded-lg p-8 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h1"></path><path d="M6 12h1"></path><path d="M10 12h1"></path><path d="M14 12h1"></path><path d="M18 12h1"></path><path d="M22 12h1"></path><path d="M12 2v1"></path><path d="M12 6v1"></path><path d="M12 10v1"></path><path d="M12 14v1"></path><path d="M12 18v1"></path><path d="M12 22v1"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Comfortable Experience</h3>
+              <h3 className="text-xl font-bold mb-4">Minimized Imperfections</h3>
               <p className="text-gray-600">
-                Advanced cooling technology and numbing protocols ensure minimal discomfort during treatment
+                Reduced appearance of fine lines, uneven texture, and dullness
               </p>
             </div>
             
             <div className="bg-white rounded-lg p-8 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path><path d="M12 12 8 8"></path><path d="M12 16v-4"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Rapid Results</h3>
+              <h3 className="text-xl font-bold mb-4">All Skin Types</h3>
               <p className="text-gray-600">
-                Visible improvement often seen after just one treatment, with complete clearance in 1-3 sessions
+                Gentle yet effective for all skin types, including sensitive, rosacea-prone, and acne-prone skin
               </p>
             </div>
             
             <div className="bg-white rounded-lg p-8 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"></path><path d="M13 17.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 21h10"></path><rect width="20" height="14" x="2" y="3" rx="2"></rect></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Customized Care</h3>
+              <h3 className="text-xl font-bold mb-4">No-Makeup Confidence</h3>
               <p className="text-gray-600">
-                Treatment protocols tailored to your specific skin concerns and skin type for optimal results
+                Skin so flawless you'll feel confident going makeup-free
               </p>
             </div>
           </div>
@@ -290,46 +316,46 @@ export default function MoleWartRemovalPage() {
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    What should I expect immediately after treatment?
+                    Is the Radiant Defense Synergy Treatment suitable for all skin types?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    After treatment, the treated area may appear red and slightly swollen. In most cases, a small scab will form within 1-2 days. It's crucial to avoid touching or picking at this scab as it's part of the natural healing process. The area should be kept clean and moisturized according to our aftercare instructions. Most clients can resume normal activities immediately, though sun exposure should be strictly avoided during the healing period.
+                    Yes, our treatment is suitable for all skin types, including sensitive skin, rosacea-prone skin, enlarged pores, dull or dry skin, flaking, itching, and damaged skin. The gentle yet effective formula is designed to address multiple concerns while respecting even the most delicate skin barriers.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-2">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    What aftercare is required following the treatment?
+                    What immediate results can I expect after the treatment?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Proper aftercare is essential for optimal healing. We recommend keeping the area clean by gently washing with mild soap and water twice daily. Apply the prescribed healing ointment to keep the area hydrated and protected. Avoid water immersion (swimming, long baths) for 1-2 days. Strict sun protection is crucial—apply SPF 50+ and reapply every 2 hours when outdoors. Avoid using exfoliants, retinoids, or harsh skincare products on the treated area until it has completely healed.
+                    Immediately after treatment, you'll notice removal of dead skin cells, refined pores, brightened skin tone, and an overall illuminated appearance with a beautiful lit-from-within glow. Your skin will feel smoother, look clearer, and have a natural radiance that mimics professional lighting.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-3">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    How many treatments will I need?
+                    How do Resveratrol and Probiotics work together to benefit my skin?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    The number of treatments required depends on the size, type, and depth of the skin growth being addressed. Many smaller growths can be completely removed in a single session. Larger or deeper growths may require 2-3 treatments spaced 4-6 weeks apart to achieve optimal results. During your consultation, our specialists will assess your specific condition and provide a personalized treatment plan detailing the expected number of sessions needed for your desired outcome.
+                    Resveratrol works as a potent antioxidant to purify and renew your skin, while Probiotics strengthen your skin's natural defense mechanisms at the foundational level. Together, they create a synergistic effect that not only protects against environmental damage but also enhances your skin's natural ability to repair and rejuvenate itself, resulting in a healthier, more resilient complexion.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-4">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    Is the treatment painful?
+                    How often should I receive this treatment for optimal results?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Most clients describe the sensation as mild discomfort rather than pain. The treatment incorporates advanced cooling technology to minimize discomfort. For sensitive areas or clients with lower pain thresholds, we offer topical numbing cream that's applied 30 minutes before treatment. The actual laser treatment is quite quick, typically lasting only seconds to minutes depending on the size of the area being treated. Many clients are pleasantly surprised by how comfortable the experience is compared to what they anticipated.
+                    For optimal results, we recommend an initial series of 4-6 treatments spaced 2-3 weeks apart, followed by monthly maintenance treatments. However, many clients see significant improvement after just one session. Your specific treatment plan will be customized based on your skin's unique needs and concerns during your consultation.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-5">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    Will there be scarring after the treatment?
+                    Is there any downtime after the treatment?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    One of the key advantages of our laser treatment is the significantly reduced risk of scarring compared to traditional surgical removal methods. Our precision technology targets only the unwanted growth while minimizing impact to surrounding tissue. Following proper aftercare instructions is crucial to minimize scarring risk. In rare cases where the growth is very large or deep, some minimal scarring may occur, but it's typically much less noticeable than with surgical excision. Our specialists may recommend follow-up treatments with specialized scar-reducing products if necessary.
+                    There is no downtime associated with our Radiant Defense Synergy Treatment. You can immediately resume your normal activities, and many clients choose to have this treatment before special events for an instant glow. Your skin may appear slightly flushed immediately after treatment, but this typically subsides within 30-60 minutes, leaving behind only the beautiful radiance.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -342,10 +368,10 @@ export default function MoleWartRemovalPage() {
       <section className="py-20 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">
-            Ready for <span className="text-primary">Clear, Beautiful Skin</span>?
+            Ready for <span className="text-primary">Naturally Flawless Skin</span>?
           </h2>
           <p className="mt-6 mx-auto max-w-2xl text-lg text-gray-600">
-            Experience our advanced Mole Wart Skin Growth Removal treatment and discover how our precision laser technology can transform your skin with minimal downtime and superior results.
+            Experience our revolutionary Radiant Defense Synergy Treatment and discover how the powerful combination of Resveratrol and Immune Probiotics can transform your skin with deep purification, enhanced protection, and a natural, healthy glow.
           </p>
           <div className="mt-10">
             <Link href="/contact">
