@@ -5,12 +5,13 @@ import { Card, CardContent } from '@/components/ui/card'
 import PlaceholderImage from '@/components/PlaceholderImage'
 
 const bodyCareServices = [
-  { id: 1, title: 'Body Sculpting', slug: 'body-sculpting', description: 'Non-invasive techniques that target stubborn fat cells to contour and shape your body.' },
-  { id: 2, title: 'Cellulite Reduction', slug: 'cellulite-reduction', description: 'Advanced treatments that smooth and firm skin affected by cellulite.' },
-  { id: 3, title: 'Skin Tightening', slug: 'skin-tightening', description: 'Focused treatments that firm loose skin and improve overall elasticity.' },
-  { id: 4, title: 'Body Hydration', slug: 'body-hydration', description: 'Deep moisturizing treatments that transform dry, dull skin into smooth, radiant surfaces.' },
-  { id: 5, title: 'Detox Wraps', slug: 'detox-wraps', description: 'Luxurious body wraps that draw out impurities while nourishing your skin.' },
-  { id: 6, title: 'Anti-Aging Body Treatments', slug: 'anti-aging-body', description: 'Comprehensive treatments that address signs of aging on the body, not just the face.' },
+  { id: 1, title: '2-in-1 Lymphatic Detox', slug: 'lymphatic-detox', description: 'Advanced dual-action treatment that enhances circulation, reduces bloating, and eliminates toxins for total body wellness.' },
+  { id: 2, title: 'Body Sculpting', slug: 'body-sculpting', description: 'Non-invasive techniques that target stubborn fat cells to contour and shape your body.' },
+  { id: 3, title: 'Cellulite Reduction', slug: 'cellulite-reduction', description: 'Advanced treatments that smooth and firm skin affected by cellulite.' },
+  { id: 4, title: 'Skin Tightening', slug: 'skin-tightening', description: 'Focused treatments that firm loose skin and improve overall elasticity.' },
+  { id: 5, title: 'Body Hydration', slug: 'body-hydration', description: 'Deep moisturizing treatments that transform dry, dull skin into smooth, radiant surfaces.' },
+  { id: 6, title: 'Detox Wraps', slug: 'detox-wraps', description: 'Luxurious body wraps that draw out impurities while nourishing your skin.' },
+  { id: 7, title: 'Anti-Aging Body Treatments', slug: 'anti-aging-body', description: 'Comprehensive treatments that address signs of aging on the body, not just the face.' },
 ]
 
 export default function BodyCarePage() {
