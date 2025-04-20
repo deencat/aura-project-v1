@@ -24,7 +24,17 @@ export default function NewBlogPostPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string
+    slug: string
+    category: string
+    content: string
+    metaDescription: string
+    author: string
+    publishDate: string
+    status: string
+    featuredImage: string | null
+  }>({
     title: '',
     slug: '',
     category: categories[0],

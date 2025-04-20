@@ -1,21 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { inter, playfair } from './fonts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-
-// Initialize the Inter font
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-playfair',
-})
 
 export const metadata: Metadata = {
   title: 'Aura - Tech-Forward Beauty',

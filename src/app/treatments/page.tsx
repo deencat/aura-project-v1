@@ -9,13 +9,14 @@ const treatments = [
   { id: 2, title: 'Peeled Egg Skin', slug: 'peeled-egg-skin', description: 'Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.' },
   { id: 3, title: 'Collagen Regeneration', slug: 'collagen-regeneration', description: 'Boost your skin\'s natural collagen production for improved elasticity and youthful appearance.' },
   { id: 4, title: '360 Smart Rescue', slug: 'smart-rescue', description: 'Complete skin revival treatment that addresses multiple concerns simultaneously.' },
-  { id: 5, title: 'Farewell Puffy Face', slug: 'farewell-puffy', description: 'Say goodbye to facial puffiness and bloating with this specialized treatment.' },
-  { id: 6, title: 'Desert Skin Rescue', slug: 'desert-skin-rescue', description: 'Intensive hydration therapy for extremely dry, dehydrated skin.' },
-  { id: 7, title: 'Royal Porcelain Skin', slug: 'porcelain-skin', description: 'Achieve a flawless, porcelain-like complexion with this premium treatment.' },
+  { id: 5, title: 'Farewell Puffy', slug: 'farewell-puffy', description: 'Say goodbye to facial puffiness and bloating with this specialized treatment.' },
+  { id: 6, title: 'Ultimate Stemcell Hydrating Repair', slug: 'ultimate-stemcell-hydrating-repair', description: 'Advanced stem cell therapy that provides deep hydration and repairs damaged skin cells for ultimate rejuvenation.' },
+  { id: 7, title: 'Ceramic Skin Renewal', slug: 'ceramic-skin-renewal', description: 'Achieve a flawless, porcelain-like complexion with this premium treatment.' },
   { id: 8, title: 'Crystal Micro-Needling', slug: 'crystal-needling', description: 'Advanced micro-needling enhanced with crystal technology for superior results.' },
   { id: 9, title: 'Zero Flaw Skin', slug: 'zero-flaw-skin', description: 'Perfect your complexion and minimize imperfections with this comprehensive treatment.' },
   { id: 10, title: 'Baby Face Contouring', slug: 'baby-face', description: 'Sculpt and define facial contours while maintaining a youthful appearance.' },
   { id: 11, title: 'Laser Treatment', slug: 'laser-treatment', description: 'Transform your skin with our advanced laser treatments targeting wrinkles, scars, pigmentation, and more with precision and minimal downtime.' },
+  { id: 12, title: 'Mole Wart Skin Growth Removal', slug: 'mole-wart-removal', description: 'Advanced laser technology for precise removal of moles, warts, and skin growths with minimal scarring and downtime.' },
 ]
 
 export default function TreatmentsPage() {

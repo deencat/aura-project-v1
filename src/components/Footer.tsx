@@ -59,7 +59,7 @@ export default function Footer() {
                 'Collagen Regeneration',
                 '360 Smart Rescue',
                 'Farewell Puffy Face',
-                'Desert Skin Rescue'
+                'Ultimate Stemcell Hydrating Repair'
               ].map((item) => (
                 <li key={item}>
                   <Link href="#" className="text-sm text-gray-600 hover:text-primary">
@@ -148,9 +148,9 @@ export default function Footer() {
             <div className="mt-4 flex space-x-6 md:mt-0">
               {['Terms', 'Privacy Policy', 'Cookies'].map((item) => (
                 <Link key={item} href="#" className="text-sm text-gray-500 hover:text-primary">
-                  {item}
-                </Link>
-              ))}
+                {item}
+              </Link>
+            ))}
             </div>
           </div>
         </div>

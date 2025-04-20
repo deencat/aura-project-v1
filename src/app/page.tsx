@@ -88,7 +88,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-
+            
             {/* Treatment 2 */}
             <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
               <div className="aspect-[4/3] w-full overflow-hidden">
@@ -108,8 +108,8 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-            </div>
-
+              </div>
+              
             {/* Treatment 3 */}
             <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
               <div className="aspect-[4/3] w-full overflow-hidden">
@@ -146,7 +146,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
             Our <span className="text-primary">Services</span>
-          </h2>
+            </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Category 1 */}
             <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
@@ -165,9 +165,9 @@ export default function Home() {
                     Explore
                   </Button>
                 </Link>
-              </div>
+          </div>
             </div>
-
+            
             {/* Category 2 */}
             <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
               <div className="aspect-square w-full overflow-hidden">
@@ -197,7 +197,7 @@ export default function Home() {
                   aspectRatio="aspect-square"
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
-              </div>
+          </div>
               <div className="p-6 text-center">
                 <h3 className="mb-2 text-xl font-bold">AI Facial Filters</h3>
                 <Link href="/facial-filters">
@@ -292,7 +292,7 @@ export default function Home() {
             <Link href="/contact">
               <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
                 Book Consultation
-              </Button>
+          </Button>
             </Link>
           </div>
         </div>

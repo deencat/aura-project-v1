@@ -14,6 +14,17 @@ interface PlaceholderImageProps {
 
 type GradientType = 'beauty' | 'treatment' | 'benefits' | 'avatar' | 'about' | 'team' | 'map';
 
+// Move this outside the component and make it a regular function
+function checkForRealImage(type: string | undefined, page: string | undefined, section: string | undefined): boolean {
+  // For treatment images or specific page sections, we'll use real images
+  if (type === 'treatment' || (page && section)) {
+    return true;
+  }
+  
+  // For other types, continue to use placeholder styling
+  return false;
+}
+
 export default function PlaceholderImage({
   type = 'beauty',
   number = 1,
@@ -33,16 +44,8 @@ export default function PlaceholderImage({
     imagePath += `${type}-${number}.jpg`
   }
 
-  // Check if a real image file exists for the specified type and number
-  const useRealImage = () => {
-    // For treatment images or specific page sections, we'll use real images
-    if (type === 'treatment' || (page && section)) {
-      return true;
-    }
-    
-    // For other types, continue to use placeholder styling
-    return false;
-  }
+  // Check if we should use a real image
+  const hasRealImage = checkForRealImage(type, page, section);
   
   // Different background gradients for different placeholder types
   const gradients: Record<GradientType, string> = {
@@ -148,16 +151,12 @@ export default function PlaceholderImage({
     }
   }
   
+  // Function to create image label
   const getImageLabel = () => {
-    if (!useRealImage()) return null;
-    
-    let label = '';
-    
-    // Handle page-section format
     if (page && section) {
       if (page === 'peeled-egg-skin') {
         if (section === 'hero') {
-          label = 'Peeled Egg Skin Treatment';
+          return 'Peeled Egg Skin Treatment';
         } else if (section === 'benefits') {
           const benefitLabels = [
             'Before & After',
@@ -166,12 +165,12 @@ export default function PlaceholderImage({
             'Client Results',
             'Application Technique'
           ];
-          label = number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
+          return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
         }
       }
       else if (page === 'laser-treatment') {
         if (section === 'hero') {
-          label = 'Advanced Laser Treatment';
+          return 'Advanced Laser Treatment';
         } else if (section === 'benefits') {
           const benefitLabels = [
             'Before & After',
@@ -180,9 +179,24 @@ export default function PlaceholderImage({
             'Client Results',
             'Advanced Technology'
           ];
-          label = number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
+          return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
         }
       }
+      else if (page === 'mole-wart-removal') {
+        if (section === 'hero') {
+          return 'Mole Wart Skin Growth Removal';
+        } else if (section === 'benefits') {
+          const benefitLabels = [
+            'Before & After',
+            'Treatment Process',
+            'Precision Technology',
+            'Healing Process',
+            'Final Results'
+          ];
+          return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
+        }
+      }
+      return `${page} ${section}`;
     } 
     // Handle old format
     else if (type === 'treatment') {
@@ -192,35 +206,35 @@ export default function PlaceholderImage({
         'Collagen Regeneration',
         '360 Smart Rescue',
         'Farewell Puffy Face',
-        'Desert Skin Rescue',
-        'Royal Porcelain Skin',
+        'Ultimate Stemcell Hydrating Repair',
+        'Ceramic Skin Renewal',
         'Crystal Micro-Needling'
       ];
       
-      label = number <= treatmentLabels.length ? treatmentLabels[number - 1] : 'Treatment';
+      return number <= treatmentLabels.length ? treatmentLabels[number - 1] : 'Treatment';
     }
     
-    if (!label) return null;
-    
-    return (
-      <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
-        <div className="text-center text-base font-medium text-white">{label}</div>
-      </div>
-    );
+    return `${type} image ${number}`;
   }
-
+  
+  const imageLabel = getImageLabel();
+  
   // If using a real image
-  if (useRealImage()) {
+  if (hasRealImage) {
     return (
       <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
         <Image 
           src={imagePath}
-          alt={page && section ? `${page} ${section} image ${number}` : `${type} image ${number}`}
+          alt={imageLabel}
           fill
           style={{objectFit: 'cover'}}
           priority={number === 1}
         />
-        {getImageLabel()}
+        {imageLabel && (
+          <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
+            <div className="text-center text-base font-medium text-white">{imageLabel}</div>
+          </div>
+        )}
       </div>
     );
   }

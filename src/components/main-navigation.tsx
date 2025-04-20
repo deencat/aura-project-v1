@@ -19,9 +19,10 @@ const premiumTreatments = [
   { title: 'Collagen Regeneration', href: '/treatments/collagen-regeneration', description: 'Boosts natural collagen production for youthful appearance' },
   { title: '360 Smart Rescue', href: '/treatments/smart-rescue', description: 'Complete skin revival addressing multiple concerns' },
   { title: 'Farewell Puffy Face', href: '/treatments/farewell-puffy', description: 'Reduces facial puffiness and bloating' },
-  { title: 'Desert Skin Rescue', href: '/treatments/desert-skin-rescue', description: 'Intensive hydration for extremely dry skin' },
-  { title: 'Royal Porcelain Skin', href: '/treatments/porcelain-skin', description: 'Achieve a flawless, porcelain-like complexion' },
+  { title: 'Ultimate Stemcell Hydrating Repair', href: '/treatments/ultimate-stemcell-hydrating-repair', description: 'Deep hydration and cellular regeneration for dehydrated skin' },
+  { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal', description: 'Achieve a flawless, porcelain-like complexion' },
   { title: 'Crystal Micro-Needling', href: '/treatments/crystal-needling', description: 'Advanced micro-needling with crystal technology' },
+  { title: 'Mole Wart Skin Growth Removal', href: '/treatments/mole-wart-removal', description: 'Precision laser technology for removal of moles, warts, and skin growths' },
 ]
 
 const bodyCareServices = [
@@ -277,4 +278,5 @@ const ListItem = React.forwardRef<
       </NavigationMenuLink>
     </li>
   )
-}) 
+})
+ListItem.displayName = "ListItem" 

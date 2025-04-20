@@ -20,7 +20,8 @@
     "memory-add-conversation": "node scripts/memory/add-conversation-memory.js",
     "memory-add-latest": "node scripts/memory/add-latest-conversation.js",
     "memory-ensure": "node scripts/memory/ensure-memory-running.js",
-    "memory-verify": "node scripts/memory/verify-memory-system.js"
+    "memory-verify": "node scripts/memory/verify-memory-system.js",
+    "download-fonts": "node scripts/download-fonts.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

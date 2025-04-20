@@ -10,12 +10,12 @@ export default function AboutPage() {
       <section className="relative flex min-h-[50vh] items-center bg-gray-50">
         <div className="container mx-auto px-4 py-16">
           <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
+          <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
               About <span className="text-primary">Aura Beauty</span>
-            </h1>
+          </h1>
             <p className="mt-6 text-lg leading-relaxed text-gray-600">
               We Care. We Beautify. Eternally.
-            </p>
+          </p>
           </div>
         </div>
       </section>
@@ -32,12 +32,12 @@ export default function AboutPage() {
             <div className="text-lg leading-relaxed text-gray-600">
               <p className="mb-6">
                 Aura Beauty Medical Aesthetic Center has always been committed to providing clients with diverse, effective, and safe treatment programs. Our beauty center brings together professional treatment equipment and techniques from different places, striving to provide each client with the most attentive, suitable, and optimal service experience, protecting every inch of your skin from the inside out.
-              </p>
-              <p>
+                </p>
+                <p>
                 Founded with a passion for transforming the beauty industry, Aura Beauty has grown from a small clinic to a premier beauty destination. Our journey began with a simple belief: everyone deserves to feel confident and beautiful in their own skin. This philosophy has guided our approach to beauty treatments, focusing on natural enhancement rather than dramatic change.
-              </p>
+                </p>
+              </div>
             </div>
-          </div>
         </div>
       </section>
 
@@ -49,7 +49,7 @@ export default function AboutPage() {
               <h2 className="font-serif text-3xl font-bold md:text-4xl">
                 Our <span className="text-primary">Mission</span>
               </h2>
-            </div>
+              </div>
             <div className="text-lg leading-relaxed text-gray-600">
               <p className="mb-6">
                 The primary mission of Aura Beauty Medical Aesthetic Center is to provide exceptional medical beauty services to help each client achieve their beauty goals. Unlike ordinary beauty salons, at Aura Beauty, our beauticians deeply believe that each client is unique, so they design and provide personalized beauty treatment programs. They listen carefully to your needs and formulate a beauty plan that suits you.
@@ -64,15 +64,15 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
+      
       {/* Our Values Section */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
-              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+          <h2 className="font-serif text-3xl font-bold md:text-4xl">
                 Our <span className="text-primary">Values</span>
-              </h2>
+          </h2>
             </div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               <div className="rounded-lg bg-gray-50 p-8 text-center">
@@ -88,13 +88,13 @@ export default function AboutPage() {
               <div className="rounded-lg bg-gray-50 p-8 text-center">
                 <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-                <h3 className="mb-4 text-xl font-bold">Safety First</h3>
+              </div>
+              <h3 className="mb-4 text-xl font-bold">Safety First</h3>
                 <p className="text-gray-600">
                   We prioritize client safety and treatment quality, using FDA-certified beauty equipment and maintaining strict quality control.
-                </p>
-              </div>
-              
+              </p>
+            </div>
+            
               <div className="rounded-lg bg-gray-50 p-8 text-center">
                 <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
@@ -130,7 +130,7 @@ export default function AboutPage() {
                       number={num} 
                       aspectRatio="aspect-[3/4]"
                     />
-                  </div>
+              </div>
                   <div className="p-6 text-center">
                     <h3 className="text-xl font-bold">{`Dr. ${['Emma Wilson', 'Michael Chen', 'Sophia Rodriguez'][num-1]}`}</h3>
                     <p className="mb-4 text-primary">{['Lead Aesthetician', 'Skincare Specialist', 'Beauty Technologist'][num-1]}</p>
@@ -156,7 +156,7 @@ export default function AboutPage() {
             <div className="mb-12 text-center">
               <h2 className="font-serif text-3xl font-bold md:text-4xl">
                 Why Choose <span className="text-primary">Aura Beauty</span>
-              </h2>
+          </h2>
             </div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               <div className="flex items-start">
@@ -258,7 +258,7 @@ export default function AboutPage() {
             <Link href="/contact">
               <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium uppercase tracking-wide text-white hover:bg-primary/90">
                 Contact Us Today
-              </Button>
+            </Button>
             </Link>
           </div>
         </div>

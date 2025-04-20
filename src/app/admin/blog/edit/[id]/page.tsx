@@ -60,22 +60,32 @@ const categories = [
 ]
 
 export default function EditBlogPostPage() {
-  const params = useParams()
   const router = useRouter()
-  const postId = Number(params.id)
+  const params = useParams<{ id: string }>()
+  const postId = params.id
   
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string
+    slug: string
+    category: string
+    featuredImage: File | null
+    featuredImagePreview: string
+    content: string
+    metaDescription: string
+    publishDate: string
+    status: string
+  }>({
     title: '',
     slug: '',
-    category: '',
+    category: 'Treatments',
     featuredImage: null,
     featuredImagePreview: '',
     content: '',
     metaDescription: '',
-    publishDate: '',
-    status: 'Draft',
+    publishDate: new Date().toISOString().split('T')[0],
+    status: 'Draft'
   })
 
   // Fetch blog post data
@@ -110,14 +120,14 @@ export default function EditBlogPostPage() {
   }, [postId, router])
 
   // Handle input changes
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   // Handle image upload
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
       setFormData(prev => ({
         ...prev,
@@ -137,7 +147,7 @@ export default function EditBlogPostPage() {
   }
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // In a real application, you would send this data to your API
     console.log('Form submitted with data:', formData)
