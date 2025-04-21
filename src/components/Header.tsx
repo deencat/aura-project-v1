@@ -33,7 +33,6 @@ const menuData = [
     submenu: [
       { title: '2-in-1 Lymphatic Detox', href: '/body-care/lymphatic-detox' },
       { title: 'Breast Enhancement', href: '/body-care/breast-enhancement' },
-      { title: 'Milk Bubble Whitening', href: '/body-care/milk-bubble' },
       { title: 'Perfect Buttocks', href: '/body-care/perfect-buttocks' },
       { title: 'Full Body Hair Removal', href: '/body-care/hair-removal' },
       { title: 'Stretch Mark Repair', href: '/body-care/stretch-mark' },
@@ -49,7 +48,6 @@ const menuData = [
     href: '/whitening',
     submenu: [
       { title: 'Royal Black Scan', href: '/whitening/royal-black-scan' },
-      { title: 'Milk Bubble Whitening', href: '/whitening/milk-bubble' },
       { title: 'Collagen Whitening', href: '/whitening/collagen-whitening' },
     ]
   },
