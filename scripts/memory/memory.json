@@ -146,6 +146,67 @@
       ],
       "createdAt": "2025-04-19T17:25:28.235Z",
       "updatedAt": "2025-04-19T17:25:28.237Z"
+    },
+    "memory-system-conversation-1745203113772": {
+      "name": "memory-system-conversation-1745203113772",
+      "entityType": "conversation",
+      "observations": [
+        "Design Mode: In prototyping mode",
+        "Focused on frontend development with mock data",
+        "Using dummy JSON to represent data",
+        "Creating responsive UI components with navigation",
+        "Not connecting to backend logic"
+      ],
+      "createdAt": "2025-04-21T02:38:33.772Z",
+      "updatedAt": "2025-04-21T02:38:33.773Z"
+    },
+    "memory-system-conversation-1745203244292": {
+      "name": "memory-system-conversation-1745203244292",
+      "entityType": "conversation",
+      "observations": [
+        "Testing script functionality",
+        "Checking script compatibility",
+        "Identifying duplicate functionality"
+      ],
+      "createdAt": "2025-04-21T02:40:44.292Z",
+      "updatedAt": "2025-04-21T02:40:44.292Z"
+    },
+    "memory-system-conversation-1745203456717": {
+      "name": "memory-system-conversation-1745203456717",
+      "entityType": "conversation",
+      "observations": [
+        "Testing consolidated script",
+        "Automatic server startup",
+        "Fixed path handling"
+      ],
+      "createdAt": "2025-04-21T02:44:16.717Z",
+      "updatedAt": "2025-04-21T02:44:16.717Z"
+    },
+    "memory-system-conversation-1745203601686": {
+      "name": "memory-system-conversation-1745203601686",
+      "entityType": "conversation",
+      "observations": [
+        "Updated memory system to accept conversation observations via command line",
+        "Fixed the UI utils module for shadcn components",
+        "Created a proper memory recording system that captures specific conversation details",
+        "Improved developer experience with better memory system feedback",
+        "Date: 2025-04-21"
+      ],
+      "createdAt": "2025-04-21T02:46:41.686Z",
+      "updatedAt": "2025-04-21T02:46:41.686Z"
+    },
+    "memory-system-conversation-1745203664927": {
+      "name": "memory-system-conversation-1745203664927",
+      "entityType": "conversation",
+      "observations": [
+        "Created consolidated add-conversation.js script to replace multiple scripts",
+        "Fixed path handling for directories with spaces",
+        "Updated add-latest-conversation.js to use the new script",
+        "Created documentation for memory script cleanup",
+        "Added new npm script memory-add to package.json"
+      ],
+      "createdAt": "2025-04-21T02:47:44.927Z",
+      "updatedAt": "2025-04-21T02:47:44.927Z"
     }
   },
   "relations": []

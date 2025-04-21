@@ -1,16 +1,12 @@
 /**
  * Add Latest Conversation Memory Script
  * 
- * This script ensures the memory server is running and then adds
- * a new memory entity for the current conversation with specific
+ * This script adds a new memory entity for the current conversation with specific
  * observations about what was discussed or accomplished.
  * 
  * Usage:
  * node add-latest-conversation.js
  */
-
-const { execSync } = require('child_process');
-const path = require('path');
 
 async function addLatestConversation() {
   console.log('Adding latest conversation to memory...');
@@ -24,17 +20,21 @@ async function addLatestConversation() {
     'Date: ' + new Date().toISOString().split('T')[0]
   ];
   
-  // Format observations for the command line
-  const observationArgs = observations.map(obs => `"${obs}"`).join(' ');
-  
-  // First ensure the memory server is running
   try {
-    console.log('Ensuring memory server is running...');
-    execSync('node scripts/memory/ensure-memory-running.js', { stdio: 'inherit' });
-    
-    // Now add the conversation with observations
+    // Import the add-conversation module directly instead of executing it as a separate process
+    // This avoids path issues with spaces in directory names
     console.log('\nAdding conversation to memory...');
-    execSync(`node scripts/memory/add-conversation-memory.js ${observationArgs}`, { stdio: 'inherit' });
+    
+    // Get the function from our consolidated script
+    const { addConversationMemory } = require('./add-conversation');
+    
+    // Call the function directly with our observations
+    global._directObservations = observations;
+    
+    await addConversationMemory();
+    
+    // Clean up the global variable
+    delete global._directObservations;
     
     console.log('\n✅ Latest conversation successfully added to memory');
   } catch (error) {

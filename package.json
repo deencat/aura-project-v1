@@ -21,6 +21,7 @@
     "memory-add-latest": "node scripts/memory/add-latest-conversation.js",
     "memory-ensure": "node scripts/memory/ensure-memory-running.js",
     "memory-verify": "node scripts/memory/verify-memory-system.js",
+    "memory-add": "node scripts/memory/add-conversation.js",
     "download-fonts": "node scripts/download-fonts.js"
   },
   "dependencies": {

@@ -18,7 +18,9 @@ const fs = require('fs');
 async function ensureMemoryServerRunning() {
   try {
     console.log('Ensuring memory server is running...');
-    execSync('node ' + path.join(__dirname, 'ensure-memory-running.js'), { stdio: 'inherit' });
+    // Use the current working directory to resolve the path correctly
+    const scriptPath = path.join(process.cwd(), 'scripts', 'memory', 'ensure-memory-running.js');
+    execSync('node ' + scriptPath, { stdio: 'inherit' });
     return true;
   } catch (error) {
     console.error('❌ Failed to start memory server:', error.message);
