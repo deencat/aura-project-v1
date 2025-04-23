@@ -12,12 +12,11 @@ const treatments = [
   { id: 5, title: 'Farewell Puffy', slug: 'farewell-puffy', description: 'Say goodbye to facial puffiness and bloating with this specialized treatment.' },
   { id: 6, title: 'Ultimate Stemcell Hydrating Repair', slug: 'ultimate-stemcell-hydrating-repair', description: 'Advanced stem cell therapy that provides deep hydration and repairs damaged skin cells for ultimate rejuvenation.' },
   { id: 7, title: 'Ceramic Skin Renewal', slug: 'ceramic-skin-renewal', description: 'Achieve a flawless, porcelain-like complexion with this premium treatment.' },
-  { id: 8, title: 'Crystal Micro-Needling', slug: 'crystal-needling', description: 'Advanced micro-needling enhanced with crystal technology for superior results.' },
-  { id: 9, title: 'Radiant Defense Synergy', slug: 'radiant-defense-synergy', description: 'Innovative combination of Resveratrol and Immune Probiotics that purifies, strengthens, and defends your skin for a naturally radiant complexion.' },
-  { id: 10, title: 'Baby Face Contouring', slug: 'baby-face', description: 'Sculpt and define facial contours while maintaining a youthful appearance.' },
-  { id: 11, title: 'Laser Treatment', slug: 'laser-treatment', description: 'Transform your skin with our advanced laser treatments targeting wrinkles, scars, pigmentation, and more with precision and minimal downtime.' },
-  { id: 12, title: 'Mole, Wart & Skin Growth Removal', slug: 'mole-wart-removal', description: 'Advanced laser technology for precise removal of moles, warts, and skin growths with minimal scarring and downtime.' },
-  { id: 13, title: 'New Doublo', slug: 'new-doublo', description: 'Advanced ultrasound technology that lifts and tightens skin by targeting deeper layers for natural-looking rejuvenation without surgery.' },
+  { id: 8, title: 'Radiant Defense Synergy', slug: 'radiant-defense-synergy', description: 'Innovative combination of Resveratrol and Immune Probiotics that purifies, strengthens, and defends your skin for a naturally radiant complexion.' },
+  { id: 9, title: 'Baby Face Contouring', slug: 'baby-face', description: 'Sculpt and define facial contours while maintaining a youthful appearance.' },
+  { id: 10, title: 'Laser Treatment', slug: 'laser-treatment', description: 'Transform your skin with our advanced laser treatments targeting wrinkles, scars, pigmentation, and more with precision and minimal downtime.' },
+  { id: 11, title: 'Mole, Wart & Skin Growth Removal', slug: 'mole-wart-removal', description: 'Advanced laser technology for precise removal of moles, warts, and skin growths with minimal scarring and downtime.' },
+  { id: 12, title: 'New Doublo', slug: 'new-doublo', description: 'Advanced ultrasound technology that lifts and tightens skin by targeting deeper layers for natural-looking rejuvenation without surgery.' },
 ]
 
 export default function TreatmentsPage() {

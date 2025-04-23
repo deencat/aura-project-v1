@@ -116,6 +116,7 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Created "Goddess Curves" (Breast Enhancement) page with detailed content about the cellular breast vitality treatment
 - Created "Hair Removal" page with comprehensive content and image carousel
 - Added placeholder images for various treatments with correct naming conventions
+- Removed "Crystal Micro-Needling" page and all related navigation references from the site
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages

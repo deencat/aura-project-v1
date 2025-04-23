@@ -21,7 +21,6 @@ const premiumTreatments = [
   { title: 'Farewell Puffy Face', href: '/treatments/farewell-puffy', description: 'Reduces facial puffiness and bloating' },
   { title: 'Ultimate Stemcell Hydrating Repair', href: '/treatments/ultimate-stemcell-hydrating-repair', description: 'Deep hydration and cellular regeneration for dehydrated skin' },
   { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal', description: 'Achieve a flawless, porcelain-like complexion' },
-  { title: 'Crystal Micro-Needling', href: '/treatments/crystal-needling', description: 'Advanced micro-needling with crystal technology' },
   { title: 'Mole, Wart & Skin Growth Removal', href: '/treatments/mole-wart-removal', description: 'Precision laser technology for removal of moles, warts, and skin growths' },
   { title: 'Radiant Defense Synergy Treatment', href: '/treatments/radiant-defense-synergy', description: 'Revolutionary combination of Resveratrol and Probiotics for flawless, lit-from-within skin' },
   { title: 'New Doublo™', href: '/treatments/new-doublo', description: 'World\'s first dual-action MFU and 4RF technology for instant lifting and sculpting results' },

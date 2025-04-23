@@ -216,8 +216,7 @@ export default function PlaceholderImage({
         '360 Smart Rescue',
         'Farewell Puffy Face',
         'Ultimate Stemcell Hydrating Repair',
-        'Ceramic Skin Renewal',
-        'Crystal Micro-Needling'
+        'Ceramic Skin Renewal'
       ];
       
       return number <= treatmentLabels.length ? treatmentLabels[number - 1] : 'Treatment';

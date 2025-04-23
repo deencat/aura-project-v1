@@ -21,7 +21,6 @@ const menuData = [
       { title: 'Farewell Puffy Face', href: '/treatments/farewell-puffy' },
       { title: 'Ultimate Stemcell Hydrating Repair', href: '/treatments/ultimate-stemcell-hydrating-repair' },
       { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal' },
-      { title: 'Crystal Micro-Needling', href: '/treatments/crystal-needling' },
       { title: 'Mole, Wart & Skin Growth Removal', href: '/treatments/mole-wart-removal' },
       { title: 'Radiant Defense Synergy Treatment', href: '/treatments/radiant-defense-synergy' },
       { title: 'New Doublo™', href: '/treatments/new-doublo' },
