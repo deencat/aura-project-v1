@@ -1,17 +1,11 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
-import { cn } from '@/lib/utils'
+import { ChevronDown, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const premiumTreatments = [
   { title: 'Royal Black Scan', href: '/treatments/royal-black-scan', description: 'Advanced technology for spots, pigmentation, and blemishes' },
@@ -49,235 +43,104 @@ const cellBeautyTreatments = [
   { title: 'Cellular Detox', href: '/cell-beauty/cellular-detox', description: 'Removes cellular toxins to enhance skin health' },
 ]
 
-const hairCareServices = [
-  { title: 'Hair Moisturizing', href: '/hair-care/hair-moisturizing', description: 'Deep conditioning for dry, damaged hair' },
-  { title: 'Scalp Treatment', href: '/hair-care/scalp-treatment', description: 'Promotes healthier hair growth' },
-  { title: 'Keratin Treatment', href: '/hair-care/keratin-treatment', description: 'Eliminates frizz and adds shine' },
-  { title: 'Hair Color Refresh', href: '/hair-care/hair-color-refresh', description: 'Enhances vibrancy and protects from fading' },
-]
-
 export function MainNavigation() {
   const pathname = usePathname()
+  const [activeItem, setActiveItem] = useState<string | null>(null)
+
+  const handleMouseEnter = (title: string) => {
+    setActiveItem(title)
+  }
+
+  const handleMouseLeave = () => {
+    setActiveItem(null)
+  }
+
+  const mainMenuItems = [
+    { title: 'Home', href: '/' },
+    { 
+      title: 'Premium Beauty', 
+      href: '/treatments',
+      submenu: premiumTreatments
+    },
+    { 
+      title: 'Body Care', 
+      href: '/body-care',
+      submenu: bodyCareServices
+    },
+    { 
+      title: 'Facial Services', 
+      href: '/facial',
+      submenu: facialFilters
+    },
+    {
+      title: 'Cell Beauty',
+      href: '/cell-beauty',
+      submenu: cellBeautyTreatments
+    },
+    { title: 'About', href: '/about' },
+    { title: 'Contact', href: '/contact' },
+  ]
 
   return (
-    <div className="container flex h-16 items-center">
-      <div className="mr-4 flex">
+    <div className="container flex h-16 items-center px-0">
+      <div className="mr-8 flex">
         <Link href="/" className="font-serif text-2xl font-bold">
           <span className="mr-1">Aura</span>
           <span className="text-primary">Beauty</span>
         </Link>
       </div>
 
-      <NavigationMenu className="hidden md:flex">
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
-              <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
-                active={pathname === '/'}
+      <div className="hidden flex-1 items-center justify-between md:flex">
+        <nav className="flex space-x-1">
+          {mainMenuItems.map((item) => (
+            <div
+              key={item.title}
+              className="relative"
+              onMouseEnter={() => item.submenu && handleMouseEnter(item.title)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Link 
+                href={item.href}
+                className={cn(
+                  "flex items-center px-3 py-2 text-sm font-medium transition-colors",
+                  pathname === item.href ? "text-primary" : "text-gray-700 hover:text-primary",
+                )}
               >
-                Home
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+                {item.title}
+                {item.submenu && <ChevronDown className="ml-1 h-4 w-4" />}
+              </Link>
 
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Premium Beauty Treatments</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2 lg:w-[700px]">
-                {premiumTreatments.map((treatment) => (
-                  <ListItem
-                    key={treatment.title}
-                    title={treatment.title}
-                    href={treatment.href}
-                  >
-                    {treatment.description}
-                  </ListItem>
-                ))}
-                <div className="col-span-2 mt-4 border-t pt-4">
-                  <Link href="/treatments" className="text-sm font-medium text-primary">
-                    View all treatments →
-                  </Link>
-                </div>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Body Care</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2 lg:w-[700px]">
-                {bodyCareServices.map((service) => (
-                  <ListItem
-                    key={service.title}
-                    title={service.title}
-                    href={service.href}
-                  >
-                    {service.description}
-                  </ListItem>
-                ))}
-                <div className="col-span-2 mt-4 border-t pt-4">
-                  <Link href="/body-care" className="text-sm font-medium text-primary">
-                    View all body care treatments →
-                  </Link>
-                </div>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Facial Services</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-3 lg:w-[700px]">
-                <li className="col-span-1 row-span-3">
-                  <NavigationMenuLink asChild>
-                    <a
-                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-primary/50 to-primary p-6 no-underline outline-none focus:shadow-md"
-                      href="/facial"
-                    >
-                      <div className="mb-2 mt-4 text-lg font-medium text-white">
-                        Facial Treatments
-                      </div>
-                      <p className="text-sm leading-tight text-white/90">
-                        Advanced facial therapies for radiant, youthful skin
-                      </p>
-                    </a>
-                  </NavigationMenuLink>
-                </li>
-                <li className="col-span-2 row-span-1">
-                  <div className="mb-2 mt-4 text-lg font-medium">AI Facial Filters</div>
-                </li>
-                {facialFilters.map((filter) => (
-                  <ListItem
-                    key={filter.title}
-                    title={filter.title}
-                    href={filter.href}
-                  >
-                    {filter.description}
-                  </ListItem>
-                ))}
-                <div className="col-span-3 mt-4 border-t pt-4">
-                  <div className="flex justify-between">
-                    <Link href="/facial" className="text-sm font-medium text-primary">
-                      View all facial treatments →
-                    </Link>
-                    <Link href="/facial-filters" className="text-sm font-medium text-primary">
-                      View all AI filters →
-                    </Link>
+              {item.submenu && activeItem === item.title && (
+                <div className="absolute left-0 top-full z-50 mt-1 min-w-[240px] origin-top-left rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 transition">
+                  <div className="grid grid-cols-1 gap-2 p-2">
+                    {item.submenu.map((subItem) => (
+                      <Link
+                        key={subItem.title}
+                        href={subItem.href}
+                        className="rounded-md px-3 py-2 text-sm hover:bg-gray-50 hover:text-primary"
+                      >
+                        <div className="font-medium">{subItem.title}</div>
+                        <p className="mt-1 text-xs text-gray-500">{subItem.description}</p>
+                      </Link>
+                    ))}
                   </div>
                 </div>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+              )}
+            </div>
+          ))}
+        </nav>
 
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Specialized Services</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2 lg:w-[700px]">
-                <div className="col-span-2 mb-2">
-                  <div className="mb-2 text-lg font-medium text-primary">Cell Beauty Technology</div>
-                  <p className="text-sm text-gray-600">Cutting-edge cellular-level treatments that transform your skin at its fundamental level</p>
-                </div>
-                {cellBeautyTreatments.map((treatment) => (
-                  <ListItem
-                    key={treatment.title}
-                    title={treatment.title}
-                    href={treatment.href}
-                  >
-                    {treatment.description}
-                  </ListItem>
-                ))}
-                <div className="col-span-2 mt-4 border-t pt-4 mb-4">
-                  <Link href="/cell-beauty" className="text-sm font-medium text-primary">
-                    View all cell beauty treatments →
-                  </Link>
-                </div>
-
-                <div className="col-span-2 mb-2">
-                  <div className="mb-2 text-lg font-medium text-primary">Hair Care</div>
-                  <p className="text-sm text-gray-600">Luxurious treatments to restore health, shine, and beauty to every strand</p>
-                </div>
-                {hairCareServices.map((service) => (
-                  <ListItem
-                    key={service.title}
-                    title={service.title}
-                    href={service.href}
-                  >
-                    {service.description}
-                  </ListItem>
-                ))}
-                <div className="col-span-2 mt-4 border-t pt-4">
-                  <Link href="/hair-care" className="text-sm font-medium text-primary">
-                    View all hair care services →
-                  </Link>
-                </div>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <Link href="/about" legacyBehavior passHref>
-              <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
-                active={pathname === '/about'}
-              >
-                About
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <Link href="/contact" legacyBehavior passHref>
-              <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
-                active={pathname === '/contact'}
-              >
-                Contact
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-
-      <div className="ml-auto flex items-center space-x-4">
-        <Link href="/contact" className="hidden sm:block">
-          <Button size="sm" className="rounded-full bg-primary hover:bg-primary/90">
-            Book Now
-          </Button>
-        </Link>
-        <div className="block md:hidden">
-          <Button variant="ghost" size="icon" className="text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-          </Button>
+        <div className="flex items-center space-x-4">
+          <button className="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-primary">
+            <Search className="h-5 w-5" />
+          </button>
+          <Link href="/contact">
+            <Button size="sm" className="rounded-full bg-primary hover:bg-primary/90">
+              Book Now
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
   )
-}
-
-const ListItem = React.forwardRef<
-  React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'>
->(({ className, title, children, href, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          href={href}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  )
-})
-ListItem.displayName = "ListItem" 
+} 

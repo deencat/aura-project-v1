@@ -117,6 +117,7 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Created "Hair Removal" page with comprehensive content and image carousel
 - Added placeholder images for various treatments with correct naming conventions
 - Removed "Crystal Micro-Needling" page and all related navigation references from the site
+- Redesigned Header and main navigation components with a cleaner, modern approach inspired by EstheClinic's website design
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages
