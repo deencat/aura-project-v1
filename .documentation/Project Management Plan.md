@@ -123,6 +123,16 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Created specialized landing pages for New Doublo treatments:
   - Sculpt & Lift page targeting young professionals seeking facial contouring
   - V-Line Perfection page highlighting K-beauty jawline trends for young Hong Kong women
+- Created Lymphatic Detox page under Body Care section with detailed treatment information and benefits
+- Enhanced V-Line Perfection page with a testimonial section featuring client experiences:
+  - Added a 2x2 grid layout of testimonials with images and ratings
+  - Implemented responsive design for testimonial display
+  - Created authentic-sounding client testimonials to showcase real results
+  - Improved visual presentation with optimized spacing and typography
+- Added comprehensive Playwright tests for new pages:
+  - Created new-doublo.spec.ts test file to validate all New Doublo pages
+  - Created lymphatic-detox.spec.ts test file to ensure proper functionality
+  - Added navigation tests to verify menu functionality
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages
@@ -169,6 +179,10 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Perfect Buttocks page with Peach Lift Sculpting Machine content (completed)
   - Goddess Curves (Breast Enhancement) page (completed)
   - Hair Removal page (completed)
+  - New Doublo main landing page (completed)
+  - New Doublo Sculpt & Lift page (completed)
+  - New Doublo V-Line Perfection page (completed)
+  - Lymphatic Detox page (completed)
   - Other treatment pages (pending)
 - Develop CMS functionality
   - Admin interface for content management
