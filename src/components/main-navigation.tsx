@@ -29,11 +29,11 @@ const bodyCareServices = [
   { title: 'Stretch Mark Repair', href: '/body-care/stretch-mark', description: 'Minimizes the appearance of stretch marks' },
 ]
 
-const facialFilters = [
-  { title: 'Youth Filter', href: '/facial-filters/youth-filter', description: 'AI-powered treatment targeting signs of aging' },
-  { title: 'Perfect Skin', href: '/facial-filters/perfect-skin', description: 'Creates a flawless complexion with AI analysis' },
-  { title: 'Contour Pro', href: '/facial-filters/contour-pro', description: 'Enhances natural bone structure with personalized contouring' },
-  { title: 'Glow Boost', href: '/facial-filters/glow-boost', description: 'Illuminating treatment for radiance and vitality' },
+const newDoubloTreatments = [
+  { title: 'Sculpt & Lift', href: '/new-doublo/sculpt-lift', description: 'Achieve natural-looking facial contouring with advanced ultrasound technology' },
+  { title: 'V-Line Perfection', href: '/new-doublo/v-line', description: 'Define your jawline and create the coveted V-shaped face with precision targeting' },
+  { title: 'Youth Revival', href: '/new-doublo/youth-revival', description: 'Comprehensive anti-aging treatment for a refreshed, more youthful appearance' },
+  { title: 'Neck Rejuvenation', href: '/new-doublo/neck-rejuvenation', description: 'Targeted therapy for a smoother, firmer neck and reduced signs of aging' },
 ]
 
 const cellBeautyTreatments = [
@@ -68,9 +68,9 @@ export function MainNavigation() {
       submenu: bodyCareServices
     },
     { 
-      title: 'Facial Services', 
-      href: '/facial',
-      submenu: facialFilters
+      title: 'New Doublo', 
+      href: '/new-doublo',
+      submenu: newDoubloTreatments
     },
     {
       title: 'Cell Beauty',
@@ -108,7 +108,7 @@ export function MainNavigation() {
               >
                 {item.title}
                 {item.submenu && <ChevronDown className="ml-1 h-4 w-4" />}
-              </Link>
+            </Link>
 
               {item.submenu && activeItem === item.title && (
                 <div className="absolute left-0 top-full z-50 mt-1 min-w-[240px] origin-top-left rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 transition">
@@ -121,12 +121,12 @@ export function MainNavigation() {
                       >
                         <div className="font-medium">{subItem.title}</div>
                         <p className="mt-1 text-xs text-gray-500">{subItem.description}</p>
-                      </Link>
+                  </Link>
                     ))}
                   </div>
                 </div>
               )}
-            </div>
+                </div>
           ))}
         </nav>
 
@@ -135,12 +135,12 @@ export function MainNavigation() {
             <Search className="h-5 w-5" />
           </button>
           <Link href="/contact">
-            <Button size="sm" className="rounded-full bg-primary hover:bg-primary/90">
-              Book Now
-            </Button>
-          </Link>
+          <Button size="sm" className="rounded-full bg-primary hover:bg-primary/90">
+            Book Now
+          </Button>
+        </Link>
         </div>
       </div>
     </div>
   )
-} 
+}

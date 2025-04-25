@@ -88,6 +88,34 @@
   }
 }
 
+@layer components {
+  /* Header styles for better navigation */
+  .main-nav {
+    @apply flex items-center justify-between w-full px-4;
+  }
+
+  .main-nav-item {
+    @apply relative flex items-center whitespace-nowrap;
+  }
+
+  .main-nav-link {
+    @apply px-3 py-4 text-sm font-medium transition-colors whitespace-nowrap hover:text-primary relative; 
+  }
+
+  .main-nav-submenu {
+    @apply absolute left-0 top-full z-50 w-full min-w-[240px] bg-white shadow-lg py-3 border-t-2 border-primary;
+  }
+
+  .main-nav-submenu-item {
+    @apply block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary whitespace-nowrap;
+  }
+
+  /* Mobile nav styles */
+  .mobile-nav-trigger {
+    @apply flex justify-between items-center w-full py-2 text-gray-800;
+  }
+}
+
 @layer utilities {
   /* Fade in animation classes */
   .animate-fade-in {
@@ -104,7 +132,7 @@
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
@@ -118,5 +146,44 @@
     background-repeat: repeat;
     background-size: 800px;
     background-position: center;
+  }
+
+  /* Add ping-slow animation for ResultsGraph */
+  .animate-ping-slow {
+    animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* Hover underline animation */
+  .hover-underline-animation {
+    position: relative;
+  }
+  
+  .hover-underline-animation::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: theme('colors.primary.DEFAULT');
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+  
+  .hover-underline-animation:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
   }
 } 

@@ -118,6 +118,11 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Added placeholder images for various treatments with correct naming conventions
 - Removed "Crystal Micro-Needling" page and all related navigation references from the site
 - Redesigned Header and main navigation components with a cleaner, modern approach inspired by EstheClinic's website design
+- Replaced AI Facial menu with New Doublo menu in the navigation structure
+- Created comprehensive main New Doublo landing page with treatment options, technology explanations, and marketing content
+- Created specialized landing pages for New Doublo treatments:
+  - Sculpt & Lift page targeting young professionals seeking facial contouring
+  - V-Line Perfection page highlighting K-beauty jawline trends for young Hong Kong women
 
 ### Pending Tasks (Prioritized)
 1. Create remaining individual treatment pages

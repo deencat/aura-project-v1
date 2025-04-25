@@ -1,70 +1,116 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('New Doublo™ Treatment Page', () => {
-  test('page loads correctly with all essential elements', async ({ page }) => {
-    // Navigate to the New Doublo page
-    await page.goto('/treatments/new-doublo');
-
-    // Verify page title
-    const pageTitle = await page.locator('h1:has-text("New Doublo™")');
-    await expect(pageTitle).toBeVisible();
+test.describe('New Doublo Pages', () => {
+  test('main New Doublo page loads successfully with key elements', async ({ page }) => {
+    // Navigate to the main New Doublo page
+    await page.goto('/new-doublo');
     
-    // Verify subtitle
-    await expect(page.locator('h1 span.text-primary:has-text("Patented, World-First SD Synergy Lifting")')).toBeVisible();
-
-    // Check for hero section
-    await expect(page.locator('section').first()).toBeVisible();
+    // Check page title is visible
+    await expect(page.getByRole('heading', { name: /Meet The New Doublo™ HIFU/i })).toBeVisible();
     
-    // Check for treatment tags - should have 5 tags
-    await expect(page.locator('.mt-6.flex.flex-wrap.gap-3')).toBeVisible();
-    const tags = await page.locator('.inline-block.bg-primary\\/10.text-primary.rounded-full');
-    await expect(tags).toHaveCount(5);
+    // Check that the hero section has the dark background image
+    const heroImageSelector = 'section div img[src*="new-doublo-hero.jpg"]';
+    await expect(page.locator(heroImageSelector).first()).toBeVisible();
     
-    // Check for Book Now button
-    const bookButton = await page.locator('a:has-text("Book Now")');
-    await expect(bookButton).toBeVisible();
+    // Check that the booking button is visible
+    await expect(page.getByRole('link', { name: /Book Consultation/i })).toBeVisible();
     
-    // Check for "Why Choose" section
-    const whyChooseTitle = await page.locator('h2:has-text("Why Choose")');
-    await expect(whyChooseTitle).toBeVisible();
+    // Check that the technology section is visible
+    await expect(page.getByRole('heading', { name: /World's First Dual-Action Technology/i })).toBeVisible();
     
-    // Check for specific benefits
-    await expect(page.locator('h3:has-text("Double Lifting Power")')).toBeVisible();
-    await expect(page.locator('h3:has-text("Patented SD Technology")')).toBeVisible();
-    await expect(page.locator('h3:has-text("Fully Customizable")')).toBeVisible();
-    await expect(page.locator('h3:has-text("Zero Downtime")')).toBeVisible();
+    // Check that the treatments section is visible
+    await expect(page.getByRole('heading', { name: /Sculpt Your Perfect Look/i })).toBeVisible();
     
-    // Check for "Who is New Doublo™ Perfect For?" section
-    const idealCandidatesTitle = await page.locator('h2:has-text("Who is")');
-    await expect(idealCandidatesTitle).toBeVisible();
+    // Verify all four treatment options are shown
+    const treatmentOptions = [
+      'Sculpt & Lift',
+      'V-Line Perfection',
+      'Youth Revival',
+      'Neck Rejuvenation'
+    ];
     
-    // Check for "Experience Visible Results" section
-    const resultsTitle = await page.locator('h2:has-text("Experience")');
-    await expect(resultsTitle).toBeVisible();
-    
-    // Check for FAQ section
-    const faqTitle = await page.locator('h2:has-text("Frequently Asked")');
-    await expect(faqTitle).toBeVisible();
-    
-    // Check for booking section at the bottom
-    const bookingTitle = await page.locator('h2:has-text("Ready for")');
-    await expect(bookingTitle).toBeVisible();
-    const bookingButton = await page.locator('a:has-text("Book Your Treatment")');
-    await expect(bookingButton).toBeVisible();
+    for (const treatment of treatmentOptions) {
+      await expect(page.getByText(treatment, { exact: true })).toBeVisible();
+    }
   });
-
-  test('page navigation works correctly from treatments page', async ({ page }) => {
-    // Navigate to the treatments page
-    await page.goto('/treatments');
+  
+  test('Sculpt & Lift page loads successfully', async ({ page }) => {
+    // Navigate to the Sculpt & Lift page
+    await page.goto('/new-doublo/sculpt-lift');
     
-    // Find and click on the New Doublo card
-    await page.locator('h3:has-text("New Doublo™")').click();
+    // Check the page title is visible
+    await expect(page.getByRole('heading', { name: /Experience The Next Level In Non-Surgical Lifting/i })).toBeVisible();
     
-    // Verify we're on the correct page
-    await expect(page).toHaveURL(/.*\/treatments\/new-doublo/);
+    // Check that the hero section has the dark background image
+    const heroImageSelector = 'section div img[src*="new-doublo-hero.jpg"]';
+    await expect(page.locator(heroImageSelector).first()).toBeVisible();
     
-    // Verify the page title is visible
-    const pageTitle = await page.locator('h1:has-text("New Doublo™")');
-    await expect(pageTitle).toBeVisible();
+    // Check the booking button is visible
+    await expect(page.getByRole('link', { name: /BOOK YOUR CONSULTATION NOW/i })).toBeVisible();
+    
+    // Check that the benefits section is present
+    await expect(page.getByRole('heading', { name: /Why Choose Sculpt & Lift/i })).toBeVisible();
+    
+    // Check that the treatment details section is present
+    await expect(page.getByRole('heading', { name: /How It Works/i })).toBeVisible();
+    
+    // Check that the pricing section is present
+    await expect(page.getByText(/Limited Time Offer/i)).toBeVisible();
+  });
+  
+  test('V-Line Perfection page loads successfully', async ({ page }) => {
+    // Navigate to the V-Line page
+    await page.goto('/new-doublo/v-line');
+    
+    // Check the page title is visible
+    await expect(page.getByRole('heading', { name: /V-Line Perfection/i })).toBeVisible();
+    
+    // Check that the hero section has the correct dark background image
+    const heroImageSelector = 'section div img[src*="new-doublo-hero-1.jpg"]';
+    await expect(page.locator(heroImageSelector).first()).toBeVisible();
+    
+    // Check the booking button is visible
+    await expect(page.getByRole('link', { name: /Get Your V-Line/i })).toBeVisible();
+    
+    // Check that the benefits section is present
+    await expect(page.getByRole('heading', { name: /Why Everyone Wants the V-Line/i })).toBeVisible();
+    
+    // Check that the how it works section is present
+    await expect(page.getByRole('heading', { name: /How V-Line Works/i })).toBeVisible();
+    
+    // Check that the testimonial is present with the new design
+    await expect(page.getByText(/My jawline has never looked better/i)).toBeVisible();
+    await expect(page.getByText(/Verified Client/i)).toBeVisible();
+    
+    // Check that the special offer section is present
+    await expect(page.getByText(/Limited Time Offer/i)).toBeVisible();
+  });
+  
+  test('navigation from homepage to New Doublo pages', async ({ page }) => {
+    // Start from the homepage
+    await page.goto('/');
+    
+    // Navigate to the New Doublo section via the navigation menu
+    await page.getByRole('link', { name: /New Doublo/i }).first().hover();
+    
+    // Click on the Sculpt & Lift option in the dropdown
+    await page.getByRole('link', { name: /Sculpt & Lift/i }).click();
+    
+    // Verify we're on the Sculpt & Lift page
+    await expect(page).toHaveURL(/.*\/new-doublo\/sculpt-lift/);
+    await expect(page.getByRole('heading', { name: /Experience The Next Level/i })).toBeVisible();
+    
+    // Navigate back to the homepage
+    await page.goto('/');
+    
+    // Navigate to the New Doublo section again
+    await page.getByRole('link', { name: /New Doublo/i }).first().hover();
+    
+    // Click on the V-Line Perfection option
+    await page.getByRole('link', { name: /V-Line Perfection/i }).click();
+    
+    // Verify we're on the V-Line page
+    await expect(page).toHaveURL(/.*\/new-doublo\/v-line/);
+    await expect(page.getByRole('heading', { name: /V-Line Perfection/i })).toBeVisible();
   });
 }); 
