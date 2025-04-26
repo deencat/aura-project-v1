@@ -233,6 +233,32 @@
       ],
       "createdAt": "2025-04-25T14:44:51.543Z",
       "updatedAt": "2025-04-25T14:44:51.544Z"
+    },
+    "memory-system-conversation-1745633706850": {
+      "name": "memory-system-conversation-1745633706850",
+      "entityType": "conversation",
+      "observations": [
+        "Created Youth Revival page with professional marketing content",
+        "Used Anne Marie Laboratoire's New Doublo marketing as reference for conversion-focused layout",
+        "Added compelling sections addressing customer pain points and objections",
+        "Implemented strategic pricing presentation with clear value proposition",
+        "Updated Project Management Plan to include the completion of the Youth Revival page"
+      ],
+      "createdAt": "2025-04-26T02:15:06.850Z",
+      "updatedAt": "2025-04-26T02:15:06.851Z"
+    },
+    "memory-system-conversation-1745635520785": {
+      "name": "memory-system-conversation-1745635520785",
+      "entityType": "conversation",
+      "observations": [
+        "Created comprehensive Neck Rejuvenation landing page with professional marketing content",
+        "Implemented targeted content addressing 'tech neck' and specific neck aging concerns",
+        "Added strategic pricing presentation with 52% savings incentive",
+        "Developed before/after comparison section and expert testimonial for credibility",
+        "Updated Project Management Plan to include completion of the Neck Rejuvenation page"
+      ],
+      "createdAt": "2025-04-26T02:45:20.785Z",
+      "updatedAt": "2025-04-26T02:45:20.787Z"
     }
   },
   "relations": []
