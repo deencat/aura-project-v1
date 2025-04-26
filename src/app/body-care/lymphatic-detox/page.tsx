@@ -79,9 +79,11 @@ export default function LymphaticDetoxPage() {
                 <p className="text-gray-600 leading-relaxed mb-8 max-w-xl">
                   Urban life means stress, long hours sitting, and poor diet—leading to toxin buildup, swelling, fatigue, dull skin, and weakened immunity. Our Dual-Action Lymphatic Detox combines patented magnetic fork technology with expert manual techniques for deeper, faster results.
                 </p>
-                <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-md transition-colors">
-                  BOOK NOW
-                </button>
+                <Link href="/contact">
+                  <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-md transition-colors">
+                    BOOK NOW
+                  </button>
+                </Link>
               </div>
             </div>
             <div className="md:col-span-6 lg:col-span-7 relative">
