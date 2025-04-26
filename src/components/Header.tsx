@@ -36,7 +36,6 @@ const menuData = [
       { title: 'Perfect Buttocks', href: '/body-care/perfect-buttocks' },
       { title: 'Full Body Hair Removal', href: '/body-care/hair-removal' },
       { title: 'Stretch Mark Repair', href: '/body-care/stretch-mark' },
-      { title: 'Collagen Whitening', href: '/body-care/collagen-whitening' },
     ]
   },
   {
@@ -47,14 +46,6 @@ const menuData = [
       { title: 'V-Line Perfection', href: '/new-doublo/v-line' },
       { title: 'Youth Revival', href: '/new-doublo/youth-revival' },
       { title: 'Neck Rejuvenation', href: '/new-doublo/neck-rejuvenation' },
-    ]
-  },
-  {
-    title: 'Aura Whitening',
-    href: '/whitening',
-    submenu: [
-      { title: 'Royal Black Scan', href: '/whitening/royal-black-scan' },
-      { title: 'Collagen Whitening', href: '/whitening/collagen-whitening' },
     ]
   },
   {
