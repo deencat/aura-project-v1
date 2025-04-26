@@ -93,8 +93,8 @@ export default function EditBlogPostPage() {
     // Simulate API fetch with mock data
     const fetchPost = () => {
       setIsLoading(true)
-      // Find post by id
-      const post = mockPosts.find(post => post.id === postId)
+      // Find post by id - convert postId string to number for comparison
+      const post = mockPosts.find(post => post.id === parseInt(postId))
       
       if (post) {
         setFormData({

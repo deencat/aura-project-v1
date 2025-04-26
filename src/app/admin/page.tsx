@@ -10,7 +10,8 @@ import {
   Clock, 
   FileEdit,
   ArrowRight,
-  Pencil
+  Pencil,
+  MessageSquare
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
@@ -208,6 +209,18 @@ export default function AdminDashboard() {
                 <h3 className="text-lg font-medium">Create Promotion</h3>
                 <p className="mt-2 text-center text-sm text-gray-500">
                   Set up a new promotion or special offer
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link href="/admin/testimonials/new">
+            <Card className="h-full cursor-pointer transition-all hover:border-primary hover:shadow-md">
+              <CardContent className="flex flex-col items-center justify-center p-6">
+                <MessageSquare className="mb-4 h-8 w-8 text-primary" />
+                <h3 className="text-lg font-medium">Add Testimonial</h3>
+                <p className="mt-2 text-center text-sm text-gray-500">
+                  Create a new client testimonial for services
                 </p>
               </CardContent>
             </Card>

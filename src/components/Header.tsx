@@ -61,30 +61,29 @@ const menuData = [
 ]
 
 export default function Header() {
+  const [currentHover, setCurrentHover] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
-  const submenuTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [openMobileSubmenus, setOpenMobileSubmenus] = useState<string[]>([])
 
   const handleMouseEnter = (title: string) => {
-    if (submenuTimeoutRef.current) {
-      clearTimeout(submenuTimeoutRef.current)
-    }
-    setActiveSubmenu(title)
+    setCurrentHover(title)
   }
 
   const handleMouseLeave = () => {
-    submenuTimeoutRef.current = setTimeout(() => {
-      setActiveSubmenu(null)
-    }, 300)
+    setCurrentHover(null)
   }
 
-  useEffect(() => {
-    return () => {
-      if (submenuTimeoutRef.current) {
-        clearTimeout(submenuTimeoutRef.current)
-      }
-    }
-  }, [])
+  const toggleMobileSubmenu = (title: string) => {
+    setOpenMobileSubmenus(prev => 
+      prev.includes(title) 
+        ? prev.filter(item => item !== title) 
+        : [...prev, title]
+    )
+  }
+
+  const isMobileSubmenuOpen = (title: string) => {
+    return openMobileSubmenus.includes(title)
+  }
 
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-50">
@@ -180,7 +179,7 @@ export default function Header() {
                   <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
                 </Link>
                 
-                {item.submenu && activeSubmenu === item.title && (
+                {item.submenu && currentHover === item.title && (
                   <div className="absolute left-0 top-full z-50 mt-0 min-w-[240px] bg-white shadow-lg py-3 border-t-2 border-primary">
                     {item.submenu.map((subItem) => (
                       <Link 
@@ -243,46 +242,43 @@ export default function Header() {
         <div className="flex-1 overflow-y-auto py-4">
           <nav>
             <ul className="space-y-1 px-4">
-              {menuData.map((item) => {
-                const [isOpen, setIsOpen] = useState(false);
-                return (
-                  <li key={item.title} className="border-b border-gray-100 py-2">
-                    <div className="flex justify-between items-center">
-                      <Link
-                        href={item.href}
-                        className="block py-2 text-base font-medium"
-                        onClick={() => !item.submenu && setMobileMenuOpen(false)}
+              {menuData.map((item) => (
+                <li key={item.title} className="border-b border-gray-100 py-2">
+                  <div className="flex justify-between items-center">
+                    <Link
+                      href={item.href}
+                      className="block py-2 text-base font-medium"
+                      onClick={() => !item.submenu && setMobileMenuOpen(false)}
+                    >
+                      {item.title}
+                    </Link>
+                    {item.submenu && (
+                      <button
+                        onClick={() => toggleMobileSubmenu(item.title)}
+                        className="p-2 text-gray-600"
                       >
-                        {item.title}
-                      </Link>
-                      {item.submenu && (
-                        <button
-                          onClick={() => setIsOpen(!isOpen)}
-                          className="p-2 text-gray-600"
-                        >
-                          <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                        </button>
-                      )}
-                    </div>
-                    
-                    {item.submenu && isOpen && (
-                      <ul className="mt-2 space-y-1 pl-4 border-l-2 border-gray-100">
-                        {item.submenu.map((subItem) => (
-                          <li key={subItem.title}>
-                            <Link
-                              href={subItem.href}
-                              className="block py-2 text-sm text-gray-600 hover:text-primary"
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              {subItem.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                        <ChevronDown className={`h-5 w-5 transition-transform ${isMobileSubmenuOpen(item.title) ? 'rotate-180' : ''}`} />
+                      </button>
                     )}
-                  </li>
-                );
-              })}
+                  </div>
+                  
+                  {item.submenu && isMobileSubmenuOpen(item.title) && (
+                    <ul className="mt-2 space-y-1 pl-4 border-l-2 border-gray-100">
+                      {item.submenu.map((subItem) => (
+                        <li key={subItem.title}>
+                          <Link
+                            href={subItem.href}
+                            className="block py-2 text-sm text-gray-600 hover:text-primary"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {subItem.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
