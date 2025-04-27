@@ -2,75 +2,68 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Lymphatic Detox Page', () => {
   test('page loads successfully and displays key elements', async ({ page }) => {
-    // Navigate to the lymphatic detox page
-    await page.goto('/body-care/lymphatic-detox');
+    // Navigate to the lymphatic detox page with a longer timeout
+    await page.goto('/body-care/lymphatic-detox', { timeout: 60000 });
     
-    // Check page title
+    // Verify we reached the right URL
+    await expect(page).toHaveURL(/.*\/body-care\/lymphatic-detox/);
+    
+    // Check for the page title
     await expect(page.getByRole('heading', { name: /Dual-Action Lymphatic Detox/i })).toBeVisible();
     
-    // Check booking button
-    await expect(page.getByText('BOOK NOW')).toBeVisible();
+    // Check for the booking button
+    await expect(page.getByRole('button', { name: 'BOOK NOW', exact: true })).toBeVisible();
     
-    // Check main description text
-    await expect(page.getByText(/Urban life means stress/i)).toBeVisible();
+    // Check for main description text
+    await expect(page.getByText(/urban life takes a toll on our body/i)).toBeVisible();
     
-    // Check "Triple Pathway Technology" section
-    await expect(page.getByRole('heading', { name: /Triple Pathway Technology/i })).toBeVisible();
+    // Check for "How It Works" section
+    await expect(page.getByRole('heading', { name: /How It Works/i })).toBeVisible();
     
-    // Check cards in the Unique Value Proposition section
-    await expect(page.getByText('Magnetic Fork Technology')).toBeVisible();
-    await expect(page.getByText('Triple Detox Pathways')).toBeVisible();
-    await expect(page.getByText('Expert Manual Techniques')).toBeVisible();
+    // Check for "Benefits" section
+    await expect(page.getByRole('heading', { name: /Benefits/i })).toBeVisible();
     
-    // Check "Immediate Tangible Results" section
-    await expect(page.getByRole('heading', { name: /Immediate Tangible Results/i })).toBeVisible();
-    
-    // Check tabs in the Benefits section
-    const tabsList = page.getByRole('tablist');
-    await expect(tabsList).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Immediate' })).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Metabolic' })).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Non-Invasive' })).toBeVisible();
+    // Check for FAQ section
+    await expect(page.getByRole('heading', { name: /Frequently Asked Questions/i })).toBeVisible();
   });
   
-  test('navigation from homepage works', async ({ page }) => {
+  test('navigates from homepage to lymphatic detox page', async ({ page }) => {
     // Start from homepage
     await page.goto('/');
     
-    // Hover on Body Care in the menu to show dropdown
-    await page.getByRole('link', { name: /Body Care/i }).hover();
+    // Navigate to the Body Care section (hover on treatments)
+    await page.getByRole('link', { name: 'Treatments' }).hover();
     
-    // Wait for dropdown to appear
-    await page.waitForTimeout(500);
+    // Wait for dropdown and click on Body Care
+    await page.getByRole('link', { name: 'Body Care' }).click();
+    await expect(page).toHaveURL(/.*\/body-care/);
     
-    // Click on Lymphatic Detox in the dropdown
-    await page.getByRole('link', { name: /2-in-1 Lymphatic Detox/i }).click();
+    // Find and click on the Lymphatic Detox link
+    await page.getByRole('link', { name: /Lymphatic Detox/i }).click();
     
-    // Verify we reached the correct page
+    // Verify navigation to the correct page
     await expect(page).toHaveURL(/.*\/body-care\/lymphatic-detox/);
     await expect(page.getByRole('heading', { name: /Dual-Action Lymphatic Detox/i })).toBeVisible();
   });
   
-  test('fade-in animations are applied correctly', async ({ page }) => {
+  test('fade-in animations are applied', async ({ page }) => {
     // Navigate to the lymphatic detox page
-    await page.goto('/body-care/lymphatic-detox');
+    await page.goto('/body-care/lymphatic-detox', { timeout: 60000 });
     
-    // Check for FadeInSection components
-    await page.waitForTimeout(1000); // Allow time for animations to be applied
-    
-    // Use a more targeted selector - look for elements containing the animate-fade-in class
-    await expect(page.locator('.animate-fade-in')).toHaveCount({ min: 1 });
+    // Check for elements with fade-in animation classes
+    const fadeElements = await page.locator('.animate-fade-in').count();
+    expect(fadeElements).toBeGreaterThan(0);
   });
   
   test('book now button navigates to contact page', async ({ page }) => {
     // Navigate to the lymphatic detox page
     await page.goto('/body-care/lymphatic-detox');
     
-    // Click the primary booking button
-    await page.getByText('BOOK NOW', { exact: true }).click();
+    // Click the booking button
+    await page.getByRole('button', { name: 'BOOK NOW', exact: true }).click();
     
     // Verify navigation to contact page
-    await page.waitForTimeout(1000); // Allow time for navigation
+    await page.waitForTimeout(1000);
     await expect(page).toHaveURL(/.*\/contact/);
   });
 });

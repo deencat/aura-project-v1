@@ -120,7 +120,7 @@ export default function EditBlogPostPage() {
   }, [postId, router])
 
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
@@ -147,8 +147,10 @@ export default function EditBlogPostPage() {
   }
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+    if (e.type === 'submit') {
+      e.preventDefault()
+    }
     // In a real application, you would send this data to your API
     console.log('Form submitted with data:', formData)
     alert('Blog post updated successfully!')

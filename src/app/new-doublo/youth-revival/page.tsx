@@ -10,14 +10,16 @@ export default function YouthRevivalPage() {
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative px-4 py-20">
-        <div className="absolute inset-0 bg-gray-900">
-          <Image
-            src="/images/backgrounds/new-doublo-hero-2.jpg"
-            alt="Youth Revival Treatment"
-            fill
-            className="object-cover object-center opacity-80"
-            priority
-          />
+        <div className="absolute inset-0 bg-gray-900 overflow-hidden">
+          <video 
+            className="absolute w-full h-full object-cover object-center opacity-80"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src="/images/placeholders/new-doublo/youth-vival01.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/10" />
         </div>
         
@@ -203,12 +205,19 @@ export default function YouthRevivalPage() {
               
               <div className="md:w-1/2 bg-gray-100 flex justify-center items-center">
                 <div className="p-8 w-full">
-                  <PlaceholderImage 
-                    page="new-doublo" 
-                    section="youth"
-                    number={1}
-                    aspectRatio="aspect-video"
-                  />
+                  <div className="aspect-video w-full rounded-lg overflow-hidden shadow-md">
+                    <video 
+                      className="w-full h-full object-cover" 
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    >
+                      <source src="/images/placeholders/new-doublo/youth-vival01.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
                 </div>
               </div>
             </div>

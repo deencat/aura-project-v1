@@ -87,13 +87,18 @@ export default function HairRemovalPage() {
             <div className="md:col-span-6 lg:col-span-7 relative">
               <div className="relative h-[500px] rounded-xl overflow-hidden">
                 <div className="absolute right-0 top-0 w-full h-full">
-                  {/* Hero image */}
+                  {/* Hero video replacing the image */}
                   <div className="relative w-full h-full bg-gradient-to-r from-teal-50 to-blue-50">
-                    <img
-                      src="/images/placeholders/snow-glow-hero.jpg" 
-                      alt="SnowGlow Smooth Hair Removal Treatment"
+                    <video 
                       className="w-full h-full object-cover"
-                    />
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    >
+                      <source src="/images/placeholders/hair02.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
                     <div className="w-full h-full bg-gradient-to-r from-white to-transparent absolute top-0 z-10"></div>
                   </div>
                 </div>
