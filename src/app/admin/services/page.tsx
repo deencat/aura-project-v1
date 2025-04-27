@@ -300,17 +300,17 @@ export default function ServicesPage() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link href={`/treatments/${service.slug}`} target="_blank">
-                          <Button size="icon" variant="ghost" className="h-8 w-8">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </Link>
-                        <Link href={`/admin/services/${service.id}/edit`}>
-                          <Button size="icon" variant="ghost" className="h-8 w-8">
+                        <Link href={`/admin/services/edit/${service.id}`}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
                             <Edit className="h-4 w-4" />
                           </Button>
                         </Link>
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-red-500">
+                        <Link href={`/treatments/${service.slug}`} target="_blank">
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

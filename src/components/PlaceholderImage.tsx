@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 
 interface PlaceholderImageProps {
@@ -33,6 +33,9 @@ export default function PlaceholderImage({
   aspectRatio = 'aspect-square',
   className = '',
 }: PlaceholderImageProps) {
+  // Add state to track image loading errors
+  const [imageError, setImageError] = useState(false);
+
   // Build image path based on provided params
   let imagePath = '/images/placeholders/'
   
@@ -44,8 +47,8 @@ export default function PlaceholderImage({
     imagePath += `${type}-${number}.jpg`
   }
 
-  // Check if we should use a real image
-  const hasRealImage = checkForRealImage(type, page, section);
+  // Check if we should attempt to use a real image
+  const shouldUseRealImage = checkForRealImage(type, page, section) && !imageError;
   
   // Different background gradients for different placeholder types
   const gradients: Record<GradientType, string> = {
@@ -69,6 +72,7 @@ export default function PlaceholderImage({
         about: 'about',
         avatar: 'avatar',
         map: 'map',
+        neck: 'treatment',  // Add mapping for neck section
       };
       return sectionToGradient[section] || 'beauty';
     }
@@ -88,15 +92,14 @@ export default function PlaceholderImage({
             <div className="absolute right-4 top-4 h-16 w-16 rounded-full bg-primary/20"></div>
             <div className="absolute bottom-4 left-4 h-10 w-10 rounded-full bg-secondary/30"></div>
             <div className="absolute left-1/4 top-1/3 h-8 w-8 rounded-full bg-pink-200/50"></div>
-            <svg className="absolute bottom-8 right-8 h-12 w-12 text-primary/20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"></path></svg>
           </>
         )
       case 'treatment':
+      case 'neck': // Add specific handling for neck
         return (
           <>
             <div className="absolute left-6 top-6 h-12 w-12 rounded-full bg-primary/20"></div>
             <div className="absolute bottom-6 right-10 h-8 w-8 rounded-full bg-secondary/30"></div>
-            <svg className="absolute bottom-10 left-10 h-10 w-10 text-primary/20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h1"></path><path d="M17 3h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1"></path><path d="M12 12a9 9 0 0 0 9 9"></path><path d="M12 12a9 9 0 0 1-9 9"></path><path d="M7 21H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h3"></path><path d="M20 21h-3a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h3"></path><path d="M12 7v5"></path></svg>
           </>
         )
       case 'benefits':
@@ -104,14 +107,12 @@ export default function PlaceholderImage({
           <>
             <div className="absolute bottom-6 left-6 h-16 w-16 rounded-full bg-primary/20"></div>
             <div className="absolute right-10 top-10 h-10 w-10 rounded-full bg-secondary/30"></div>
-            <svg className="absolute left-1/2 top-1/3 h-12 w-12 -translate-x-1/2 text-primary/20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="4" height="4" x="10" y="10" rx="1"></rect><path d="M4 12h4"></path><path d="M16 12h4"></path><path d="M12 4v4"></path><path d="M12 16v4"></path></svg>
           </>
         )
       case 'avatar':
         return (
           <>
             <div className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-300"></div>
-            <svg className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           </>
         )
       case 'about':
@@ -119,29 +120,18 @@ export default function PlaceholderImage({
           <>
             <div className="absolute bottom-8 left-8 h-16 w-16 rounded-full bg-primary/20"></div>
             <div className="absolute right-8 top-8 h-12 w-12 rounded-full bg-secondary/30"></div>
-            <svg className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 text-primary/20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
           </>
         )
       case 'team':
-        const teamNumber = number > 4 ? 1 : number;
-        const teamIcons = [
-          <svg key="1" className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>,
-          <svg key="2" className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 3a2.5 2.5 0 0 1 2.5 2.5"></path><path d="M7 3a2.5 2.5 0 0 0-2.5 2.5"></path><path d="M19 10a7.5 7.5 0 1 0-10 7"></path><path d="M9 17c.6 2 2.4 3.5 4.8 3.5.3 0 .7 0 1-.1"></path><path d="M22 22a3.5 3.5 0 0 0-5.3-3"></path></svg>,
-          <svg key="3" className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>,
-          <svg key="4" className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 22h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-4"></path><path d="m9 16 4-4-4-4"></path><path d="M12 12H3"></path></svg>
-        ];
-        
         return (
           <>
             <div className="absolute left-1/2 top-1/3 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-300"></div>
-            {teamIcons[teamNumber - 1]}
-            <div className="absolute bottom-8 w-full text-center text-sm font-medium text-gray-500">Team Member {teamNumber}</div>
+            <div className="absolute bottom-8 w-full text-center text-sm font-medium text-gray-500">Team Member {number}</div>
           </>
         )
       case 'map':
         return (
           <>
-            <svg className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="10" r="3"></circle><path d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8Z"></path></svg>
             <div className="absolute left-1/2 top-6 -translate-x-1/2 text-sm font-medium text-gray-500">Map Location</div>
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium text-primary">7/F, Cameron Commercial Building</div>
           </>
@@ -203,6 +193,14 @@ export default function PlaceholderImage({
           return 'New Doublo™ SD Synergy Lifting';
         } else if (section === 'results') {
           return 'Visible Rejuvenation Results';
+        } else if (section === 'neck') {
+          const neckLabels = [
+            'Before & After Neck Treatment',
+            'Neck Rejuvenation Process',
+            'Advanced Neck Technology',
+            'Client Neck Results'
+          ];
+          return number <= neckLabels.length ? neckLabels[number - 1] : `Neck Image ${number}`;
         }
       }
       return `${page} ${section}`;
@@ -227,8 +225,8 @@ export default function PlaceholderImage({
   
   const imageLabel = getImageLabel();
   
-  // If using a real image
-  if (hasRealImage) {
+  // If using a real image and we should attempt to load it
+  if (shouldUseRealImage) {
     return (
       <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
         <Image 
@@ -237,21 +235,35 @@ export default function PlaceholderImage({
           fill
           style={{objectFit: 'cover'}}
           priority={number === 1}
+          onError={() => setImageError(true)}
         />
-        {imageLabel && (
-          <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
-            <div className="text-center text-base font-medium text-white">{imageLabel}</div>
-          </div>
-        )}
+        <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
+          <div className="text-center text-base font-medium text-white">{imageLabel}</div>
+        </div>
       </div>
     );
   }
   
   // Otherwise use the placeholder styling
+  // Get the gradient type
   const gradientType = getGradientType();
+  const gradient = gradients[gradientType] || gradients.beauty;
+  
   return (
-    <div className={`relative ${aspectRatio} w-full ${gradients[gradientType]} overflow-hidden rounded-lg ${className}`}>
+    <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${gradient} ${className} flex items-center justify-center`}>
+      {/* Decorative elements */}
       {getDecorativeElements()}
+      
+      {/* Placeholder content */}
+      <div className="text-center p-4 z-10">
+        <div className="font-medium text-gray-700 mb-2">{imageLabel}</div>
+        <div className="text-sm text-gray-500">Image placeholder</div>
+      </div>
+      
+      {/* Image label */}
+      <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
+        <div className="text-center text-base font-medium text-white">{imageLabel}</div>
+      </div>
     </div>
-  )
+  );
 } 

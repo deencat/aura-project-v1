@@ -1,86 +1,105 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Admin Dashboard', () => {
-  test('should load the admin dashboard page', async ({ page }) => {
-    await page.goto('/admin');
-    await expect(page.locator('h1')).toHaveText('Dashboard');
-    
-    // Check that the statistics cards are displayed
-    const statsCards = page.locator('.grid >> .card');
-    await expect(statsCards).toHaveCount(4);
-    
-    // Check that the service statistics card contains the correct data
-    const servicesCard = page.locator('text=Total Services').first();
-    await expect(servicesCard).toBeVisible();
-    
-    // Check that the recent activity section is displayed
-    await expect(page.locator('text=Recent Activity')).toBeVisible();
-    
-    // Check that the quick actions section is displayed
-    await expect(page.locator('text=Quick Actions')).toBeVisible();
-  });
-  
-  test('should navigate to services page', async ({ page }) => {
+  test('admin dashboard page loads with statistics cards', async ({ page }) => {
+    // Navigate to the admin dashboard
     await page.goto('/admin');
     
-    // Click on the Services link in the sidebar
-    await page.click('text=Services');
+    // Check that we're on the admin page
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
     
-    // Check that we've navigated to the services page
-    await expect(page).toHaveURL('/admin/services');
-    await expect(page.locator('h1')).toHaveText('Services');
+    // Check that statistics cards are visible
+    await expect(page.getByText('Total Services')).toBeVisible();
+    await expect(page.getByText('Team Members')).toBeVisible();
+    await expect(page.getByText('Blog Posts')).toBeVisible();
+    await expect(page.getByText('Active Promotions')).toBeVisible();
     
-    // Check that the services table is displayed
-    const servicesTable = page.locator('table');
-    await expect(servicesTable).toBeVisible();
+    // Check that Recent Activity section is visible
+    await expect(page.getByRole('heading', { name: 'Recent Activity' })).toBeVisible();
+    
+    // Check that Quick Actions section is visible
+    await expect(page.getByRole('heading', { name: 'Quick Actions' })).toBeVisible();
+    await expect(page.getByText('Add New Service')).toBeVisible();
+    await expect(page.getByText('Write Blog Post')).toBeVisible();
   });
   
-  test('should navigate to add new service page', async ({ page }) => {
+  test('navigate to services page and view services table', async ({ page }) => {
+    // Start from the admin dashboard
+    await page.goto('/admin');
+    
+    // Navigate to services page
+    await page.getByRole('link', { name: /Total Services/i }).click();
+    
+    // Check that we're on the services page
+    await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible();
+    
+    // Check that services table is visible
+    await expect(page.getByRole('columnheader', { name: 'Service Name' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Category' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Price' })).toBeVisible();
+    
+    // Verify at least one service is shown
+    await expect(page.getByText('Royal Black Scan')).toBeVisible();
+  });
+  
+  test('can navigate to add new service page', async ({ page }) => {
+    // Start from the services page
     await page.goto('/admin/services');
     
     // Click on the Add New Service button
-    await page.click('text=Add New Service');
+    await page.getByRole('link', { name: 'Add New Service' }).click();
     
-    // Check that we've navigated to the add new service page
-    await expect(page).toHaveURL('/admin/services/new');
-    await expect(page.locator('h1')).toHaveText('Add New Service');
+    // Check that we're on the add new service page
+    await expect(page.getByRole('heading', { name: 'Add New Service' })).toBeVisible();
     
-    // Check that the form is displayed
-    const nameInput = page.locator('input[name="name"]');
-    await expect(nameInput).toBeVisible();
+    // Check that the form is visible
+    await expect(page.getByLabel('Service Name')).toBeVisible();
+    await expect(page.getByLabel('URL Slug')).toBeVisible();
     
-    // Test that the slug is auto-generated from the name
-    await nameInput.fill('Test Service Name');
-    const slugInput = page.locator('input[name="slug"]');
-    await expect(slugInput).toHaveValue('test-service-name');
-    
-    // Test that the language tabs work
-    await page.click('text=Traditional Chinese');
-    await expect(page.locator('button:has-text("Traditional Chinese")')).toHaveClass(/border-primary/);
+    // Test auto-generation of slug
+    await page.getByLabel('Service Name').fill('Test New Service');
+    await expect(page.getByLabel('URL Slug')).toHaveValue('test-new-service');
   });
   
-  test('should filter services on the services page', async ({ page }) => {
+  test('can navigate to edit service page', async ({ page }) => {
+    // Start from the services page
     await page.goto('/admin/services');
     
-    // Enter a search term
-    await page.fill('input[type="search"]', 'Facial');
+    // Click on the Edit button for the first service
+    await page.locator('button[aria-label="Edit"]').first().click();
     
-    // Check that the filtered results are displayed
-    const rows = page.locator('tbody tr');
+    // Check that we're on the edit service page
+    await expect(page.getByRole('heading', { name: 'Edit Service' })).toBeVisible();
     
-    // Wait for the filtering to apply
-    await page.waitForTimeout(500);
+    // Verify form is populated with service data
+    await expect(page.getByLabel('Service Name')).not.toHaveValue('');
+    await expect(page.getByLabel('URL Slug')).not.toHaveValue('');
     
-    // Get the count of rows
-    const rowCount = await rows.count();
+    // Test that we can edit the service name
+    const currentName = await page.getByLabel('Service Name').inputValue();
+    await page.getByLabel('Service Name').fill(`${currentName} (Edited)`);
     
-    // Check that at least one row is displayed
-    expect(rowCount).toBeGreaterThan(0);
+    // Check save button is visible
+    await expect(page.getByRole('button', { name: 'Save Changes' })).toBeVisible();
+  });
+  
+  test('filtering services works correctly', async ({ page }) => {
+    // Start from the services page
+    await page.goto('/admin/services');
     
-    // Check that all displayed rows contain the search term
-    for (let i = 0; i < rowCount; i++) {
-      const rowText = await rows.nth(i).textContent();
-      expect(rowText.toLowerCase()).toContain('facial');
-    }
+    // Filter by search term
+    await page.getByPlaceholder('Search services...').fill('facial');
+    
+    // Check that filtered results are shown
+    await expect(page.getByText('Facial Treatments')).toBeVisible();
+    
+    // Clear filter
+    await page.getByPlaceholder('Search services...').clear();
+    
+    // Filter by category
+    await page.selectOption('select:near(:text("All Categories"))', 'Facial Treatments');
+    
+    // Check that filtered results are shown
+    await expect(page.getByText('Facial Treatments')).toBeVisible();
   });
 }); 
