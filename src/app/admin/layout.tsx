@@ -12,7 +12,8 @@ import {
   MessageSquare, 
   Settings, 
   Globe,
-  Ticket
+  Ticket,
+  Image
 } from 'lucide-react'
 
 interface SidebarLinkProps {
@@ -55,6 +56,7 @@ export default function AdminLayout({
     { href: '/admin/promotions', icon: <Ticket size={18} />, label: 'Promotions' },
     { href: '/admin/languages', icon: <Globe size={18} />, label: 'Languages' },
     { href: '/admin/settings', icon: <Settings size={18} />, label: 'Settings' },
+    { href: '/admin/images', icon: <Image size={18} />, label: 'Images' },
   ]
 
   return (

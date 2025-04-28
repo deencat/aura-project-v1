@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 const treatments = [
   { 
@@ -51,7 +52,7 @@ export default function NewDoubloPage() {
       <section className="relative flex min-h-[80vh] flex-col items-center justify-center px-4 py-20 text-center">
         <div className="absolute inset-0 bg-gray-900 overflow-hidden">
           <Image
-            src="/images/backgrounds/new-doublo-hero.jpg"
+            src="/images/treatments/new-doublo/hero.jpg"
             alt="New Doublo Technology"
             fill
             className="object-cover object-center opacity-80"
@@ -118,11 +119,13 @@ export default function NewDoubloPage() {
                 stimulating collagen growth without damaging the skin surface—ideal for lifting and tightening.
               </p>
               <div className="mt-auto aspect-video w-full overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  page="new-doublo" 
-                  section="technology" 
-                  number={1} 
-                  aspectRatio="aspect-video"
+                <TreatmentImage 
+                  category="new-doublo"
+                  treatment="technology"
+                  type="technology"
+                  index={1}
+                  alt="MFU Technology"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
@@ -135,11 +138,13 @@ export default function NewDoubloPage() {
                 and create the coveted V-line effect popular in K-beauty trends.
               </p>
               <div className="mt-auto aspect-video w-full overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  page="new-doublo" 
-                  section="technology" 
-                  number={2} 
-                  aspectRatio="aspect-video"
+                <TreatmentImage 
+                  category="new-doublo"
+                  treatment="technology"
+                  type="technology"
+                  index={2}
+                  alt="4RF Technology"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
@@ -213,11 +218,12 @@ export default function NewDoubloPage() {
             {treatments.map((treatment) => (
               <Card key={treatment.id} className="overflow-hidden transition-all hover:shadow-md">
                 <div className="aspect-[4/3] w-full">
-                  <PlaceholderImage 
-                    page="new-doublo" 
-                    section="treatment" 
-                    number={treatment.id} 
-                    aspectRatio="aspect-[4/3]"
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment={treatment.slug}
+                    type="hero"
+                    alt={treatment.title}
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <CardContent className="p-6">
@@ -253,10 +259,12 @@ export default function NewDoubloPage() {
             <div className="rounded-lg bg-white p-8 shadow-sm">
               <div className="flex flex-col items-center">
                 <div className="mb-6 h-20 w-20 overflow-hidden rounded-full">
-                  <PlaceholderImage 
-                    type="avatar" 
-                    number={1}
-                    aspectRatio="aspect-square"
+                  <Image 
+                    src="/images/treatments/avatars/client-5.jpg"
+                    alt="Michelle Testimonial"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <p className="mb-6 text-center text-gray-600 italic">
@@ -272,10 +280,12 @@ export default function NewDoubloPage() {
             <div className="rounded-lg bg-white p-8 shadow-sm">
               <div className="flex flex-col items-center">
                 <div className="mb-6 h-20 w-20 overflow-hidden rounded-full">
-                  <PlaceholderImage 
-                    type="avatar" 
-                    number={2}
-                    aspectRatio="aspect-square"
+                  <Image 
+                    src="/images/treatments/avatars/client-6.jpg"
+                    alt="Sophia Testimonial"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <p className="mb-6 text-center text-gray-600 italic">

@@ -5,6 +5,7 @@ import PlaceholderImage from '@/components/PlaceholderImage'
 import { Sparkles, ArrowRight, CheckCircle, XCircle } from 'lucide-react'
 import Image from 'next/image'
 import ResultsGraph from '@/components/ResultsGraph'
+import TreatmentImage from '@/components/TreatmentImage'
 
 // Add types for component props
 interface BeforeAfterSliderProps {
@@ -260,8 +261,10 @@ export default function SculptLiftPage() {
       {/* Hero Section */}
       <section className="relative h-[500px] md:h-[600px] overflow-hidden">
         <div className="absolute inset-0 bg-gray-900">
-          <Image
-            src="/images/backgrounds/new-doublo-hero.jpg"
+          <TreatmentImage
+            category="new-doublo"
+            treatment="sculpt-lift"
+            type="hero"
             alt="Sculpt & Lift Treatment"
             fill
             className="object-cover object-center opacity-80"

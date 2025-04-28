@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import PlaceholderImage from '@/components/PlaceholderImage'
 import { Sparkles, Clock, Check, Star } from 'lucide-react'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function VLinePage() {
   return (
@@ -11,8 +12,10 @@ export default function VLinePage() {
       {/* Hero Section */}
       <section className="relative px-4 py-20">
         <div className="absolute inset-0 bg-gray-900">
-          <Image
-            src="/images/backgrounds/new-doublo-hero-1.jpg"
+          <TreatmentImage
+            category="new-doublo"
+            treatment="v-line"
+            type="hero"
             alt="V-Line Perfection Treatment"
             fill
             className="object-cover object-left opacity-80"
@@ -191,11 +194,13 @@ export default function VLinePage() {
             
             <div className="order-1 md:order-2 relative mx-auto max-w-md">
               <div className="aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
-                <PlaceholderImage 
-                  page="new-doublo" 
-                  section="vline"
-                  number={2} 
-                  aspectRatio="aspect-video"
+                <TreatmentImage 
+                  category="new-doublo"
+                  treatment="v-line"
+                  type="how-it-works"
+                  index={1}
+                  alt="How V-Line Works"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="absolute top-1/2 -right-64 -translate-y-1/2 w-[40rem] rounded-xl bg-white p-6 shadow-lg border border-gray-100">
@@ -207,10 +212,12 @@ export default function VLinePage() {
                     <div className="mb-4">
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <PlaceholderImage 
-                            type="avatar" 
-                            number={3}
-                            aspectRatio="aspect-square"
+                          <Image
+                            src="/images/treatments/avatars/client-1.jpg"
+                            alt="Lily C."
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <div>
@@ -232,10 +239,12 @@ export default function VLinePage() {
                     <div className="mb-4">
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <PlaceholderImage 
-                            type="avatar" 
-                            number={4}
-                            aspectRatio="aspect-square"
+                          <Image
+                            src="/images/treatments/avatars/client-2.jpg"
+                            alt="Michelle T."
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <div>
@@ -257,10 +266,12 @@ export default function VLinePage() {
                     <div>
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <PlaceholderImage 
-                            type="avatar" 
-                            number={1}
-                            aspectRatio="aspect-square"
+                          <Image
+                            src="/images/treatments/avatars/client-3.jpg"
+                            alt="James K."
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <div>
@@ -283,10 +294,12 @@ export default function VLinePage() {
                     <div>
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <PlaceholderImage 
-                            type="avatar" 
-                            number={2}
-                            aspectRatio="aspect-square"
+                          <Image
+                            src="/images/treatments/avatars/client-4.jpg"
+                            alt="Sarah Wong"
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <div>

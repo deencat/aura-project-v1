@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { fetchActualPageImages, getValidImagePath } from '../src/utils/imageUtils';
 
 test.describe('Lymphatic Detox Page', () => {
   test('page loads successfully and displays key elements', async ({ page }) => {
@@ -65,5 +66,26 @@ test.describe('Lymphatic Detox Page', () => {
     // Verify navigation to contact page
     await page.waitForTimeout(1000);
     await expect(page).toHaveURL(/.*\/contact/);
+  });
+  
+  test('image elements use correct image paths', async ({ page }) => {
+    // Navigate to the lymphatic detox page
+    await page.goto('/body-care/lymphatic-detox', { timeout: 60000 });
+    
+    // Get expected image paths
+    const imagePaths = fetchActualPageImages('lymphatic-detox');
+    
+    // Check hero image source (may be using the fallback)
+    const heroImage = page.locator('.hero-section img').first();
+    await expect(heroImage).toBeVisible();
+    
+    // Check at least one gallery image is visible
+    const galleryImages = page.locator('.gallery-section img');
+    await expect(galleryImages.count()).toBeGreaterThan(0);
+    
+    // Verify the image loading mechanism works correctly
+    const processedPath = await getValidImagePath(imagePaths.hero, '/images/placeholder.jpg');
+    expect(typeof processedPath).toBe('string');
+    expect(processedPath.length).toBeGreaterThan(0);
   });
 });

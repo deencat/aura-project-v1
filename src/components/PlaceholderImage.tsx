@@ -10,6 +10,7 @@ interface PlaceholderImageProps {
   section?: string
   aspectRatio?: string
   className?: string
+  imageUrl?: string
 }
 
 type GradientType = 'beauty' | 'treatment' | 'benefits' | 'avatar' | 'about' | 'team' | 'map';
@@ -32,9 +33,26 @@ export default function PlaceholderImage({
   section,
   aspectRatio = 'aspect-square',
   className = '',
+  imageUrl,
 }: PlaceholderImageProps) {
   // Add state to track image loading errors
   const [imageError, setImageError] = useState(false);
+
+  // If imageUrl is provided, use it directly
+  if (imageUrl && !imageError) {
+    return (
+      <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
+        <Image 
+          src={imageUrl}
+          alt={`Image ${number}`}
+          fill
+          style={{objectFit: 'cover'}}
+          priority={number === 1}
+          onError={() => setImageError(true)}
+        />
+      </div>
+    );
+  }
 
   // Build image path based on provided params
   let imagePath = '/images/placeholders/'

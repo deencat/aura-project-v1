@@ -68,7 +68,7 @@ test.describe('New Doublo Pages', () => {
     await expect(page.getByRole('heading', { name: /V-Line Perfection/i }).first()).toBeVisible();
     
     // Check that the hero section has the correct dark background image
-    const heroImageSelector = 'section div img[src*="new-doublo-hero-1.jpg"]';
+    const heroImageSelector = 'section div img[src*="/images/treatments/new-doublo/v-line/hero.jpg"]';
     await page.locator(heroImageSelector).first().isVisible();
     
     // Check the booking button is visible

@@ -21,85 +21,96 @@ import { Input } from '@/components/ui/input'
 const mockServices = [
   {
     id: 1,
-    name: 'Royal Black Scan',
-    category: 'Premium Beauty',
-    price: '$1,200',
-    duration: '120 min',
+    name: 'Lymphatic Detox',
+    category: 'Body Care',
+    price: '$980',
+    duration: '90 min',
     status: 'Active',
-    slug: 'royal-black-scan'
+    slug: 'body-care/lymphatic-detox'
   },
   {
     id: 2,
-    name: 'Peeled Egg Skin',
-    category: 'Facial Treatments',
-    price: '$800',
-    duration: '90 min',
+    name: 'Stretch Mark Treatment',
+    category: 'Body Care',
+    price: '$850',
+    duration: '75 min',
     status: 'Active',
-    slug: 'peeled-egg-skin'
+    slug: 'body-care/stretch-mark'
   },
   {
     id: 3,
-    name: 'Laser Treatment',
-    category: 'Specialized Services',
-    price: '$1,500',
+    name: 'Hair Removal',
+    category: 'Body Care',
+    price: '$650',
     duration: '60 min',
     status: 'Active',
-    slug: 'laser-treatment'
+    slug: 'body-care/hair-removal'
   },
   {
     id: 4,
-    name: 'Collagen Regeneration',
-    category: 'Facial Treatments',
-    price: '$980',
-    duration: '75 min',
+    name: 'Perfect Buttocks',
+    category: 'Body Care',
+    price: '$1,100',
+    duration: '90 min',
     status: 'Active',
-    slug: 'collagen-regeneration'
+    slug: 'body-care/perfect-buttocks'
   },
   {
     id: 5,
-    name: 'Hydrating Facial',
-    category: 'Facial Treatments',
-    price: '$750',
-    duration: '60 min',
+    name: 'Breast Enhancement',
+    category: 'Body Care',
+    price: '$1,200',
+    duration: '90 min',
     status: 'Active',
-    slug: 'hydrating-facial'
+    slug: 'body-care/breast-enhancement'
   },
   {
     id: 6,
-    name: 'Body Sculpting',
-    category: 'Body Care',
+    name: 'Neck Rejuvenation',
+    category: 'New Doublo',
     price: '$1,350',
-    duration: '90 min',
-    status: 'Draft',
-    slug: 'body-sculpting'
+    duration: '60 min',
+    status: 'Active',
+    slug: 'new-doublo/neck-rejuvenation'
   },
   {
     id: 7,
-    name: 'Anti-Aging Treatment',
-    category: 'Facial Treatments',
-    price: '$1,100',
-    duration: '90 min',
-    status: 'Draft',
-    slug: 'anti-aging-treatment'
+    name: 'Youth Revival',
+    category: 'New Doublo',
+    price: '$1,450',
+    duration: '75 min',
+    status: 'Active',
+    slug: 'new-doublo/youth-revival'
   },
   {
     id: 8,
-    name: 'Acne Treatment',
-    category: 'Specialized Services',
-    price: '$880',
+    name: 'V-Line Perfection',
+    category: 'New Doublo',
+    price: '$1,500',
     duration: '60 min',
     status: 'Active',
-    slug: 'acne-treatment'
+    slug: 'new-doublo/v-line'
   },
+  {
+    id: 9,
+    name: 'Sculpt & Lift',
+    category: 'New Doublo',
+    price: '$1,400',
+    duration: '60 min',
+    status: 'Active',
+    slug: 'new-doublo/sculpt-lift'
+  }
 ]
 
 // Categories for filtering
 const categories = [
   'All Categories',
-  'Premium Beauty',
-  'Facial Treatments',
-  'Specialized Services',
   'Body Care',
+  'New Doublo',
+  'Facial Services',
+  'Premium Beauty',
+  'Specialized Services',
+  'Cell Beauty',
 ]
 
 // Status options for filtering
@@ -305,7 +316,7 @@ export default function ServicesPage() {
                             <Edit className="h-4 w-4" />
                           </Button>
                         </Link>
-                        <Link href={`/treatments/${service.slug}`} target="_blank">
+                        <Link href={`/${service.slug}`} target="_blank">
                           <Button variant="ghost" size="icon" className="h-8 w-8">
                             <Eye className="h-4 w-4" />
                           </Button>

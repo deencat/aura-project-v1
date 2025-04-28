@@ -1,14 +1,30 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Upload, Calendar } from 'lucide-react'
+import Image from 'next/image'
+import { ChevronLeft, Upload, Calendar, ImageIcon, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckIcon, AlertCircle } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 
 // Mock categories
 const categories = [
@@ -19,6 +35,51 @@ const categories = [
   "Beauty Advice",
   "Treatment Reviews"
 ]
+
+// Mock library images
+const libraryImages = [
+  {
+    id: 1,
+    name: "hero-background.jpg",
+    url: "/images/placeholders/new-doublo-hero-1.jpg",
+    category: "Backgrounds",
+  },
+  {
+    id: 2,
+    name: "facial-treatment.jpg",
+    url: "/images/placeholders/treatment-1.jpg",
+    category: "Treatments",
+  },
+  {
+    id: 3,
+    name: "neck-rejuvenation.jpg",
+    url: "/images/placeholders/new-doublo-neck-1.jpg",
+    category: "Treatments",
+  },
+  {
+    id: 4,
+    name: "doublo-device.jpg",
+    url: "/images/placeholders/new-doublo-device-1.jpg",
+    category: "Equipment",
+  }
+];
+
+// Rich text editor toolbar options
+interface ToolbarButtonProps {
+  icon: React.ReactNode;
+  action: () => void;
+  isActive?: boolean;
+}
+
+const ToolbarButton: React.FC<ToolbarButtonProps> = ({ icon, action, isActive }) => (
+  <button
+    className={`p-2 rounded hover:bg-gray-100 ${isActive ? 'bg-gray-100 text-primary' : ''}`}
+    onClick={action}
+    type="button"
+  >
+    {icon}
+  </button>
+);
 
 export default function NewBlogPostPage() {
   const [loading, setLoading] = useState(false)
@@ -45,6 +106,12 @@ export default function NewBlogPostPage() {
     status: 'Draft',
     featuredImage: null
   })
+  
+  const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false)
+  const [selectedTab, setSelectedTab] = useState("library")
+  const [forFeaturedImage, setForFeaturedImage] = useState(false)
+
+  const contentEditorRef = useRef<HTMLDivElement>(null)
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -68,8 +135,66 @@ export default function NewBlogPostPage() {
     }
   }
 
-  // Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle content change from rich text editor
+  const handleContentChange = () => {
+    if (contentEditorRef.current) {
+      setFormData({
+        ...formData,
+        content: contentEditorRef.current.innerHTML
+      })
+    }
+  }
+
+  // Handle rich text editor toolbar actions
+  const handleBold = () => {
+    document.execCommand('bold', false)
+    handleContentChange()
+  }
+
+  const handleItalic = () => {
+    document.execCommand('italic', false)
+    handleContentChange()
+  }
+
+  const handleUnderline = () => {
+    document.execCommand('underline', false)
+    handleContentChange()
+  }
+
+  const handleHeading = (level: number) => {
+    document.execCommand('formatBlock', false, `h${level}`)
+    handleContentChange()
+  }
+
+  const handleParagraph = () => {
+    document.execCommand('formatBlock', false, 'p')
+    handleContentChange()
+  }
+
+  const handleLink = () => {
+    const url = prompt('Enter URL:')
+    if (url) {
+      document.execCommand('createLink', false, url)
+      handleContentChange()
+    }
+  }
+
+  const handleUnlink = () => {
+    document.execCommand('unlink', false)
+    handleContentChange()
+  }
+
+  const handleList = (type: 'ol' | 'ul') => {
+    if (type === 'ol') {
+      document.execCommand('insertOrderedList', false)
+    } else {
+      document.execCommand('insertUnorderedList', false)
+    }
+    handleContentChange()
+  }
+
+  // Handle image upload for featured image
+  const handleFeaturedImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       // In a real app, you would upload the file to your server/cloud storage
@@ -78,6 +203,48 @@ export default function NewBlogPostPage() {
         ...formData,
         featuredImage: URL.createObjectURL(file)
       })
+    }
+  }
+
+  // Open media library
+  const openMediaLibrary = (forFeatured: boolean = false) => {
+    setForFeaturedImage(forFeatured)
+    setIsMediaLibraryOpen(true)
+  }
+
+  // Insert image from library
+  const insertImageFromLibrary = (url: string) => {
+    if (forFeaturedImage) {
+      setFormData({
+        ...formData,
+        featuredImage: url
+      })
+    } else {
+      document.execCommand('insertHTML', false, `<img src="${url}" alt="Blog image" class="max-w-full h-auto my-4 rounded-md" />`)
+      handleContentChange()
+    }
+    setIsMediaLibraryOpen(false)
+  }
+
+  // Upload a new image
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // In a real app, you would upload the file to your server/cloud storage
+      // For now, we'll just create a URL for the image
+      const imageUrl = URL.createObjectURL(file)
+      
+      if (forFeaturedImage) {
+        setFormData({
+          ...formData,
+          featuredImage: imageUrl
+        })
+      } else {
+        document.execCommand('insertHTML', false, `<img src="${imageUrl}" alt="Blog image" class="max-w-full h-auto my-4 rounded-md" />`)
+        handleContentChange()
+      }
+      
+      setIsMediaLibraryOpen(false)
     }
   }
 
@@ -108,6 +275,9 @@ export default function NewBlogPostPage() {
           status: 'Draft',
           featuredImage: null
         })
+        if (contentEditorRef.current) {
+          contentEditorRef.current.innerHTML = ''
+        }
         setSuccess(false)
       }, 2000)
     } catch (err) {
@@ -251,7 +421,7 @@ export default function NewBlogPostPage() {
               className={`relative flex h-40 w-40 cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 ${
                 formData.featuredImage ? 'bg-gray-50' : 'bg-white'
               }`}
-              onClick={() => document.getElementById('image-upload')?.click()}
+              onClick={() => openMediaLibrary(true)}
             >
               {formData.featuredImage ? (
                 <img
@@ -263,17 +433,10 @@ export default function NewBlogPostPage() {
                 <div className="flex flex-col items-center justify-center space-y-2 p-4 text-center">
                   <Upload className="h-8 w-8 text-gray-400" />
                   <p className="text-sm text-gray-500">
-                    Click to upload<br />or drag and drop
+                    Click to select image
                   </p>
                 </div>
               )}
-              <input
-                type="file"
-                id="image-upload"
-                className="hidden"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
             </div>
             <div className="flex-1 space-y-1">
               <p className="text-sm font-medium">Image requirements:</p>
@@ -286,18 +449,42 @@ export default function NewBlogPostPage() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Rich Text Editor */}
         <div className="space-y-2">
           <Label htmlFor="content">Content</Label>
-          <Textarea
-            id="content"
-            name="content"
-            placeholder="Write your blog post content here..."
-            value={formData.content}
-            onChange={handleInputChange}
-            className="min-h-[300px] resize-y"
-            required
-          />
+          <div className="border rounded-md overflow-hidden">
+            {/* Toolbar */}
+            <div className="flex flex-wrap items-center gap-1 border-b p-2 bg-gray-50">
+              <ToolbarButton icon={<strong>B</strong>} action={handleBold} />
+              <ToolbarButton icon={<em>I</em>} action={handleItalic} />
+              <ToolbarButton icon={<span className="underline">U</span>} action={handleUnderline} />
+              <div className="w-px h-6 bg-gray-300 mx-1"></div>
+              <ToolbarButton icon={<span>H1</span>} action={() => handleHeading(1)} />
+              <ToolbarButton icon={<span>H2</span>} action={() => handleHeading(2)} />
+              <ToolbarButton icon={<span>H3</span>} action={() => handleHeading(3)} />
+              <ToolbarButton icon={<span>P</span>} action={handleParagraph} />
+              <div className="w-px h-6 bg-gray-300 mx-1"></div>
+              <ToolbarButton icon={<span>🔗</span>} action={handleLink} />
+              <ToolbarButton icon={<span>🚫🔗</span>} action={handleUnlink} />
+              <div className="w-px h-6 bg-gray-300 mx-1"></div>
+              <ToolbarButton icon={<span>1.</span>} action={() => handleList('ol')} />
+              <ToolbarButton icon={<span>•</span>} action={() => handleList('ul')} />
+              <div className="w-px h-6 bg-gray-300 mx-1"></div>
+              <ToolbarButton 
+                icon={<ImageIcon className="h-4 w-4" />} 
+                action={() => openMediaLibrary(false)} 
+              />
+            </div>
+            
+            {/* Editor */}
+            <div
+              ref={contentEditorRef}
+              className="min-h-[300px] p-4 outline-none focus:ring-0"
+              contentEditable
+              onInput={handleContentChange}
+              dangerouslySetInnerHTML={{ __html: formData.content }}
+            />
+          </div>
         </div>
 
         {/* Meta Description */}
@@ -327,6 +514,82 @@ export default function NewBlogPostPage() {
           </Button>
         </div>
       </form>
+
+      {/* Media Library Dialog */}
+      <Dialog open={isMediaLibraryOpen} onOpenChange={setIsMediaLibraryOpen}>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Media Library</DialogTitle>
+            <DialogDescription>
+              Select an image for your blog post
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Tabs defaultValue="library" value={selectedTab} onValueChange={setSelectedTab}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="library">Library</TabsTrigger>
+              <TabsTrigger value="upload">Upload New</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="library" className="py-4">
+              <div className="grid grid-cols-3 gap-4">
+                {libraryImages.map((image) => (
+                  <div 
+                    key={image.id} 
+                    className="cursor-pointer overflow-hidden rounded-md border hover:border-primary"
+                    onClick={() => insertImageFromLibrary(image.url)}
+                  >
+                    <div className="relative aspect-square">
+                      <Image
+                        src={image.url}
+                        alt={image.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-2">
+                      <p className="truncate text-sm">{image.name}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 text-center">
+                <Link href="/admin/images" target="_blank">
+                  <Button variant="outline" size="sm">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Manage Media Library
+                  </Button>
+                </Link>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="upload" className="py-4">
+              <div 
+                className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 hover:bg-gray-50"
+                onClick={() => document.getElementById('image-upload-dialog')?.click()}
+              >
+                <Upload className="h-10 w-10 text-gray-400" />
+                <p className="mt-2 text-sm text-gray-500">Click to upload or drag and drop</p>
+                <p className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+                <input
+                  id="image-upload-dialog"
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsMediaLibraryOpen(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 
