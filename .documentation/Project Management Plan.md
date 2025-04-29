@@ -63,6 +63,7 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Run full Playwright regression tests after each change
 - Fix any negative test results
 - Terminate lingering Playwright report server processes before running tests again
+- Update test selectors when component implementations change (like with TreatmentImage)
 - Available test scripts:
   - `npm test`: Run all Playwright tests
   - `npm run test:ui`: Run tests with Playwright UI mode
@@ -157,19 +158,39 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Implemented preview functionality to view services from admin panel
   - Expanded Playwright tests to verify CMS functionality
   - Designed intuitive UI for content editors with responsive layouts
+- Created reusable TreatmentImage component to standardize image handling:
+  - Implemented consistent image sizing and display across treatment pages
+  - Added support for categorizing images by treatment type
+  - Created easy-to-use props interface for specifying image category, treatment, type, and index
+  - Designed the component to handle different image display contexts (hero, feature, avatar, etc.)
+  - Implemented consistent styling for all treatment-related images
+  - Updated New Doublo page to use TreatmentImage for testimonial avatars and benefits section
+  - Updated Hair Removal page to use TreatmentImage for all treatment images
+  - Created comprehensive Playwright tests for TreatmentImage component rendering
+  - Improved responsive behavior of images across all device sizes
 
 ### Pending Tasks (Prioritized)
-1. Implement CMS functionality for content management
+1. Update Playwright tests to verify TreatmentImage implementation
+   - Update test selectors for new image implementation
+   - Add specific tests for image component rendering
+   - Ensure all tests pass with the new component structure
+   - Add test coverage for fallback image functionality
+2. Implement remaining TreatmentImage updates across the site
+   - Update all other treatment pages to use the TreatmentImage component
+   - Standardize image naming conventions across the site
+   - Review and update image paths for consistency
+   - Create consistent placeholder images for all categories and types
+3. Implement CMS functionality for content management
    - Enhance admin dashboard interface
    - Expand service management with advanced editing features
    - Complete blog & testimonial management functionality
    - Support multilingual content (Traditional Chinese, Simplified Chinese, English)
    - Implement promotion & coupon code management
    - Develop staff profile management interface
-2. Create remaining individual treatment pages
-3. Add more comprehensive test coverage
-4. Implement responsive design refinements for mobile devices
-5. Add animations and transitions for improved UX
+4. Create remaining individual treatment pages
+5. Add more comprehensive test coverage
+6. Implement responsive design refinements for mobile devices
+7. Add animations and transitions for improved UX
 
 ### Backlog Tasks
 - Implement Memory Viewer component for debugging

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { CarouselApi } from "@/components/ui/carousel"
@@ -13,6 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function HairRemovalPage() {
   const [api, setApi] = useState<CarouselApi>()
@@ -124,15 +124,21 @@ export default function HairRemovalPage() {
           <div className="mb-16">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="rounded-xl overflow-hidden shadow-md">
-                <img 
-                  src="/images/hair-removal/hairremoval01.jpg" 
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="hair-removal"
+                  type="how-it-works"
+                  index={1}
                   alt="Hair Removal Treatment Areas - Face and Upper Body"
                   className="w-full h-auto object-cover rounded-xl"
                 />
               </div>
               <div className="rounded-xl overflow-hidden shadow-md">
-                <img 
-                  src="/images/hair-removal/hairremoval02.jpg" 
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="hair-removal"
+                  type="how-it-works"
+                  index={2}
                   alt="Hair Removal Treatment Areas - Lower Body"
                   className="w-full h-auto object-cover rounded-xl"
                 />
@@ -381,8 +387,11 @@ export default function HairRemovalPage() {
             </div>
             
             <div className="relative rounded-xl overflow-hidden shadow-md">
-              <img 
-                src="/images/placeholders/triple-wavelength-tech.jpg" 
+              <TreatmentImage 
+                category="body-care"
+                treatment="hair-removal"
+                type="technology"
+                index={1}
                 alt="Triple Wavelength Technology"
                 className="w-full h-auto object-cover rounded-xl"
               />
@@ -444,8 +453,11 @@ export default function HairRemovalPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02]">
               <div className="h-64 overflow-hidden">
-                <img 
-                  src="/images/placeholders/permanent-hair-removal.jpg" 
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="hair-removal"
+                  type="benefits"
+                  index={1}
                   alt="Permanent Hair Removal"
                   className="w-full h-full object-cover"
                 />
@@ -481,8 +493,11 @@ export default function HairRemovalPage() {
             
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02]">
               <div className="h-64 overflow-hidden">
-                <img 
-                  src="/images/placeholders/skin-whitening.jpg" 
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="hair-removal"
+                  type="benefits"
+                  index={2}
                   alt="Skin Whitening"
                   className="w-full h-full object-cover"
                 />

@@ -51,8 +51,10 @@ export default function NewDoubloPage() {
       {/* Hero Section */}
       <section className="relative flex min-h-[80vh] flex-col items-center justify-center px-4 py-20 text-center">
         <div className="absolute inset-0 bg-gray-900 overflow-hidden">
-          <Image
-            src="/images/treatments/new-doublo/hero.jpg"
+          <TreatmentImage
+            category="new-doublo"
+            treatment="main"
+            type="hero"
             alt="New Doublo Technology"
             fill
             className="object-cover object-center opacity-80"
@@ -166,34 +168,55 @@ export default function NewDoubloPage() {
             </p>
           </div>
           
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <div className="mb-4 h-48 w-full overflow-hidden rounded-lg">
+                <TreatmentImage 
+                  category="new-doublo"
+                  treatment="benefits"
+                  type="feature"
+                  index={1}
+                  alt="Skin Tightening"
+                  className="h-full w-full object-cover"
+                />
               </div>
-              <h3 className="mb-3 text-xl font-bold">Zero Downtime</h3>
+              <h3 className="mb-2 text-xl font-bold">Skin Tightening</h3>
               <p className="text-gray-600">
-                Return to your busy lifestyle immediately after treatment with no recovery time needed—perfect for Hong Kong's fast-paced lifestyle.
+                Experience immediate and long-lasting skin tightening effects with our advanced ultrasound technology.
               </p>
             </div>
-            
+
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 8-8 8"/><path d="m8 8 8 8"/></svg>
+              <div className="mb-4 h-48 w-full overflow-hidden rounded-lg">
+                <TreatmentImage 
+                  category="new-doublo"
+                  treatment="benefits"
+                  type="feature"
+                  index={2}
+                  alt="Collagen Boost"
+                  className="h-full w-full object-cover"
+                />
               </div>
-              <h3 className="mb-3 text-xl font-bold">Non-Invasive</h3>
+              <h3 className="mb-2 text-xl font-bold">Collagen Boost</h3>
               <p className="text-gray-600">
-                Achieve surgical-like results without needles, incisions, or anesthesia for a completely natural transformation.
+                Stimulate natural collagen production for firmer, more youthful-looking skin.
               </p>
             </div>
-            
+
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h20"/><path d="M2 4h20"/><path d="M2 20h20"/></svg>
+              <div className="mb-4 h-48 w-full overflow-hidden rounded-lg">
+                <TreatmentImage 
+                  category="new-doublo"
+                  treatment="benefits"
+                  type="feature"
+                  index={3}
+                  alt="No Downtime"
+                  className="h-full w-full object-cover"
+                />
               </div>
-              <h3 className="mb-3 text-xl font-bold">Customizable</h3>
+              <h3 className="mb-2 text-xl font-bold">No Downtime</h3>
               <p className="text-gray-600">
-                Personalized treatment plans address your unique needs and beauty goals with precision targeting for optimal results.
+                Return to your daily activities immediately after treatment with minimal to no recovery time needed.
               </p>
             </div>
           </div>
@@ -259,11 +282,12 @@ export default function NewDoubloPage() {
             <div className="rounded-lg bg-white p-8 shadow-sm">
               <div className="flex flex-col items-center">
                 <div className="mb-6 h-20 w-20 overflow-hidden rounded-full">
-                  <Image 
-                    src="/images/treatments/avatars/client-5.jpg"
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment="testimonials"
+                    type="avatar"
+                    index={1}
                     alt="Michelle Testimonial"
-                    width={80}
-                    height={80}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -280,11 +304,12 @@ export default function NewDoubloPage() {
             <div className="rounded-lg bg-white p-8 shadow-sm">
               <div className="flex flex-col items-center">
                 <div className="mb-6 h-20 w-20 overflow-hidden rounded-full">
-                  <Image 
-                    src="/images/treatments/avatars/client-6.jpg"
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment="testimonials"
+                    type="avatar"
+                    index={2}
                     alt="Sophia Testimonial"
-                    width={80}
-                    height={80}
                     className="w-full h-full object-cover"
                   />
                 </div>
