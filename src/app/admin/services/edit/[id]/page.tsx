@@ -22,6 +22,82 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import PlaceholderImage from '@/components/PlaceholderImage'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PageImagesTabs } from '@/components/PageImagesTabs'
+
+// Define types for the application
+interface ServiceSection {
+  id: string;
+  name: string;
+  type: string;
+}
+
+interface ServiceTemplate {
+  name: string;
+  sections: ServiceSection[];
+}
+
+interface ServiceTemplates {
+  [key: string]: ServiceTemplate;
+}
+
+interface ServiceImageSet {
+  template?: string;
+  hero?: string;
+  how_it_works?: string[];
+  benefits?: string[];
+  results?: string[];
+  testimonials?: string;
+  before_after?: string[];
+  technology?: string;
+  comparison?: string;
+  [key: string]: string | string[] | undefined;
+}
+
+interface ServiceMockImages {
+  [key: string]: ServiceImageSet;
+}
+
+interface ServiceFormData {
+  name: string;
+  slug: string;
+  category: string;
+  price: string;
+  duration: string;
+  short_description: string;
+  long_description: string;
+  benefits: string;
+  suitable_for: string;
+  contraindications: string;
+  preparation: string;
+  aftercare: string;
+  status: string;
+  [key: string]: string;
+}
+
+interface MediaItem {
+  id: number;
+  path: string;
+  name: string;
+  type: string;
+  size: string;
+}
+
+interface Service {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  duration: string;
+  status: string;
+  slug: string;
+  short_description: string;
+  long_description: string;
+  benefits: string;
+  suitable_for: string;
+  contraindications: string;
+  preparation: string;
+  aftercare: string;
+}
 
 // Categories for dropdown - matching the categories in the services page
 const categories = [
@@ -34,7 +110,7 @@ const categories = [
 ]
 
 // Mock data for services - same as in services page
-const mockServices = [
+const mockServices: Service[] = [
   {
     id: 1,
     name: 'Lymphatic Detox',
@@ -182,7 +258,7 @@ const mockServices = [
 ]
 
 // Mock images for services, organized by sections
-const serviceMockImages = {
+const serviceMockImages: ServiceMockImages = {
   'body-care/lymphatic-detox': {
     template: 'body-care',
     hero: '/images/treatments/lymphatic/hero.jpg',
@@ -226,11 +302,44 @@ const serviceMockImages = {
     technology: '/images/treatments/v-line/technology.jpg',
     comparison: '/images/treatments/v-line/comparison.jpg',
     testimonials: '/images/treatments/v-line/testimonial.jpg'
+  },
+  'new-doublo/sculpt-lift': {
+    template: 'new-doublo',
+    hero: '/images/treatments/new-doublo/sculpt-lift/hero.jpg',
+    before_after: [
+      '/images/treatments/new-doublo/sculpt-lift/before-after-1.jpg',
+      '/images/treatments/new-doublo/sculpt-lift/before-after-2.jpg',
+    ],
+    technology: '/images/treatments/new-doublo/sculpt-lift/technology.jpg',
+    comparison: '/images/treatments/new-doublo/sculpt-lift/comparison.jpg',
+    testimonials: '/images/treatments/new-doublo/sculpt-lift/testimonial.jpg'
+  },
+  'new-doublo/neck-rejuvenation': {
+    template: 'new-doublo',
+    hero: '/images/treatments/new-doublo/neck-rejuvenation/hero.jpg',
+    before_after: [
+      '/images/treatments/new-doublo/neck-rejuvenation/before-after-1.jpg',
+      '/images/treatments/new-doublo/neck-rejuvenation/before-after-2.jpg',
+    ],
+    technology: '/images/treatments/new-doublo/neck-rejuvenation/technology.jpg',
+    comparison: '/images/treatments/new-doublo/neck-rejuvenation/comparison.jpg',
+    testimonials: '/images/treatments/new-doublo/neck-rejuvenation/testimonial.jpg'
+  },
+  'new-doublo/youth-revival': {
+    template: 'new-doublo',
+    hero: '/images/treatments/new-doublo/youth-revival/hero.jpg',
+    before_after: [
+      '/images/treatments/new-doublo/youth-revival/before-after-1.jpg',
+      '/images/treatments/new-doublo/youth-revival/before-after-2.jpg',
+    ],
+    technology: '/images/treatments/new-doublo/youth-revival/technology.jpg',
+    comparison: '/images/treatments/new-doublo/youth-revival/comparison.jpg',
+    testimonials: '/images/treatments/new-doublo/youth-revival/testimonial.jpg'
   }
 };
 
 // Service page templates with their sections
-const serviceTemplates = {
+const serviceTemplates: ServiceTemplates = {
   'body-care': {
     name: 'Body Care Template',
     sections: [
@@ -276,58 +385,70 @@ const serviceTemplates = {
 };
 
 // Mock media library images
-const mockMediaLibrary = [
-  { id: 1, path: '/images/media/image-1.jpg', name: 'Image 1', type: 'image/jpeg', size: '245 KB' },
-  { id: 2, path: '/images/media/image-2.jpg', name: 'Image 2', type: 'image/jpeg', size: '312 KB' },
-  { id: 3, path: '/images/media/image-3.jpg', name: 'Image 3', type: 'image/jpeg', size: '178 KB' },
-  { id: 4, path: '/images/media/image-4.jpg', name: 'Image 4', type: 'image/jpeg', size: '425 KB' },
-  { id: 5, path: '/images/media/image-5.jpg', name: 'Image 5', type: 'image/jpeg', size: '156 KB' },
-  { id: 6, path: '/images/media/image-6.jpg', name: 'Image 6', type: 'image/jpeg', size: '289 KB' },
-  { id: 7, path: '/images/media/image-7.jpg', name: 'Image 7', type: 'image/jpeg', size: '341 KB' },
-  { id: 8, path: '/images/media/image-8.jpg', name: 'Image 8', type: 'image/jpeg', size: '203 KB' },
+const mockMediaLibrary: MediaItem[] = [
+  { id: 1, path: '/images/placeholders/spa01.jpg', name: 'Spa Image', type: 'image/jpeg', size: '245 KB' },
+  { id: 2, path: '/images/treatments/new-doublo/sculpt-lift/hero.jpg', name: 'Sculpt & Lift Hero', type: 'image/jpeg', size: '312 KB' },
+  { id: 3, path: '/images/treatments/new-doublo/sculpt-lift/before-after-1.jpg', name: 'Sculpt & Lift Before/After 1', type: 'image/jpeg', size: '178 KB' },
+  { id: 4, path: '/images/treatments/new-doublo/sculpt-lift/before-after-2.jpg', name: 'Sculpt & Lift Before/After 2', type: 'image/jpeg', size: '425 KB' },
+  { id: 5, path: '/images/treatments/new-doublo/sculpt-lift/technology.jpg', name: 'Sculpt & Lift Technology', type: 'image/jpeg', size: '156 KB' },
+  { id: 6, path: '/images/treatments/new-doublo/sculpt-lift/comparison.jpg', name: 'Sculpt & Lift Comparison', type: 'image/jpeg', size: '289 KB' },
+  { id: 7, path: '/images/treatments/v-line/hero.jpg', name: 'V-Line Hero', type: 'image/jpeg', size: '341 KB' },
+  { id: 8, path: '/images/treatments/v-line/technology.jpg', name: 'V-Line Technology', type: 'image/jpeg', size: '203 KB' },
+  { id: 9, path: '/images/treatments/lymphatic/hero.jpg', name: 'Lymphatic Hero', type: 'image/jpeg', size: '275 KB' },
+  { id: 10, path: '/images/placeholders/new-doublo-hero.jpg', name: 'New Doublo Hero', type: 'image/jpeg', size: '188 KB' },
 ];
 
 // Function to retrieve actual images from the service page
-const fetchActualPageImages = (slug) => {
+const fetchActualPageImages = (slug: string): ServiceImageSet => {
   // This is a mock function that would normally fetch images from the API or page renderer
   // In a real implementation, this would analyze the page content to extract images
   
   // Default empty structure
   const defaultImages = {
     hero: null,
-    how_it_works: [],
-    benefits: [],
-    results: [],
+    how_it_works: [] as string[],
+    benefits: [] as string[],
+    results: [] as string[],
     testimonials: null,
-    before_after: [],
+    before_after: [] as string[],
     technology: null,
     comparison: null
   };
   
-  // If we don't have mock images for this slug, check if we can parse from actual page
-  if (!serviceMockImages[slug]) {
-    // In the prototype, we'll return placeholder image paths matching the section names
-    const template = slug.split('/')[0];
-    const pageType = slug.split('/')[1];
+  // If we don't have mock images for this slug, use paths based on the slug
+  if (!serviceMockImages[slug as keyof typeof serviceMockImages]) {
+    // Parse the template type from the slug
+    const templateType = slug.split('/')[0];
     
-    // Generate placeholder paths that would simulate what we'd get from a real page
+    // Generate image paths based on the service slug
+    // This creates more accurate paths instead of using generic placeholders
     return {
-      hero: `/images/actual/${template}/${pageType}/hero.jpg`,
-      how_it_works: [1, 2, 3].map(n => `/images/actual/${template}/${pageType}/process-${n}.jpg`),
-      benefits: [1, 2].map(n => `/images/actual/${template}/${pageType}/benefit-${n}.jpg`),
-      results: [1, 2].map(n => `/images/actual/${template}/${pageType}/result-${n}.jpg`),
-      testimonials: `/images/actual/${template}/${pageType}/testimonial.jpg`,
-      before_after: [1, 2].map(n => `/images/actual/${template}/${pageType}/before-after-${n}.jpg`),
-      technology: `/images/actual/${template}/${pageType}/technology.jpg`,
-      comparison: `/images/actual/${template}/${pageType}/comparison.jpg`,
+      hero: `/images/treatments/${slug}/hero.jpg`,
+      how_it_works: [1, 2, 3].map(n => `/images/treatments/${slug}/process-${n}.jpg`),
+      benefits: [1, 2].map(n => `/images/treatments/${slug}/benefit-${n}.jpg`),
+      results: [1, 2].map(n => `/images/treatments/${slug}/results-${n}.jpg`),
+      testimonials: `/images/treatments/${slug}/testimonial.jpg`,
+      before_after: [1, 2].map(n => `/images/treatments/${slug}/before-after-${n}.jpg`),
+      technology: `/images/treatments/${slug}/technology.jpg`,
+      comparison: `/images/treatments/${slug}/comparison.jpg`,
     };
   }
   
-  return serviceMockImages[slug] || defaultImages;
+  return serviceMockImages[slug as keyof typeof serviceMockImages] || defaultImages;
 };
 
 // Add image preview enhancement to display original vs current image
-const ImagePreview = ({ currentImage, originalImage, className = '', aspectRatio = 'aspect-[3/2]' }) => {
+const ImagePreview = ({ 
+  currentImage, 
+  originalImage, 
+  className = '', 
+  aspectRatio = 'aspect-[3/2]' 
+}: {
+  currentImage?: string;
+  originalImage?: string;
+  className?: string;
+  aspectRatio?: string;
+}) => {
   const [showOriginal, setShowOriginal] = useState(false);
   
   return (
@@ -379,11 +500,11 @@ export default function EditServicePage() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [mediaDialogOpen, setMediaDialogOpen] = useState(false)
-  const [selectedMediaTarget, setSelectedMediaTarget] = useState({ section: 'hero', index: 0 })
-  const [selectedMedia, setSelectedMedia] = useState(null)
-  const [serviceTemplate, setServiceTemplate] = useState('default')
-  const [sectionImages, setSectionImages] = useState({})
-  const [formData, setFormData] = useState({
+  const [selectedMediaTarget, setSelectedMediaTarget] = useState<{ section: string, index: number }>({ section: 'hero', index: 0 })
+  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null)
+  const [serviceTemplate, setServiceTemplate] = useState<string>('default')
+  const [sectionImages, setSectionImages] = useState<ServiceImageSet>({})
+  const [formData, setFormData] = useState<ServiceFormData>({
     name: '',
     slug: '',
     category: '',
@@ -398,11 +519,11 @@ export default function EditServicePage() {
     aftercare: '',
     status: '',
   })
-  const [originalImages, setOriginalImages] = useState({});
+  const [originalImages, setOriginalImages] = useState<ServiceImageSet>({});
 
   // Determine the template based on category
-  const getTemplateFromCategory = (category) => {
-    const categoryMap = {
+  const getTemplateFromCategory = (category: string) => {
+    const categoryMap: Record<string, string> = {
       'Body Care': 'body-care',
       'New Doublo': 'new-doublo',
       'Facial Services': 'facial-services'
@@ -412,7 +533,7 @@ export default function EditServicePage() {
 
   // Get active template sections
   const getTemplateSections = () => {
-    return serviceTemplates[serviceTemplate]?.sections || serviceTemplates['default'].sections;
+    return serviceTemplates[serviceTemplate as keyof typeof serviceTemplates]?.sections || serviceTemplates['default'].sections;
   }
 
   // Load service data - update to include original images
@@ -442,16 +563,19 @@ export default function EditServicePage() {
         const template = getTemplateFromCategory(service.category);
         setServiceTemplate(template);
 
+        // Ensure 'hero' tab is always selected initially
+        setActiveImageTab('hero');
+
         // Load actual images from the page
         const actualImages = fetchActualPageImages(service.slug);
         setOriginalImages(actualImages);
 
         // Set service images if they exist, otherwise use actuals
-        if (serviceMockImages[service.slug]) {
-          const templateImages = {};
-          Object.keys(serviceMockImages[service.slug]).forEach(key => {
+        if (serviceMockImages[service.slug as keyof typeof serviceMockImages]) {
+          const templateImages: Record<string, any> = {};
+          Object.keys(serviceMockImages[service.slug as keyof typeof serviceMockImages]).forEach(key => {
             if (key !== 'template') {
-              templateImages[key] = serviceMockImages[service.slug][key];
+              templateImages[key] = serviceMockImages[service.slug as keyof typeof serviceMockImages][key];
             }
           });
           setSectionImages(templateImages);
@@ -477,7 +601,7 @@ export default function EditServicePage() {
       setServiceTemplate(template);
       
       // Set active tab to first section of new template
-      const sections = serviceTemplates[template]?.sections || serviceTemplates['default'].sections;
+      const sections = serviceTemplates[template as keyof typeof serviceTemplates]?.sections || serviceTemplates['default'].sections;
       if (sections.length > 0) {
         setActiveImageTab(sections[0].id);
       }
@@ -485,14 +609,14 @@ export default function EditServicePage() {
   }, [formData.category]);
 
   // Open media library dialog
-  const openMediaDialog = (section, index = 0) => {
+  const openMediaDialog = (section: string, index = 0) => {
     setSelectedMediaTarget({ section, index });
     setSelectedMedia(null);
     setMediaDialogOpen(true);
   }
 
   // Select an image from media library
-  const handleSelectMedia = (media) => {
+  const handleSelectMedia = (media: any) => {
     setSelectedMedia(media);
   }
 
@@ -502,7 +626,7 @@ export default function EditServicePage() {
       const { section, index } = selectedMediaTarget;
       const currentSection = getTemplateSections().find(s => s.id === section);
       
-      if (currentSection.type === 'single') {
+      if (currentSection?.type === 'single') {
         // For single image sections
         setSectionImages({
           ...sectionImages,
@@ -530,12 +654,12 @@ export default function EditServicePage() {
   }
 
   // Remove image
-  const handleRemoveImage = (section, index = 0) => {
+  const handleRemoveImage = (section: string, index = 0) => {
     const currentSection = getTemplateSections().find(s => s.id === section);
     
-    if (currentSection.type === 'single') {
+    if (currentSection?.type === 'single') {
       // For single image sections, just remove the path
-      const updatedImages = { ...sectionImages };
+      const updatedImages = { ...sectionImages } as Record<string, any>;
       delete updatedImages[section];
       setSectionImages(updatedImages);
     } else {
@@ -551,7 +675,7 @@ export default function EditServicePage() {
   }
 
   // Update form data
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     
     // Auto-generate slug from name if category exists
@@ -588,7 +712,7 @@ export default function EditServicePage() {
   }
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Include image data in the form submission
     const formDataWithImages = {
@@ -597,10 +721,31 @@ export default function EditServicePage() {
       section_images: sectionImages
     };
     console.log('Form submitted:', formDataWithImages);
-    // Here you would normally send the data to an API
-    alert('Service updated successfully (mock)');
-    router.push('/admin/services');
+    
+    // Simulate successful submission
+    // Normally this would be an API call:
+    // await fetch(`/api/services/${id}`, {
+    //   method: 'PUT',
+    //   body: JSON.stringify(formDataWithImages),
+    //   headers: { 'Content-Type': 'application/json' }
+    // })
+    
+    // Redirect back to services list
+    router.push('/admin/services')
   }
+
+  // Add this helper function before the return statement
+  const getMediaDialogDescription = (): string => {
+    const { section, index } = selectedMediaTarget;
+    const currentSection = getTemplateSections().find(s => s.id === section);
+    if (!currentSection) {
+      return 'Select an image';
+    }
+    if (currentSection.type === 'multiple') {
+      return `Select image for ${currentSection.name} (Position ${index + 1})`;
+    }
+    return `Select image for ${currentSection.name}`;
+  };
 
   if (loading) {
     return (
@@ -637,7 +782,7 @@ export default function EditServicePage() {
 
   const renderSectionImageControls = () => {
     const sections = getTemplateSections();
-    const activeSection = sections.find(section => section.id === activeImageTab);
+    const activeSection = sections.find((section: ServiceSection) => section.id === activeImageTab);
     
     if (!activeSection) return null;
 
@@ -649,8 +794,8 @@ export default function EditServicePage() {
       return (
         <div className="space-y-4">
           <ImagePreview 
-            currentImage={imagePath} 
-            originalImage={originalImagePath}
+            currentImage={imagePath?.toString()} 
+            originalImage={originalImagePath?.toString()}
           />
           
           <div className="flex gap-2">
@@ -696,13 +841,17 @@ export default function EditServicePage() {
       );
     } else {
       // Multiple images section
-      const images = Array.isArray(sectionImages[activeSection.id]) ? sectionImages[activeSection.id] : [];
-      const originalSectionImages = Array.isArray(originalImages[activeSection.id]) ? originalImages[activeSection.id] : [];
+      const images = Array.isArray(sectionImages[activeSection.id]) 
+        ? sectionImages[activeSection.id] as string[] 
+        : [];
+      const originalSectionImages = Array.isArray(originalImages[activeSection.id]) 
+        ? originalImages[activeSection.id] as string[] 
+        : [];
       
       return (
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            {images.map((image, index) => {
+            {images.map((image: string, index: number) => {
               const originalImage = originalSectionImages[index];
               return (
                 <div key={index} className="relative group">
@@ -1029,37 +1178,47 @@ export default function EditServicePage() {
           <Card className="p-6">
             <h2 className="mb-4 text-xl font-bold">Page Images</h2>
             <div className="space-y-4">
-              <Tabs value={activeImageTab} onValueChange={setActiveImageTab}>
-                <div className="relative max-w-full">
-                  {getTemplateSections().length > 3 && (
-                    <>
-                      <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none bg-gradient-to-r from-background to-transparent" />
-                      <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none bg-gradient-to-l from-background to-transparent" />
-                    </>
-                  )}
-                  <TabsList 
-                    className={`mb-4 w-full ${
-                      getTemplateSections().length > 3 
-                        ? 'overflow-x-auto flex-nowrap max-w-full pb-1 px-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400' 
-                        : ''
-                    }`}
-                  >
-                    {getTemplateSections().map(section => (
-                      <TabsTrigger 
-                        key={section.id} 
-                        value={section.id} 
-                        className="flex-shrink-0 min-w-max px-4 whitespace-nowrap mx-1"
-                      >
-                        {section.name}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
+              <div className="flex flex-col gap-5">
+                {/* Image Section Selector with Visual Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {getTemplateSections().map((section) => (
+                    <div
+                      key={section.id}
+                      onClick={() => setActiveImageTab(section.id)}
+                      className={`rounded-md border p-2 cursor-pointer transition-all ${
+                        activeImageTab === section.id 
+                          ? 'bg-primary/10 border-primary shadow-sm' 
+                          : 'hover:bg-gray-50 border-gray-200'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center text-center gap-2">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          activeImageTab === section.id ? 'bg-primary text-white' : 'bg-gray-100'
+                        }`}>
+                          {section.id === 'hero' ? (
+                            <ImageIcon className="h-3 w-3" />
+                          ) : section.id === 'before_after' ? (
+                            <span className="text-xs">B/A</span>
+                          ) : section.id === 'technology' ? (
+                            <span className="text-xs">T</span>
+                          ) : section.id === 'comparison' ? (
+                            <span className="text-xs">C</span>
+                          ) : (
+                            <span className="text-xs">{section.name.charAt(0)}</span>
+                          )}
+                        </div>
+                        <span className="text-xs font-medium">{section.name}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                
-                <TabsContent value={activeImageTab} className="mt-2">
+
+                {/* Image Content */}
+                <div className="border rounded-md p-4 bg-white">
+                  <h3 className="font-medium mb-4">{getTemplateSections().find(s => s.id === activeImageTab)?.name || 'Section'}</h3>
                   {renderSectionImageControls()}
-                </TabsContent>
-              </Tabs>
+                </div>
+              </div>
             </div>
           </Card>
         </div>
@@ -1071,14 +1230,7 @@ export default function EditServicePage() {
           <DialogHeader>
             <DialogTitle>Media Library</DialogTitle>
             <DialogDescription>
-              {(() => {
-                const { section, index } = selectedMediaTarget;
-                const currentSection = getTemplateSections().find(s => s.id === section);
-                if (currentSection.type === 'multiple') {
-                  return `Select image for ${currentSection.name} (Position ${index + 1})`;
-                }
-                return `Select image for ${currentSection.name}`;
-              })()}
+              {getMediaDialogDescription()}
             </DialogDescription>
           </DialogHeader>
           

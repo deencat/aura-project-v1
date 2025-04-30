@@ -269,6 +269,43 @@
       ],
       "createdAt": "2025-04-28T23:48:21.048Z",
       "updatedAt": "2025-04-28T23:48:21.048Z"
+    },
+    "memory-system-conversation-1745936443706": {
+      "name": "memory-system-conversation-1745936443706",
+      "entityType": "conversation",
+      "observations": [
+        "Conversation processed with no specific observations provided",
+        "Date: 2025-04-29"
+      ],
+      "createdAt": "2025-04-29T14:20:43.706Z",
+      "updatedAt": "2025-04-29T14:20:43.706Z"
+    },
+    "memory-system-conversation-1745936465791": {
+      "name": "memory-system-conversation-1745936465791",
+      "entityType": "conversation",
+      "observations": [
+        "Resolved issues with TreatmentImage component and image paths. Created directory structure for facials/glow and new-doublo treatments with placeholder images in public/images/treatments/. Added fallback image placeholders in public/images/placeholders/facials/. Updated Playwright tests for the TreatmentImage component to be more resilient to placeholder images. All tests now pass successfully."
+      ],
+      "createdAt": "2025-04-29T14:21:05.791Z",
+      "updatedAt": "2025-04-29T14:21:05.791Z"
+    },
+    "memory-system-conversation-1745942397529": {
+      "name": "memory-system-conversation-1745942397529",
+      "entityType": "conversation",
+      "observations": [
+        "Verified the TreatmentImage component tests are working correctly. Updated the New Doublo tests to avoid strict mode violations by using first() selectors for duplicate elements. Created necessary directory structures and placeholder images for the TreatmentImage component. Next step is to implement TreatmentImage consistently across all treatment pages."
+      ],
+      "createdAt": "2025-04-29T15:59:57.529Z",
+      "updatedAt": "2025-04-29T15:59:57.530Z"
+    },
+    "memory-system-conversation-1745968584874": {
+      "name": "memory-system-conversation-1745968584874",
+      "entityType": "conversation",
+      "observations": [
+        "Implemented improved tab components for better visibility"
+      ],
+      "createdAt": "2025-04-29T23:16:24.874Z",
+      "updatedAt": "2025-04-29T23:16:24.875Z"
     }
   },
   "relations": []

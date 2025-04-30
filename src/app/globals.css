@@ -142,3 +142,32 @@
 .hover\:scrollbar-thumb-gray-400:hover {
   scrollbar-color: rgba(156, 163, 175, 0.8) transparent;
 } 
+
+/* Fix for Page Images Tabs - ensure Hero tab is always visible */
+.tabs-list {
+  scroll-behavior: smooth;
+  scroll-padding-left: 0;
+  /* Need more space for the tabs to be visible */
+  padding: 2px 4px;
+  scrollbar-width: thin;
+}
+
+/* Remove the sticky positioning that might be hiding tabs
+.tabs-list .first-tab {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: var(--muted);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+*/
+
+/* Ensure the TabsList starts with scroll 0 when it loads */
+@keyframes resetScroll {
+  from { scroll-behavior: auto; }
+  to { scroll-behavior: smooth; }
+}
+
+.tabs-list {
+  animation: resetScroll 0.1s;
+} 

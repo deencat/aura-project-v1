@@ -262,7 +262,7 @@ export default function PlaceholderImage({
     );
   }
   
-  // Otherwise use the placeholder styling
+  // If image failed to load or wasn't provided, show a placeholder
   // Get the gradient type
   const gradientType = getGradientType();
   const gradient = gradients[gradientType] || gradients.beauty;
@@ -274,8 +274,8 @@ export default function PlaceholderImage({
       
       {/* Placeholder content */}
       <div className="text-center p-4 z-10">
-        <div className="font-medium text-gray-700 mb-2">{imageLabel}</div>
-        <div className="text-sm text-gray-500">Image placeholder</div>
+        <div className="font-medium text-gray-700 mb-2">{imageError ? "Image failed to load" : imageLabel}</div>
+        <div className="text-sm text-gray-500">{imageError ? imageUrl?.split('/').pop() || "Placeholder" : "Image placeholder"}</div>
       </div>
       
       {/* Image label */}

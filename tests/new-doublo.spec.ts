@@ -120,9 +120,9 @@ test.describe('New Doublo Pages', () => {
     await expect(page.getByRole('heading', { name: /Targeting Your Aging Signs/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: /The Ultimate Solution/i })).toBeVisible();
     
-    // Verify pricing information is displayed
-    await expect(page.getByText(/HK\$1,680/)).toBeVisible();
-    await expect(page.getByText(/SAVE 43%/)).toBeVisible();
+    // Verify pricing information is displayed - fix strict mode violation by using first()
+    await expect(page.getByText(/HK\$1,680/).first()).toBeVisible();
+    await expect(page.getByText(/SAVE 43%/).first()).toBeVisible();
   });
   
   test('navigation from homepage to New Doublo pages', async ({ page }) => {
