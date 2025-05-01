@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { inter, playfair } from './fonts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import ServiceInitializer from '@/components/ServiceInitializer'
 
 export const metadata: Metadata = {
   title: 'Aura - Tech-Forward Beauty',
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen font-sans">
+        <ServiceInitializer />
         <Header />
         <main>
           {children}

@@ -37,19 +37,42 @@ export default function PlaceholderImage({
 }: PlaceholderImageProps) {
   // Add state to track image loading errors
   const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Helper function to extract filename from path for debugging
+  const getFilenameFromPath = (path: string) => {
+    return path.split('/').pop() || path;
+  };
 
   // If imageUrl is provided, use it directly
   if (imageUrl && !imageError) {
     return (
       <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          </div>
+        )}
         <Image 
           src={imageUrl}
           alt={`Image ${number}`}
           fill
           style={{objectFit: 'cover'}}
           priority={number === 1}
-          onError={() => setImageError(true)}
+          onError={() => {
+            console.log(`Image failed to load: ${imageUrl}`);
+            setImageError(true);
+          }}
+          onLoad={() => setIsLoading(false)}
         />
+        {imageError && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100">
+            <div className="text-center text-gray-500">
+              <p>Image failed to load</p>
+              <p className="text-xs text-gray-400">{getFilenameFromPath(imageUrl)}</p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -57,12 +80,30 @@ export default function PlaceholderImage({
   // Build image path based on provided params
   let imagePath = '/images/placeholders/'
   
+  // Special handling for new-doublo pages
+  if (page === 'new-doublo') {
+    // For new-doublo sections, we need custom placeholder paths
+    if (section === 'hero') {
+      imagePath = '/images/placeholders/new-doublo-hero.jpg';
+    } else if (section === 'before_after') {
+      imagePath = `/images/placeholders/new-doublo-before-after-${number}.jpg`;
+    } else if (section === 'technology') {
+      imagePath = '/images/placeholders/new-doublo-technology.jpg';
+    } else if (section === 'comparison') {
+      imagePath = '/images/placeholders/new-doublo-comparison.jpg';
+    } else if (section === 'testimonials') {
+      imagePath = '/images/placeholders/new-doublo-testimonial.jpg';
+    } else {
+      // Default section fallback
+      imagePath += `new-doublo-${section}-${number}.jpg`;
+    }
+  }
   // If page and section are provided, use the new naming convention
-  if (page && section) {
-    imagePath += `${page}-${section}-${number}.jpg`
+  else if (page && section) {
+    imagePath += `${page}-${section}-${number}.jpg`;
   } else {
     // Fall back to the old naming convention
-    imagePath += `${type}-${number}.jpg`
+    imagePath += `${type}-${number}.jpg`;
   }
 
   // Check if we should attempt to use a real image
@@ -161,68 +202,49 @@ export default function PlaceholderImage({
   
   // Function to create image label
   const getImageLabel = () => {
-    if (page && section) {
-      if (page === 'peeled-egg-skin') {
-        if (section === 'hero') {
-          return 'Peeled Egg Skin Treatment';
-        } else if (section === 'benefits') {
-          const benefitLabels = [
-            'Before & After',
-            'Treatment Process',
-            'Skin Transformation',
-            'Client Results',
-            'Application Technique'
-          ];
-          return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
+    // Special handling for v-line page
+    if (page === 'v-line' || (typeof imageUrl === 'string' && imageUrl.includes('/v-line/'))) {
+      if (section === 'hero' || imageUrl?.includes('/hero.jpg')) {
+        return 'V-Line Perfect Jawline';
+      } else if (section === 'before_after' || imageUrl?.includes('/before-after')) {
+        return `V-Line Before & After ${number}`;
+      } else if (section === 'technology' || imageUrl?.includes('/technology')) {
+        return 'V-Line Technology';
+      } else if (section === 'comparison' || imageUrl?.includes('/comparison')) {
+        return 'V-Line Comparison';
+      } else if (section === 'testimonials' || imageUrl?.includes('/testimonial')) {
+        return 'Client Testimonial';
+      }
+      return 'V-Line Treatment';
+    }
+    // Special handling for new-doublo pages
+    else if (page === 'new-doublo' || (typeof imageUrl === 'string' && imageUrl.includes('/new-doublo/'))) {
+      if (section === 'hero' || imageUrl?.includes('/hero.jpg')) {
+        return 'New Doublo Treatment';
+      } else if (section === 'before_after' || imageUrl?.includes('/before-after')) {
+        return `Before & After ${number}`;
+      } else if (section === 'technology' || imageUrl?.includes('/technology')) {
+        return 'Technology Showcase';
+      } else if (section === 'comparison' || imageUrl?.includes('/comparison')) {
+        return 'Treatment Comparison';
+      } else if (section === 'testimonials' || imageUrl?.includes('/testimonial')) {
+        return 'Client Testimonial';
+      }
+      
+      // Try to extract the service name for better labeling
+      if (typeof imageUrl === 'string') {
+        const parts = imageUrl.split('/');
+        const serviceIndex = parts.findIndex(p => p === 'new-doublo');
+        if (serviceIndex >= 0 && parts.length > serviceIndex + 1) {
+          const serviceName = parts[serviceIndex + 1];
+          if (serviceName === 'sculpt-lift') return 'Sculpt & Lift';
+          if (serviceName === 'neck-rejuvenation') return 'Neck Rejuvenation';
+          if (serviceName === 'youth-revival') return 'Youth Revival';
+          return serviceName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
       }
-      else if (page === 'laser-treatment') {
-        if (section === 'hero') {
-          return 'Advanced Laser Treatment';
-        } else if (section === 'benefits') {
-          const benefitLabels = [
-            'Before & After',
-            'Treatment Process',
-            'Skin Rejuvenation',
-            'Client Results',
-            'Advanced Technology'
-          ];
-          return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
-        }
-      }
-      else if (page === 'mole-wart-removal') {
-        if (section === 'hero') {
-          return 'Mole Wart Skin Growth Removal';
-        } else if (section === 'benefits') {
-          const benefitLabels = [
-            'Before & After',
-            'Treatment Process',
-            'Precision Technology',
-            'Healing Process',
-            'Final Results'
-          ];
-          return number <= benefitLabels.length ? benefitLabels[number - 1] : `${page} ${section}`;
-        }
-      }
-      else if (page === 'new-doublo') {
-        if (section === 'hero') {
-          return 'SD微雕拉提 (Micro-Sculpting Lift)';
-        } else if (section === 'device') {
-          return 'New Doublo™ SD Synergy Lifting';
-        } else if (section === 'results') {
-          return 'Visible Rejuvenation Results';
-        } else if (section === 'neck') {
-          const neckLabels = [
-            'Before & After Neck Treatment',
-            'Neck Rejuvenation Process',
-            'Advanced Neck Technology',
-            'Client Neck Results'
-          ];
-          return number <= neckLabels.length ? neckLabels[number - 1] : `Neck Image ${number}`;
-        }
-      }
-      return `${page} ${section}`;
-    } 
+      return 'New Doublo Treatment';
+    }
     // Handle old format
     else if (type === 'treatment') {
       const treatmentLabels = [

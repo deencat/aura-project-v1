@@ -42,11 +42,19 @@ export default function TreatmentImage({
       if (['how-it-works', 'benefits', 'results', 'gallery', 'testimonial', 'before-after'].includes(type) && index > 0) {
         path = `/images/treatments/${category}/${treatment}/${type}-${index}.jpg`;
       } else {
-        path = `/images/treatments/${category}/${treatment}/${type}.jpg`;
+        // For hero image, check if this is the youth-revival service which uses a video
+        if (type === 'hero' && category === 'new-doublo' && treatment === 'youth-revival') {
+          path = `/images/treatments/${category}/${treatment}/${type}.mp4`;
+        } else {
+          path = `/images/treatments/${category}/${treatment}/${type}.jpg`;
+        }
       }
       
       // Get a valid image path or fallback
       try {
+        // Force refresh of the cache every time by clearing the image source first
+        setImageSrc('');
+        
         const validPath = await getValidImagePath(
           path, 
           getFallbackImage(category, type)

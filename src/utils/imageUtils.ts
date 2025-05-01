@@ -76,10 +76,21 @@ export async function getValidImagePath(
     // we'll assume it doesn't exist yet and use the fallback
     
     if (imagePath.includes('/treatments/') && !imagePath.includes('/placeholders/')) {
-      const response = await fetch(imagePath, { method: 'HEAD' });
+      // Add cache busting parameter using the cache version
+      const cacheVersion = getImageCacheVersion();
+      const imagePathWithCacheBuster = `${imagePath}?v=${cacheVersion}`;
+      
+      const response = await fetch(imagePathWithCacheBuster, { 
+        method: 'HEAD',
+        cache: 'no-cache' // Avoid cache when checking for the image
+      });
+      
       if (!response.ok) {
         throw new Error('Image not found');
       }
+      
+      // Return path with cache buster to force browser to load the newest version
+      return imagePathWithCacheBuster;
     }
     
     return imagePath;
@@ -100,4 +111,85 @@ export async function getValidImagePath(
  */
 export function getFallbackImage(category: string, section: string): string {
   return `/images/placeholders/${category}/${section}.jpg`;
+}
+
+// Add a cache version timestamp in localStorage to help with cache busting
+export function getImageCacheVersion(): string {
+  // Initialize if not set
+  if (typeof window !== 'undefined' && !localStorage.getItem('imageCacheVersion')) {
+    localStorage.setItem('imageCacheVersion', Date.now().toString());
+  }
+  
+  // Return current version or generate a new one
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('imageCacheVersion') || Date.now().toString();
+  }
+  
+  return Date.now().toString();
+}
+
+// Map to store timestamps for purged images
+const imageCacheMap = new Map<string, number>();
+
+/**
+ * Purges the image cache for a specific treatment by updating the cache version
+ * This forces the browser to reload images rather than using cached versions
+ * 
+ * @param category - The treatment category
+ * @param treatment - The treatment name
+ */
+export function purgeImageCache(category?: string, treatment?: string): void {
+  if (typeof window === 'undefined') return;
+  
+  // Set new cache version
+  localStorage.setItem('imageCacheVersion', Date.now().toString());
+  
+  // If category and treatment are provided, update the imageCacheMap as well
+  if (category && treatment) {
+    const key = `${category}/${treatment}`;
+    imageCacheMap.set(key, Date.now());
+  }
+  
+  // If we're in development mode, log this action
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`🧹 Image cache purged${category ? ` for ${category}/${treatment}` : ''}. New version: ${getImageCacheVersion()}`);
+  }
+}
+
+/**
+ * Gets a cache-busting URL for an image based on its service
+ * 
+ * @param imagePath The path of the image
+ * @param category The service category
+ * @param slug The service slug
+ * @returns A cache-busting URL for the image
+ */
+export function getCacheBustedImageUrl(
+  imagePath: string, 
+  category?: string, 
+  slug?: string
+): string {
+  if (!imagePath) return '';
+  
+  // If no category/slug provided, use the full image path to extract it
+  let cacheKey = '';
+  
+  if (category && slug) {
+    cacheKey = `${category}/${slug}`;
+  } else {
+    // Try to extract from image path
+    const match = imagePath.match(/\/([\w-]+)\/([\w-]+)\//);
+    if (match && match.length >= 3) {
+      cacheKey = `${match[1]}/${match[2]}`;
+    }
+  }
+  
+  // Add timestamp parameter for cache busting if we have a key
+  if (cacheKey && imageCacheMap.has(cacheKey)) {
+    const timestamp = imageCacheMap.get(cacheKey);
+    const separator = imagePath.includes('?') ? '&' : '?';
+    return `${imagePath}${separator}t=${timestamp}`;
+  }
+  
+  return imagePath;
 } 

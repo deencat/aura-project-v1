@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
@@ -15,6 +15,7 @@ import {
   Ticket,
   Image
 } from 'lucide-react'
+import { initializeServiceStorage } from '@/utils/serviceStorage'
 
 interface SidebarLinkProps {
   href: string
@@ -45,6 +46,12 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+
+  // Initialize service storage for admin area
+  useEffect(() => {
+    const services = initializeServiceStorage();
+    console.log('Admin service storage initialized:', services.length, 'services found');
+  }, []);
 
   const navItems = [
     { href: '/admin', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },

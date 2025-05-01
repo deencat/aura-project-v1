@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import PlaceholderImage from '@/components/PlaceholderImage'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PageImagesTabs } from '@/components/PageImagesTabs'
+import { purgeImageCache, getCacheBustedImageUrl } from '@/utils/imageUtils'
 
 // Define types for the application
 interface ServiceSection {
@@ -42,15 +43,16 @@ interface ServiceTemplates {
 
 interface ServiceImageSet {
   template?: string;
-  hero?: string;
+  hero?: string | null;
+  hero_type?: 'image' | 'video'; // Add media type field for hero
   how_it_works?: string[];
   benefits?: string[];
   results?: string[];
-  testimonials?: string;
+  testimonials?: string | null;
   before_after?: string[];
-  technology?: string;
-  comparison?: string;
-  [key: string]: string | string[] | undefined;
+  technology?: string | null;
+  comparison?: string | null;
+  [key: string]: string | string[] | undefined | null | 'image' | 'video';
 }
 
 interface ServiceMockImages {
@@ -257,87 +259,6 @@ const mockServices: Service[] = [
   }
 ]
 
-// Mock images for services, organized by sections
-const serviceMockImages: ServiceMockImages = {
-  'body-care/lymphatic-detox': {
-    template: 'body-care',
-    hero: '/images/treatments/lymphatic/hero.jpg',
-    how_it_works: [
-      '/images/treatments/lymphatic/process-1.jpg',
-      '/images/treatments/lymphatic/process-2.jpg',
-      '/images/treatments/lymphatic/process-3.jpg',
-    ],
-    benefits: [
-      '/images/treatments/lymphatic/benefit-1.jpg',
-      '/images/treatments/lymphatic/benefit-2.jpg',
-    ],
-    results: [
-      '/images/treatments/lymphatic/results-1.jpg',
-      '/images/treatments/lymphatic/results-2.jpg',
-    ],
-    testimonials: '/images/treatments/lymphatic/testimonial.jpg'
-  },
-  'body-care/stretch-mark': {
-    template: 'body-care',
-    hero: '/images/treatments/stretch-mark/hero.jpg',
-    how_it_works: [
-      '/images/treatments/stretch-mark/process-1.jpg',
-      '/images/treatments/stretch-mark/process-2.jpg',
-    ],
-    benefits: [
-      '/images/treatments/stretch-mark/benefit-1.jpg',
-      '/images/treatments/stretch-mark/benefit-2.jpg',
-    ],
-    results: [
-      '/images/treatments/stretch-mark/results-1.jpg',
-    ]
-  },
-  'new-doublo/v-line': {
-    template: 'new-doublo',
-    hero: '/images/treatments/v-line/hero.jpg',
-    before_after: [
-      '/images/treatments/v-line/before-after-1.jpg',
-      '/images/treatments/v-line/before-after-2.jpg',
-    ],
-    technology: '/images/treatments/v-line/technology.jpg',
-    comparison: '/images/treatments/v-line/comparison.jpg',
-    testimonials: '/images/treatments/v-line/testimonial.jpg'
-  },
-  'new-doublo/sculpt-lift': {
-    template: 'new-doublo',
-    hero: '/images/treatments/new-doublo/sculpt-lift/hero.jpg',
-    before_after: [
-      '/images/treatments/new-doublo/sculpt-lift/before-after-1.jpg',
-      '/images/treatments/new-doublo/sculpt-lift/before-after-2.jpg',
-    ],
-    technology: '/images/treatments/new-doublo/sculpt-lift/technology.jpg',
-    comparison: '/images/treatments/new-doublo/sculpt-lift/comparison.jpg',
-    testimonials: '/images/treatments/new-doublo/sculpt-lift/testimonial.jpg'
-  },
-  'new-doublo/neck-rejuvenation': {
-    template: 'new-doublo',
-    hero: '/images/treatments/new-doublo/neck-rejuvenation/hero.jpg',
-    before_after: [
-      '/images/treatments/new-doublo/neck-rejuvenation/before-after-1.jpg',
-      '/images/treatments/new-doublo/neck-rejuvenation/before-after-2.jpg',
-    ],
-    technology: '/images/treatments/new-doublo/neck-rejuvenation/technology.jpg',
-    comparison: '/images/treatments/new-doublo/neck-rejuvenation/comparison.jpg',
-    testimonials: '/images/treatments/new-doublo/neck-rejuvenation/testimonial.jpg'
-  },
-  'new-doublo/youth-revival': {
-    template: 'new-doublo',
-    hero: '/images/treatments/new-doublo/youth-revival/hero.jpg',
-    before_after: [
-      '/images/treatments/new-doublo/youth-revival/before-after-1.jpg',
-      '/images/treatments/new-doublo/youth-revival/before-after-2.jpg',
-    ],
-    technology: '/images/treatments/new-doublo/youth-revival/technology.jpg',
-    comparison: '/images/treatments/new-doublo/youth-revival/comparison.jpg',
-    testimonials: '/images/treatments/new-doublo/youth-revival/testimonial.jpg'
-  }
-};
-
 // Service page templates with their sections
 const serviceTemplates: ServiceTemplates = {
   'body-care': {
@@ -392,99 +313,446 @@ const mockMediaLibrary: MediaItem[] = [
   { id: 4, path: '/images/treatments/new-doublo/sculpt-lift/before-after-2.jpg', name: 'Sculpt & Lift Before/After 2', type: 'image/jpeg', size: '425 KB' },
   { id: 5, path: '/images/treatments/new-doublo/sculpt-lift/technology.jpg', name: 'Sculpt & Lift Technology', type: 'image/jpeg', size: '156 KB' },
   { id: 6, path: '/images/treatments/new-doublo/sculpt-lift/comparison.jpg', name: 'Sculpt & Lift Comparison', type: 'image/jpeg', size: '289 KB' },
-  { id: 7, path: '/images/treatments/v-line/hero.jpg', name: 'V-Line Hero', type: 'image/jpeg', size: '341 KB' },
-  { id: 8, path: '/images/treatments/v-line/technology.jpg', name: 'V-Line Technology', type: 'image/jpeg', size: '203 KB' },
+  { id: 7, path: '/images/treatments/new-doublo/v-line/hero.jpg', name: 'V-Line Hero', type: 'image/jpeg', size: '341 KB' },
+  { id: 8, path: '/images/treatments/new-doublo/v-line/technology.jpg', name: 'V-Line Technology', type: 'image/jpeg', size: '203 KB' },
   { id: 9, path: '/images/treatments/lymphatic/hero.jpg', name: 'Lymphatic Hero', type: 'image/jpeg', size: '275 KB' },
   { id: 10, path: '/images/placeholders/new-doublo-hero.jpg', name: 'New Doublo Hero', type: 'image/jpeg', size: '188 KB' },
+  { id: 11, path: '/images/treatments/new-doublo/youth-revival/hero.mp4', name: 'Youth Revival Hero Video', type: 'video/mp4', size: '4.2 MB' },
 ];
 
-// Function to retrieve actual images from the service page
-const fetchActualPageImages = (slug: string): ServiceImageSet => {
-  // This is a mock function that would normally fetch images from the API or page renderer
-  // In a real implementation, this would analyze the page content to extract images
+// Helper function to verify if an image exists with a HEAD request
+const verifyImageExists = async (imagePath: string): Promise<boolean> => {
+  try {
+    const response = await fetch(imagePath, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Utility function to generate image paths from slug
+const getImagePathsFromSlug = (slug: string): ServiceImageSet => {
+  // Parse the slug to determine category and service name 
+  const [category, serviceName] = slug.split('/');
   
-  // Default empty structure
-  const defaultImages = {
-    hero: null,
-    how_it_works: [] as string[],
-    benefits: [] as string[],
-    results: [] as string[],
-    testimonials: null,
-    before_after: [] as string[],
-    technology: null,
-    comparison: null
-  };
+  // Base path for images based consistently on the slug
+  const basePath = `/images/treatments/${slug}`;
   
-  // If we don't have mock images for this slug, use paths based on the slug
-  if (!serviceMockImages[slug as keyof typeof serviceMockImages]) {
-    // Parse the template type from the slug
-    const templateType = slug.split('/')[0];
-    
-    // Generate image paths based on the service slug
-    // This creates more accurate paths instead of using generic placeholders
-    return {
-      hero: `/images/treatments/${slug}/hero.jpg`,
-      how_it_works: [1, 2, 3].map(n => `/images/treatments/${slug}/process-${n}.jpg`),
-      benefits: [1, 2].map(n => `/images/treatments/${slug}/benefit-${n}.jpg`),
-      results: [1, 2].map(n => `/images/treatments/${slug}/results-${n}.jpg`),
-      testimonials: `/images/treatments/${slug}/testimonial.jpg`,
-      before_after: [1, 2].map(n => `/images/treatments/${slug}/before-after-${n}.jpg`),
-      technology: `/images/treatments/${slug}/technology.jpg`,
-      comparison: `/images/treatments/${slug}/comparison.jpg`,
-    };
+  // Determine template type from category
+  const templateType = category || 'default';
+  const imageSet: ServiceImageSet = { template: templateType };
+  
+  // Add paths based on template type
+  if (category === 'body-care') {
+    imageSet.hero = `${basePath}/hero.jpg`;
+    imageSet.hero_type = 'image';
+    imageSet.how_it_works = [1, 2, 3].map(n => `${basePath}/process-${n}.jpg`);
+    imageSet.benefits = [1, 2].map(n => `${basePath}/benefit-${n}.jpg`);
+    imageSet.results = [1, 2].map(n => `${basePath}/results-${n}.jpg`);
+    imageSet.testimonials = `${basePath}/testimonial.jpg`;
+  } else if (category === 'new-doublo') {
+    // Special case for youth-revival which has a video hero
+    if (serviceName === 'youth-revival') {
+      imageSet.hero = `${basePath}/hero.mp4`;
+      imageSet.hero_type = 'video';
+    } else {
+      imageSet.hero = `${basePath}/hero.jpg`;
+      imageSet.hero_type = 'image';
+    }
+    imageSet.before_after = [1, 2].map(n => `${basePath}/before-after-${n}.jpg`);
+    imageSet.technology = `${basePath}/technology.jpg`;
+    imageSet.comparison = `${basePath}/comparison.jpg`;
+    imageSet.testimonials = `${basePath}/testimonial.jpg`;
+  } else if (category === 'facial-services') {
+    imageSet.hero = `${basePath}/hero.jpg`;
+    imageSet.hero_type = 'image';
+    imageSet.how_it_works = [1, 2, 3].map(n => `${basePath}/process-${n}.jpg`);
+    imageSet.benefits = [1, 2].map(n => `${basePath}/benefit-${n}.jpg`);
+    imageSet.results = [1, 2].map(n => `${basePath}/results-${n}.jpg`);
+  } else {
+    // Default structure
+    imageSet.hero = `${basePath}/hero.jpg`;
+    imageSet.hero_type = 'image';
+    imageSet.gallery = [1, 2, 3, 4].map(n => `${basePath}/gallery-${n}.jpg`);
   }
   
-  return serviceMockImages[slug as keyof typeof serviceMockImages] || defaultImages;
+  return imageSet;
+};
+
+// Mock images for services, organized by sections
+const generateMockServiceImages = (): ServiceMockImages => {
+  const mockData: ServiceMockImages = {};
+  
+  // Common treatments to create mock data for
+  const services = [
+    'body-care/lymphatic-detox',
+    'body-care/stretch-mark',
+    'new-doublo/v-line',
+    'new-doublo/sculpt-lift',
+    'new-doublo/neck-rejuvenation',
+    'new-doublo/youth-revival'
+  ];
+  
+  // Generate mock data based on slugs
+  services.forEach(slug => {
+    mockData[slug] = getImagePathsFromSlug(slug);
+  });
+  
+  // We can still add overrides or custom paths if needed for specific services
+  // For example, if a service has images in a unique location:
+  // mockData['some-category/special-service'].hero = '/some/custom/path.jpg';
+  
+  return mockData;
+};
+
+const serviceMockImages: ServiceMockImages = generateMockServiceImages();
+
+// Function to retrieve actual images from the service page
+const fetchActualPageImages = async (slug: string): Promise<ServiceImageSet> => {
+  // Real implementation to analyze the page content and extract images
+  
+  try {
+    // First try to get images from the API
+    try {
+      const response = await fetch(`/api/services/${slug}/images`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.images;
+      }
+    } catch (apiError) {
+      console.log('API fetch failed, falling back to file system checks', apiError);
+    }
+    
+    // Get expected image paths based on slug
+    const expectedImages = getImagePathsFromSlug(slug);
+    
+    // Create the image set structure
+    const imageSet: ServiceImageSet = { template: expectedImages.template };
+    
+    // Determine which sections to check based on template type
+    const templateType = slug.split('/')[0];
+    let templateSections: string[] = [];
+    
+    // Get sections based on template type
+    if (templateType === 'body-care') {
+      templateSections = ['hero', 'how_it_works', 'benefits', 'results', 'testimonials'];
+    } else if (templateType === 'new-doublo') {
+      templateSections = ['hero', 'before_after', 'technology', 'comparison', 'testimonials'];
+    } else if (templateType === 'facial-services') {
+      templateSections = ['hero', 'process', 'ingredients', 'results', 'side_effects', 'aftercare'];
+    } else {
+      templateSections = ['hero', 'gallery'];
+    }
+    
+    // Verify which images actually exist
+    for (const section of templateSections) {
+      if (section === 'hero' && expectedImages.hero) {
+        const heroPath = expectedImages.hero;
+        const isVideoHero = expectedImages.hero_type === 'video';
+        
+        // First try with the expected extension
+        if (await verifyImageExists(heroPath)) {
+          imageSet.hero = heroPath;
+          imageSet.hero_type = isVideoHero ? 'video' : 'image';
+        } else {
+          // If not found, try alternative extension
+          let alternativeHeroPath = null;
+          
+          if (heroPath.endsWith('.jpg')) {
+            alternativeHeroPath = heroPath.replace(/\.jpg$/, '.mp4');
+          } else if (heroPath.endsWith('.mp4')) {
+            alternativeHeroPath = heroPath.replace(/\.mp4$/, '.jpg');
+          }
+          
+          if (alternativeHeroPath && await verifyImageExists(alternativeHeroPath)) {
+            imageSet.hero = alternativeHeroPath;
+            imageSet.hero_type = alternativeHeroPath.endsWith('.mp4') ? 'video' : 'image';
+            console.log(`Found hero with alternative extension: ${alternativeHeroPath}`);
+          } else {
+            // For debugging, we'll try a fallback
+            console.log(`Hero not found at ${heroPath} or alternative path, checking in fallback locations`);
+          }
+        }
+      } else if ((section === 'how_it_works' || section === 'process') && expectedImages.how_it_works) {
+        const sectionImages: string[] = [];
+        for (const imagePath of expectedImages.how_it_works) {
+          if (await verifyImageExists(imagePath)) {
+            sectionImages.push(imagePath);
+          }
+        }
+        if (sectionImages.length > 0) {
+          imageSet.how_it_works = sectionImages;
+        }
+      } else if (section === 'benefits' && expectedImages.benefits) {
+        const benefitImages: string[] = [];
+        for (const imagePath of expectedImages.benefits) {
+          if (await verifyImageExists(imagePath)) {
+            benefitImages.push(imagePath);
+          }
+        }
+        if (benefitImages.length > 0) {
+          imageSet.benefits = benefitImages;
+        }
+      } else if (section === 'results' && expectedImages.results) {
+        const resultImages: string[] = [];
+        for (const imagePath of expectedImages.results) {
+          if (await verifyImageExists(imagePath)) {
+            resultImages.push(imagePath);
+          }
+        }
+        if (resultImages.length > 0) {
+          imageSet.results = resultImages;
+        }
+      } else if (section === 'before_after' && expectedImages.before_after) {
+        const beforeAfterImages: string[] = [];
+        for (const imagePath of expectedImages.before_after) {
+          if (await verifyImageExists(imagePath)) {
+            beforeAfterImages.push(imagePath);
+          }
+        }
+        if (beforeAfterImages.length > 0) {
+          imageSet.before_after = beforeAfterImages;
+        }
+      } else if (section === 'technology' && expectedImages.technology) {
+        if (await verifyImageExists(expectedImages.technology)) {
+          imageSet.technology = expectedImages.technology;
+        }
+      } else if (section === 'comparison' && expectedImages.comparison) {
+        if (await verifyImageExists(expectedImages.comparison)) {
+          imageSet.comparison = expectedImages.comparison;
+        }
+      } else if (section === 'testimonials' && expectedImages.testimonials) {
+        if (await verifyImageExists(expectedImages.testimonials)) {
+          imageSet.testimonials = expectedImages.testimonials;
+        }
+      } else if (section === 'gallery' && expectedImages.gallery) {
+        const galleryImages: string[] = [];
+        for (const imagePath of expectedImages.gallery) {
+          if (await verifyImageExists(imagePath)) {
+            galleryImages.push(imagePath);
+          }
+        }
+        if (galleryImages.length > 0) {
+          imageSet[section] = galleryImages;
+        }
+      }
+    }
+    
+    // Analyze DOM on the service page for images (if needed)
+    try {
+      // In a real implementation, this would analyze the HTML of the service page
+      // For example, we could use a headless browser to render the page and extract images
+      // Or use server-side rendering to get the actual images displayed on the page
+      // For now, we'll use our verified file paths
+    } catch (domError) {
+      console.log('DOM analysis error', domError);
+    }
+    
+    // If we have no images but have mock data for this slug, use that as fallback
+    if (Object.keys(imageSet).length <= 1 && serviceMockImages[slug]) { // Only has template property
+      return serviceMockImages[slug];
+    }
+    
+    return imageSet;
+  } catch (error) {
+    console.error('Error fetching page images:', error);
+    
+    // Fallback to empty structure if there's an error
+    return getImagePathsFromSlug(slug); // Use our utility function for consistency
+  }
+};
+
+// Synchronous wrapper for fetchActualPageImages to maintain compatibility
+const fetchActualPageImagesSync = (slug: string): ServiceImageSet => {
+  // For known services, return the mock images directly for now
+  // This avoids any async issues until we update all the calling code
+  if (serviceMockImages[slug as keyof typeof serviceMockImages]) {
+    return serviceMockImages[slug as keyof typeof serviceMockImages];
+  }
+
+  // Return the expected paths without verification
+  return getImagePathsFromSlug(slug);
+};
+
+// Helper function to render the appropriate media element
+const renderMedia = (
+  src?: string, 
+  mediaType: 'image' | 'video' = 'image', 
+  aspectRatio: string = 'aspect-[3/2]',
+  onPlay?: () => void,
+  category?: string,
+  slug?: string
+) => {
+  if (!src) return (
+    <div className={`flex items-center justify-center ${aspectRatio} bg-gray-100`}>
+      <ImageIcon className="h-16 w-16 text-gray-300" />
+    </div>
+  );
+  
+  // Apply cache-busting for images
+  const cachedSrc = mediaType === 'image' ? getCacheBustedImageUrl(src, category, slug) : src;
+  
+  if (mediaType === 'video') {
+    return (
+      <video 
+        src={cachedSrc}
+        className={`w-full ${aspectRatio} object-cover`}
+        controls
+        loop
+        muted
+        playsInline
+        onPlay={onPlay}
+      />
+    );
+  }
+  
+  return (
+    <PlaceholderImage 
+      className={`w-full ${aspectRatio}`}
+      imageUrl={cachedSrc}
+    />
+  );
 };
 
 // Add image preview enhancement to display original vs current image
-const ImagePreview = ({ 
-  currentImage, 
-  originalImage, 
-  className = '', 
-  aspectRatio = 'aspect-[3/2]' 
-}: {
+interface ImagePreviewProps {
   currentImage?: string;
   originalImage?: string;
   className?: string;
   aspectRatio?: string;
+  mediaType?: 'image' | 'video';
+  category?: string;
+  slug?: string;
+}
+
+const ImagePreview: React.FC<ImagePreviewProps> = ({ 
+  currentImage, 
+  originalImage, 
+  className = '', 
+  aspectRatio = 'aspect-[3/2]',
+  mediaType = 'image',
+  category,
+  slug
 }) => {
   const [showOriginal, setShowOriginal] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  
+  // For videos, we need special handling to ensure controls are usable
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (mediaType === 'video') {
+      // Only show original after a delay if it's a video and not currently playing
+      if (isHovering && !isPlayingVideo) {
+        timer = setTimeout(() => {
+          setShowOriginal(true);
+        }, 1500); // 1.5 second delay before showing original
+      } else {
+        setShowOriginal(false);
+      }
+    }
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isHovering, mediaType, isPlayingVideo]);
+  
+  // Special handler for video elements
+  const handleVideoInteraction = (e: React.MouseEvent) => {
+    if (mediaType === 'video') {
+      // Prevent showing original when interacting with video controls
+      e.stopPropagation();
+      setIsPlayingVideo(true);
+    }
+  };
+  
+  // Handler for video playback
+  const handleVideoPlay = () => {
+    setIsPlayingVideo(true);
+  };
   
   return (
     <div 
       className={`relative ${className} border rounded-md overflow-hidden bg-gray-50`}
-      onMouseEnter={() => originalImage && setShowOriginal(true)}
-      onMouseLeave={() => setShowOriginal(false)}
+      onMouseEnter={() => {
+        setIsHovering(true);
+        // For images, show original immediately
+        if (mediaType === 'image' && originalImage) {
+          setShowOriginal(true);
+        }
+      }}
+      onMouseLeave={() => {
+        setIsHovering(false);
+        setShowOriginal(false);
+        // Reset playing state when mouse leaves
+        if (!isPlayingVideo) {
+          setIsPlayingVideo(false);
+        }
+      }}
     >
       {currentImage ? (
         <>
-          <PlaceholderImage 
-            className={`w-full ${aspectRatio}`}
-            imageUrl={showOriginal ? originalImage : currentImage}
-          />
-          {originalImage && originalImage !== currentImage && (
+          {mediaType === 'video' ? (
+            <div onClick={handleVideoInteraction}>
+              {renderMedia(
+                showOriginal ? originalImage : currentImage, 
+                mediaType, 
+                aspectRatio, 
+                handleVideoPlay,
+                category,
+                slug
+              )}
+            </div>
+          ) : (
+            renderMedia(
+              showOriginal ? originalImage : currentImage, 
+              mediaType, 
+              aspectRatio,
+              undefined,
+              category,
+              slug
+            )
+          )}
+          {originalImage && originalImage !== currentImage && showOriginal && (
             <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-md">
-              {showOriginal ? 'Original' : 'Modified'}
+              Original
+            </div>
+          )}
+          {originalImage && originalImage !== currentImage && !showOriginal && isHovering && !isPlayingVideo && (
+            <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-md">
+              {mediaType === 'video' ? 'Hover 1.5s to see original' : 'Modified'}
             </div>
           )}
         </>
       ) : originalImage ? (
         <>
-          <PlaceholderImage 
-            className={`w-full ${aspectRatio}`} 
-            imageUrl={originalImage}
-          />
+          {renderMedia(
+            originalImage, 
+            mediaType, 
+            aspectRatio, 
+            mediaType === 'video' ? handleVideoPlay : undefined,
+            category,
+            slug
+          )}
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="text-white text-center p-4">
-              <p className="font-medium">Original Image</p>
-              <p className="text-xs mt-1">Click to use this image</p>
+              <p className="font-medium">Original {mediaType === 'video' ? 'Video' : 'Image'}</p>
+              <p className="text-xs mt-1">Click to use this {mediaType === 'video' ? 'video' : 'image'}</p>
             </div>
           </div>
         </>
       ) : (
         <div className={`flex items-center justify-center ${aspectRatio} bg-gray-100`}>
-          <ImageIcon className="h-16 w-16 text-gray-300" />
+          {mediaType === 'video' ? 
+            <div className="flex flex-col items-center">
+              <svg className="h-16 w-16 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 10L18 14M18 10L14 14M6 10C6 10 9 7 12 7C15 7 18 10 18 10C18 10 15 13 12 13C9 13 6 10 6 10Z" />
+              </svg>
+              <span className="text-xs text-gray-400 mt-2">No Video Selected</span>
+            </div>
+            : <ImageIcon className="h-16 w-16 text-gray-300" />
+          }
         </div>
       )}
     </div>
@@ -520,6 +788,9 @@ export default function EditServicePage() {
     status: '',
   })
   const [originalImages, setOriginalImages] = useState<ServiceImageSet>({});
+  const [saving, setSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Determine the template based on category
   const getTemplateFromCategory = (category: string) => {
@@ -566,8 +837,9 @@ export default function EditServicePage() {
         // Ensure 'hero' tab is always selected initially
         setActiveImageTab('hero');
 
-        // Load actual images from the page
-        const actualImages = fetchActualPageImages(service.slug);
+        // Load actual images from the page using promises
+        fetchActualPageImages(service.slug)
+          .then(actualImages => {
         setOriginalImages(actualImages);
 
         // Set service images if they exist, otherwise use actuals
@@ -583,8 +855,18 @@ export default function EditServicePage() {
           // Use actual images as starting point
           setSectionImages(actualImages);
         }
-
+          })
+          .catch(error => {
+            console.error('Error loading service images:', error);
+            
+            // Fall back to synchronous version if async fails
+            const fallbackImages = fetchActualPageImagesSync(service.slug);
+            setOriginalImages(fallbackImages);
+            setSectionImages(fallbackImages);
+          })
+          .finally(() => {
         setLoading(false);
+          });
       } else {
         setNotFound(true);
         setLoading(false);
@@ -630,7 +912,11 @@ export default function EditServicePage() {
         // For single image sections
         setSectionImages({
           ...sectionImages,
-          [section]: selectedMedia.path
+          [section]: selectedMedia.path,
+          // If this is the hero section, set the hero_type based on the file type
+          ...(section === 'hero' && {
+            hero_type: selectedMedia.type.startsWith('video/') ? 'video' : 'image'
+          })
         });
       } else {
         // For multiple image sections
@@ -712,8 +998,12 @@ export default function EditServicePage() {
   }
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Show saving state
+    setSaving(true);
+    
     // Include image data in the form submission
     const formDataWithImages = {
       ...formData,
@@ -722,16 +1012,46 @@ export default function EditServicePage() {
     };
     console.log('Form submitted:', formDataWithImages);
     
-    // Simulate successful submission
-    // Normally this would be an API call:
-    // await fetch(`/api/services/${id}`, {
-    //   method: 'PUT',
-    //   body: JSON.stringify(formDataWithImages),
-    //   headers: { 'Content-Type': 'application/json' }
-    // })
-    
-    // Redirect back to services list
-    router.push('/admin/services')
+    try {
+      // Make a real API call to update the service
+      const response = await fetch(`/api/services/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(formDataWithImages),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to update service: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Service updated successfully:', result);
+      
+      // Force a cache purge to ensure updated images show on the public-facing pages
+      try {
+        if (typeof purgeImageCache === 'function') {
+          const categorySlug = formData.category.toLowerCase().replace(/\s+/g, '-');
+          const treatmentSlug = formData.slug.split('/')[1];
+          console.log(`Purging image cache for ${categorySlug}/${treatmentSlug}`);
+          purgeImageCache(categorySlug, treatmentSlug);
+        }
+      } catch (error) {
+        console.error('Error purging image cache:', error);
+      }
+      
+      // Show success message
+      setSuccessMessage('Service updated successfully');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+      // Redirect back to services list after a short delay
+      setTimeout(() => router.push('/admin/services'), 1500);
+    } catch (error) {
+      console.error('Error updating service:', error);
+      setErrorMessage('Failed to update service. Please try again.');
+      setTimeout(() => setErrorMessage(''), 5000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   // Add this helper function before the return statement
@@ -785,26 +1105,101 @@ export default function EditServicePage() {
     const activeSection = sections.find((section: ServiceSection) => section.id === activeImageTab);
     
     if (!activeSection) return null;
+    
+    // Format category for cache-busting (lowercase with hyphens)
+    const categorySlug = formData.category.toLowerCase().replace(/\s+/g, '-');
+    const treatmentSlug = formData.slug.split('/')[1] || '';
 
     if (activeSection.type === 'single') {
       // Single image section
       const imagePath = sectionImages[activeSection.id];
       const originalImagePath = originalImages[activeSection.id];
       
+      // Determine if this is a video (for hero section in youth-revival)
+      const isVideo = activeSection.id === 'hero' && 
+                     (sectionImages.hero_type === 'video' || 
+                      (formData.slug === 'new-doublo/youth-revival' && activeSection.id === 'hero'));
+      
       return (
         <div className="space-y-4">
           <ImagePreview 
             currentImage={imagePath?.toString()} 
             originalImage={originalImagePath?.toString()}
+            mediaType={isVideo ? 'video' : 'image'}
+            category={categorySlug}
+            slug={treatmentSlug}
           />
+           
+          {/* Add media type toggle buttons for hero section */}
+          {activeSection.id === 'hero' && (
+            <div className="flex mb-2 bg-gray-100 p-1 rounded-md">
+              <button
+                type="button"
+                onClick={() => {
+                  // Convert video to image by changing extension and type
+                  let newPath = imagePath?.toString() || '';
+                  if (newPath.endsWith('.mp4')) {
+                    newPath = newPath.replace(/\.mp4$/, '.jpg');
+                  }
+                  setSectionImages({
+                    ...sectionImages,
+                    hero_type: 'image',
+                    hero: newPath || null
+                  });
+                }}
+                className={`flex-1 py-1 px-2 text-xs rounded ${!isVideo ? 'bg-white shadow-sm' : ''}`}
+              >
+                <span className="flex items-center justify-center gap-1">
+                  <ImageIcon className="h-3 w-3" />
+                  Image
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  // Convert image to video by changing extension and type
+                  let newPath = imagePath?.toString() || '';
+                  if (newPath.endsWith('.jpg')) {
+                    newPath = newPath.replace(/\.jpg$/, '.mp4');
+                  }
+                  setSectionImages({
+                    ...sectionImages,
+                    hero_type: 'video',
+                    hero: newPath || null
+                  });
+                }}
+                className={`flex-1 py-1 px-2 text-xs rounded ${isVideo ? 'bg-white shadow-sm' : ''}`}
+              >
+                <span className="flex items-center justify-center gap-1">
+                  <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z" />
+                    <rect x="3" y="6" width="12" height="12" rx="2" ry="2" />
+                  </svg>
+                  Video
+                </span>
+              </button>
+            </div>
+          )}
           
           <div className="flex gap-2">
             <Button 
               className="flex-1 items-center justify-center gap-2"
               onClick={() => openMediaDialog(activeSection.id)}
             >
+              {isVideo ? 
+                <span className="flex items-center gap-2">
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z" />
+                    <rect x="3" y="6" width="12" height="12" rx="2" ry="2" />
+                  </svg>
+                  {imagePath ? `Change Video` : `Select Video`}
+                </span> 
+                : 
+                <span className="flex items-center gap-2">
               <ImagePlus className="h-4 w-4" />
               {imagePath ? `Change Image` : `Select Image`}
+                </span>
+              }
             </Button>
             
             {imagePath && originalImagePath && imagePath !== originalImagePath && (
@@ -813,7 +1208,8 @@ export default function EditServicePage() {
                 onClick={() => {
                   setSectionImages({
                     ...sectionImages,
-                    [activeSection.id]: originalImagePath
+                    [activeSection.id]: originalImagePath,
+                    ...(isVideo && { hero_type: 'video' })
                   });
                 }}
               >
@@ -833,9 +1229,11 @@ export default function EditServicePage() {
           </div>
           
           <p className="text-xs text-gray-500">
-            Recommended size: 1200 x 800 pixels. Max file size: 2MB.
+            {isVideo ? 
+              'Recommended format: MP4. Max file size: 10MB.' : 
+              'Recommended size: 1200 x 800 pixels. Max file size: 2MB.'}
             {originalImagePath && originalImagePath !== imagePath && 
-              " Hover to see the original image from the page."}
+              ` Hover to see the original ${isVideo ? 'video' : 'image'} from the page.`}
           </p>
         </div>
       );
@@ -859,6 +1257,8 @@ export default function EditServicePage() {
                     currentImage={image}
                     originalImage={originalImage}
                     aspectRatio="aspect-square"
+                    category={categorySlug}
+                    slug={treatmentSlug}
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="flex gap-1">
@@ -928,11 +1328,42 @@ export default function EditServicePage() {
           </Link>
           <h1 className="text-3xl font-bold tracking-tight">Edit Service: {formData.name}</h1>
         </div>
-        <Button className="flex items-center gap-2" onClick={handleSubmit}>
-          <Save className="h-4 w-4" />
-          Save Changes
+        <Button 
+          className="flex items-center gap-2" 
+          onClick={handleSubmit}
+          disabled={saving}
+        >
+          {saving ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4" />
+              Save Changes
+            </>
+          )}
         </Button>
       </div>
+      
+      {/* Success/Error messages */}
+      {successMessage && (
+        <Alert className="bg-green-50 text-green-800 border-green-200">
+          <Check className="h-4 w-4 text-green-500" />
+          <AlertDescription>{successMessage}</AlertDescription>
+        </Alert>
+      )}
+      
+      {errorMessage && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
       
       {/* Language Tabs */}
       <Card>
