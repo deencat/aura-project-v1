@@ -113,23 +113,61 @@ export function getFallbackImage(category: string, section: string): string {
   return `/images/placeholders/${category}/${section}.jpg`;
 }
 
-// Add a cache version timestamp in localStorage to help with cache busting
-export function getImageCacheVersion(): string {
-  // Initialize if not set
-  if (typeof window !== 'undefined' && !localStorage.getItem('imageCacheVersion')) {
-    localStorage.setItem('imageCacheVersion', Date.now().toString());
-  }
-  
-  // Return current version or generate a new one
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('imageCacheVersion') || Date.now().toString();
-  }
-  
-  return Date.now().toString();
-}
-
 // Map to store timestamps for purged images
 const imageCacheMap = new Map<string, number>();
+
+// Constants
+const CACHE_VERSION_KEY = 'imageCacheVersion';
+const IMAGE_CACHE_MAP_KEY = 'imageCacheMap';
+const DEBUG_MODE = process.env.NODE_ENV === 'development';
+
+/**
+ * Debug logging helper - only logs in development mode
+ */
+function logDebug(message: string, data?: any): void {
+  if (!DEBUG_MODE) return;
+  
+  if (data) {
+    console.log(`🖼️ [ImageUtils] ${message}`, data);
+  } else {
+    console.log(`🖼️ [ImageUtils] ${message}`);
+  }
+}
+
+// Load image cache map from storage if available
+if (typeof window !== 'undefined') {
+  try {
+    const storedCacheMap = localStorage.getItem(IMAGE_CACHE_MAP_KEY);
+    if (storedCacheMap) {
+      const cacheEntries = JSON.parse(storedCacheMap);
+      Object.entries(cacheEntries).forEach(([key, value]) => {
+        imageCacheMap.set(key, value as number);
+      });
+      logDebug(`Loaded image cache map with ${imageCacheMap.size} entries`);
+    }
+  } catch (error) {
+    console.error('Error loading image cache map:', error);
+  }
+}
+
+/**
+ * Saves the image cache map to localStorage
+ */
+function saveImageCacheMap(): void {
+  if (typeof window === 'undefined') return;
+  
+  try {
+    const cacheObject: Record<string, number> = {};
+    imageCacheMap.forEach((value, key) => {
+      cacheObject[key] = value;
+    });
+    
+    localStorage.setItem(IMAGE_CACHE_MAP_KEY, JSON.stringify(cacheObject));
+    logDebug(`Saved image cache map with ${imageCacheMap.size} entries`);
+  } catch (error) {
+    console.error('Error saving image cache map:', error);
+  }
+}
 
 /**
  * Purges the image cache for a specific treatment by updating the cache version
@@ -141,18 +179,28 @@ const imageCacheMap = new Map<string, number>();
 export function purgeImageCache(category?: string, treatment?: string): void {
   if (typeof window === 'undefined') return;
   
+  // Generate new timestamp
+  const timestamp = Date.now();
+  
   // Set new cache version
-  localStorage.setItem('imageCacheVersion', Date.now().toString());
+  localStorage.setItem(CACHE_VERSION_KEY, timestamp.toString());
   
   // If category and treatment are provided, update the imageCacheMap as well
   if (category && treatment) {
     const key = `${category}/${treatment}`;
-    imageCacheMap.set(key, Date.now());
+    imageCacheMap.set(key, timestamp);
+    
+    // Save updated map to storage
+    saveImageCacheMap();
+    
+    logDebug(`Purged image cache for ${key} (timestamp: ${timestamp})`);
+  } else {
+    logDebug(`Purged global image cache (timestamp: ${timestamp})`);
   }
   
   // If we're in development mode, log this action
   if (process.env.NODE_ENV === 'development') {
-    console.log(`🧹 Image cache purged${category ? ` for ${category}/${treatment}` : ''}. New version: ${getImageCacheVersion()}`);
+    console.log(`🧹 Image cache purged${category ? ` for ${category}/${treatment}` : ''}. New version: ${timestamp}`);
   }
 }
 
@@ -184,12 +232,61 @@ export function getCacheBustedImageUrl(
     }
   }
   
+  let timestamp: number | undefined;
+  
   // Add timestamp parameter for cache busting if we have a key
   if (cacheKey && imageCacheMap.has(cacheKey)) {
-    const timestamp = imageCacheMap.get(cacheKey);
+    timestamp = imageCacheMap.get(cacheKey);
+  } else {
+    // Fallback to global cache version
+    try {
+      if (typeof window !== 'undefined') {
+        const cacheVersion = localStorage.getItem(CACHE_VERSION_KEY);
+        if (cacheVersion) {
+          timestamp = parseInt(cacheVersion);
+        } else {
+          timestamp = Date.now();
+          localStorage.setItem(CACHE_VERSION_KEY, timestamp.toString());
+        }
+      } else {
+        timestamp = Date.now();
+      }
+    } catch (error) {
+      timestamp = Date.now();
+      console.error('Error accessing cache version:', error);
+    }
+  }
+  
+  if (timestamp) {
     const separator = imagePath.includes('?') ? '&' : '?';
-    return `${imagePath}${separator}t=${timestamp}`;
+    const cachedUrl = `${imagePath}${separator}t=${timestamp}`;
+    
+    // Log in debug mode
+    if (DEBUG_MODE && cacheKey) {
+      logDebug(`Cache-busted URL for ${cacheKey}: ${cachedUrl}`);
+    }
+    
+    return cachedUrl;
   }
   
   return imagePath;
+}
+
+// Add a cache version timestamp in localStorage to help with cache busting
+export function getImageCacheVersion(): string {
+  // Initialize if not set
+  if (typeof window !== 'undefined' && !localStorage.getItem(CACHE_VERSION_KEY)) {
+    const timestamp = Date.now().toString();
+    localStorage.setItem(CACHE_VERSION_KEY, timestamp);
+    logDebug(`Initialized cache version: ${timestamp}`);
+    return timestamp;
+  }
+  
+  // Return current version or generate a new one
+  if (typeof window !== 'undefined') {
+    const version = localStorage.getItem(CACHE_VERSION_KEY) || Date.now().toString();
+    return version;
+  }
+  
+  return Date.now().toString();
 } 

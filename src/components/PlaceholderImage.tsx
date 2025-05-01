@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { getCacheBustedImageUrl } from '@/utils/imageUtils'
 
 interface PlaceholderImageProps {
   type?: string
@@ -39,13 +40,56 @@ export default function PlaceholderImage({
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Add dependency on key image caching props to force re-render when they change
+  useEffect(() => {
+    // Reset error state when imageUrl changes
+    if (imageUrl) {
+      setImageError(false);
+      setIsLoading(true);
+    }
+  }, [imageUrl]);
+
   // Helper function to extract filename from path for debugging
   const getFilenameFromPath = (path: string) => {
     return path.split('/').pop() || path;
   };
+  
+  // Improve the category and slug extraction logic
+  const extractCategoryAndSlug = (url: string): { category?: string, slug?: string } => {
+    if (!url) return {};
+    
+    // Try to match treatment paths like /images/treatments/category/slug/image.jpg
+    const match = url.match(/\/treatments\/([^\/]+)\/([^\/]+)\//);
+    if (match && match.length >= 3) {
+      return {
+        category: match[1],
+        slug: match[2]
+      };
+    }
+    
+    // Try to match from page and section props if available
+    if (page) {
+      // For new-doublo pages, extract the specific treatment
+      if (page === 'new-doublo' && section) {
+        return {
+          category: 'new-doublo',
+          slug: section
+        };
+      }
+      return {
+        category: page
+      };
+    }
+    
+    return {};
+  };
 
   // If imageUrl is provided, use it directly
   if (imageUrl && !imageError) {
+    // Apply cache busting to image URL
+    const { category, slug } = extractCategoryAndSlug(imageUrl);
+    const cachedImageUrl = getCacheBustedImageUrl(imageUrl, category, slug);
+    
     return (
       <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
         {isLoading && (
@@ -54,13 +98,13 @@ export default function PlaceholderImage({
           </div>
         )}
         <Image 
-          src={imageUrl}
+          src={cachedImageUrl}
           alt={`Image ${number}`}
           fill
           style={{objectFit: 'cover'}}
           priority={number === 1}
           onError={() => {
-            console.log(`Image failed to load: ${imageUrl}`);
+            console.log(`Image failed to load: ${cachedImageUrl}`);
             setImageError(true);
           }}
           onLoad={() => setIsLoading(false)}
