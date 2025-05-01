@@ -1,20 +1,13 @@
+import { clerkMiddleware } from "@clerk/nextjs/server"
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  
-  // Redirect from cell-beauty/stretch-mark to body-care/stretch-mark
-  if (pathname === '/cell-beauty/stretch-mark') {
-    return NextResponse.redirect(new URL('/body-care/stretch-mark', request.url))
-  }
-  
-  return NextResponse.next()
-}
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
 
-// See: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+export default clerkMiddleware();
+
 export const config = {
-  matcher: [
-    '/cell-beauty/stretch-mark',
-  ],
-} 
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+};

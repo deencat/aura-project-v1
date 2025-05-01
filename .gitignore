@@ -72,3 +72,6 @@ dist/
 !public/**/*.gz
 !public/**/*.br
 !public/**/*.zip
+
+# clerk configuration (can include secrets)
+/.clerk/

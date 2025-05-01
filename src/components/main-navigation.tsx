@@ -27,6 +27,7 @@ const bodyCareServices = [
   { title: 'Skin Tightening', href: '/body-care/skin-tightening', description: 'Treatments that firm loose skin and improve elasticity' },
   { title: 'Detox Wraps', href: '/body-care/detox-wraps', description: 'Draws out impurities while nourishing your skin' },
   { title: 'Hair Removal', href: '/body-care/hair-removal', description: 'Full-body solutions for smooth, hair-free skin' },
+  { title: 'SnowGlow Smooth', href: '/body-care/hair-removal-new', description: 'Triple wavelength technology for all skin types' },
   { title: 'Stretch Mark Repair', href: '/body-care/stretch-mark', description: 'Minimizes the appearance of stretch marks' },
 ]
 
