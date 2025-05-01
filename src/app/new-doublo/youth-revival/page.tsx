@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import { Sparkles, Clock, Check, Star, ShieldCheck, Clock10 } from 'lucide-react'
 
 export default function YouthRevivalPage() {
@@ -18,7 +19,8 @@ export default function YouthRevivalPage() {
             muted
             playsInline
           >
-            <source src="/images/placeholders/new-doublo/youth-vival01.mp4" type="video/mp4" />
+            <source src="/images/treatments/new-doublo/youth-revival/hero.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
           </video>
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/10" />
         </div>
@@ -183,7 +185,7 @@ export default function YouthRevivalPage() {
               <div className="md:w-1/2 p-8">
                 <h3 className="text-xl font-bold mb-4">Double Technology, Double Results</h3>
                 <p className="text-gray-600 mb-6">
-                  New Doublo™ Youth Revival reaches the deepest 4.5mm SMAS fascia layer, tightening loose skin, stimulating collagen production, and plumping depressed areas for long-lasting results.
+                  New Doublo™ Youth Revival reaches the deepest 4.5mm SMAS fascia layer, tightening loose skin, stimulating collagen production, and plumping depressed areas for long-lasting results. Unlike traditional HIFU treatments, our advanced system targets multiple skin layers simultaneously with precise energy delivery.
                 </p>
                 
                 <h4 className="font-bold text-lg mt-8 mb-3">World's First Dual Technology</h4>
@@ -192,31 +194,32 @@ export default function YouthRevivalPage() {
                     <div className="mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="h-4 w-4" />
                     </div>
-                    <p className="text-gray-600"><span className="font-medium">"SD Dot Technology":</span> Delivers "semi-circular" energy waves that evenly distribute heat to the epidermis and dermis, tightening loose skin and stimulating collagen</p>
+                    <p className="text-gray-600"><span className="font-medium">"SD Dot Technology":</span> Delivers "semi-circular" energy waves that evenly distribute heat to the epidermis and dermis, tightening loose skin and stimulating collagen. This innovative approach ensures uniform treatment coverage, preventing hotspots while maximizing collagen stimulation.</p>
                   </div>
                   <div className="flex items-start">
                     <div className="mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="h-4 w-4" />
                     </div>
-                    <p className="text-gray-600"><span className="font-medium">"FL Linear Technology":</span> Focuses high-intensity ultrasound on precise points, penetrating through to the SMAS fascia layer without damaging surrounding tissue</p>
+                    <p className="text-gray-600"><span className="font-medium">"FL Linear Technology":</span> Focuses high-intensity ultrasound on precise points, penetrating through to the SMAS fascia layer without damaging surrounding tissue. This patented delivery method reaches 4.5mm deep—30% deeper than standard treatments—while operating at a remarkable 0.2-second pulse rate for comfort.</p>
                   </div>
                 </div>
+                
+                <p className="text-gray-600 mt-6">
+                  Our cutting-edge system utilizes 10MHz high-frequency ultrasound combined with 4RF technology, providing immediate visible lifting while stimulating long-term collagen remodeling. The result is a comprehensive rejuvenation that addresses multiple signs of aging in a single, pain-free session.
+                </p>
               </div>
               
               <div className="md:w-1/2 bg-gray-100 flex justify-center items-center">
                 <div className="p-8 w-full">
-                  <div className="aspect-video w-full rounded-lg overflow-hidden shadow-md">
-                    <video 
-                      className="w-full h-full object-cover" 
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                    >
-                      <source src="/images/placeholders/new-doublo/youth-vival01.mp4" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                  <div className="w-full rounded-lg overflow-hidden shadow-md">
+                    <TreatmentImage 
+                      category="new-doublo"
+                      treatment="youth-revival"
+                      type="technology"
+                      index={1}
+                      className="w-full h-auto object-contain"
+                      alt="Youth Revival Technology"
+                    />
                   </div>
                 </div>
               </div>
@@ -334,6 +337,78 @@ export default function YouthRevivalPage() {
                 <span className="block mt-4 font-medium">If you don't see visible results after your first session, we'll provide a second treatment at no additional cost.</span>
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Before & After Section */}
+      <section className="bg-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="text-sm font-medium uppercase tracking-wider text-primary">Real Results</span>
+            <h2 className="mt-2 font-serif text-3xl font-bold md:text-4xl">
+              Before & <span className="text-primary">After</span>
+            </h2>
+            <p className="mt-4 text-gray-600">
+              See the remarkable transformation our clients experience with just one Youth Revival treatment.
+            </p>
+          </div>
+          
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+            {/* Before & After Card 1 */}
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <div className="relative aspect-[4/3] w-full">
+                <div className="w-full h-full">
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment="youth-revival"
+                    type="before-after"
+                    index={1}
+                    className="w-full h-full object-cover"
+                    alt="Before and After Youth Revival Treatment"
+                  />
+                </div>
+              </div>
+              <div className="p-6 bg-white">
+                <h3 className="text-lg font-bold">Jawline Definition & Skin Tightening</h3>
+                <p className="mt-2 text-gray-600">Client age: 48 | Single treatment | No downtime</p>
+                <p className="mt-3 text-gray-600">
+                  "I was amazed by how much definition I gained in my jawline after just one treatment. The sagging is noticeably reduced and my skin looks years younger."
+                </p>
+              </div>
+            </div>
+            
+            {/* Before & After Card 2 */}
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <div className="relative aspect-[4/3] w-full">
+                <div className="w-full h-full">
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment="youth-revival"
+                    type="before-after"
+                    index={2}
+                    className="w-full h-full object-cover"
+                    alt="Before and After Youth Revival Treatment"
+                  />
+                </div>
+              </div>
+              <div className="p-6 bg-white">
+                <h3 className="text-lg font-bold">Fine Lines & Expression Wrinkle Reduction</h3>
+                <p className="mt-2 text-gray-600">Client age: 42 | Single treatment | No downtime</p>
+                <p className="mt-3 text-gray-600">
+                  "The fine lines around my eyes and mouth are significantly reduced. My skin feels firmer and looks so much smoother. I can't believe this was done without any pain!"
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center">
+            <p className="text-gray-500 text-sm italic">Results may vary from person to person. Images are from actual clients who have consented to their use.</p>
+            <Link href="/contact">
+              <Button variant="outline" className="mt-6 rounded-full border-primary px-8 py-2 text-primary hover:bg-primary hover:text-white">
+                Schedule Your Consultation
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

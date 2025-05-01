@@ -39,7 +39,7 @@ export default function TreatmentImage({
       let path = '';
       
       // For types that support multiple images
-      if (['how-it-works', 'benefits', 'results', 'gallery', 'testimonial', 'before-after'].includes(type) && index > 0) {
+      if (['how-it-works', 'benefits', 'results', 'gallery', 'testimonial', 'before-after', 'technology'].includes(type) && index > 0) {
         path = `/images/treatments/${category}/${treatment}/${type}-${index}.jpg`;
       } else {
         // For hero image, check if this is the youth-revival service which uses a video

@@ -137,8 +137,8 @@ export default function ServicesPage() {
 
   // Sort services based on sort field and direction
   const sortedServices = [...filteredServices].sort((a, b) => {
-    const fieldA = a[sortField].toString().toLowerCase()
-    const fieldB = b[sortField].toString().toLowerCase()
+    const fieldA = a[sortField as keyof typeof a].toString().toLowerCase()
+    const fieldB = b[sortField as keyof typeof b].toString().toLowerCase()
     
     if (sortDirection === 'asc') {
       return fieldA.localeCompare(fieldB)
@@ -146,9 +146,8 @@ export default function ServicesPage() {
       return fieldB.localeCompare(fieldA)
     }
   })
-
   // Handle sort toggle
-  const handleSort = (field) => {
+  const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
     } else {

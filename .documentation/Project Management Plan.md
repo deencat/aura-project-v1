@@ -175,28 +175,42 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Styled with consistent design system based on site standards
   - Created proper directory structure for treatment images
   - Added comprehensive Playwright tests to verify page functionality and content
+- Enhanced image persistence in CMS admin interface:
+  - Improved serviceStorage utility with versioning, timestamps, and backup mechanisms
+  - Added session storage backup for data resilience and cross-tab synchronization
+  - Enhanced cache-busting for service images with per-service timestamp tracking
+  - Added debug logging system for troubleshooting in development mode
+  - Created "Refresh Images" button for manual cache invalidation when needed
+  - Updated API endpoints to ensure proper image processing and storage
+  - Enhanced PlaceholderImage component to work with cache-busted image URLs
+  - Implemented error handling for robust operation in prototype environment
 
 ### Pending Tasks (Prioritized)
-1. Update Playwright tests for remaining pages using TreatmentImage
+1. Implement Playwright tests for image persistence functionality
+   - Test image updating in admin interface
+   - Verify image changes persist across page refreshes
+   - Test cache-busting mechanisms work as expected
+   - Validate "Refresh Images" button functionality
+2. Update Playwright tests for remaining pages using TreatmentImage
    - Ensure all pages are using the new TreatmentImage component consistently
    - Add tests for fallback image functionality across all treatment pages
    - Review and fix any failing tests related to image component changes
-2. Implement remaining TreatmentImage updates across the site
+3. Implement remaining TreatmentImage updates across the site
    - Standardize image naming conventions across all treatments
    - Review and update image paths for consistency
    - Create consistent placeholder images for any missing categories and types
-3. Create additional treatment pages for remaining services
+4. Create additional treatment pages for remaining services
    - Implement treatment pages for any missing facial treatments
    - Add specialized body treatment pages as needed
    - Ensure all pages use standardized components and structure
-4. Enhance CMS functionality for content management
+5. Enhance CMS functionality for content management
    - Complete blog & testimonial management functionality
    - Support multilingual content (Traditional Chinese, Simplified Chinese, English)
    - Implement promotion & coupon code management
    - Develop staff profile management interface
-5. Add more comprehensive test coverage
-6. Implement responsive design refinements for mobile devices
-7. Add animations and transitions for improved UX
+6. Add more comprehensive test coverage
+7. Implement responsive design refinements for mobile devices
+8. Add animations and transitions for improved UX
 
 ### Backlog Tasks
 - Implement Memory Viewer component for debugging

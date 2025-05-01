@@ -89,7 +89,7 @@ const mockTestimonials = [
   }
 ]
 
-export default function EditTestimonialPage({ params }) {
+export default function EditTestimonialPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const testimonialId = parseInt(params.id)
   const [isLoading, setIsLoading] = useState(true)
@@ -125,9 +125,8 @@ export default function EditTestimonialPage({ params }) {
       setIsLoading(false)
     }, 500) // Simulate loading delay
   }, [testimonialId])
-
   // Update form data for text inputs and selects
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -261,7 +260,7 @@ export default function EditTestimonialPage({ params }) {
                       placeholder="Enter the client's testimonial"
                       rows={6}
                       value={formData.content}
-                      onChange={handleChange}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange(e)}
                     />
                   </div>
 
