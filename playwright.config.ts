@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Set environment variables for test
+process.env.PLAYWRIGHT_TEST = 'true';
+
 export default defineConfig({
   testDir: './tests',
   /* Maximum time one test can run for. */

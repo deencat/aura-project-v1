@@ -22,7 +22,8 @@
     "memory-ensure": "node scripts/memory/ensure-memory-running.js",
     "memory-verify": "node scripts/memory/verify-memory-system.js",
     "memory-add": "node scripts/memory/add-conversation.js",
-    "download-fonts": "node scripts/download-fonts.js"
+    "download-fonts": "node scripts/download-fonts.js",
+    "generate-blur": "node scripts/generate-blur-placeholders.js"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.18.2",
@@ -81,6 +82,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "node-fetch": "^3.3.2",
+    "sharp": "^0.34.1",
     "typescript": "^5"
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function AboutPage() {
   return (
@@ -125,10 +125,13 @@ export default function AboutPage() {
               {[1, 2, 3].map((num) => (
                 <div key={num} className="overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
                   <div className="aspect-[3/4] w-full">
-                    <PlaceholderImage 
-                      type="team" 
-                      number={num} 
-                      aspectRatio="aspect-[3/4]"
+                    <TreatmentImage 
+                      category="about"
+                      treatment="team"
+                      type="gallery"
+                      index={num}
+                      alt={`Team member ${num} - Aura Beauty specialist`}
+                      className="aspect-[3/4] object-cover"
                     />
               </div>
                   <div className="p-6 text-center">

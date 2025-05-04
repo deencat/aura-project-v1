@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function ContactPage() {
   return (
@@ -152,9 +152,12 @@ export default function ContactPage() {
                 
                 <div className="overflow-hidden rounded-lg border border-gray-200">
                   <div className="aspect-[16/9] w-full">
-                    <PlaceholderImage 
-                      type="map" 
-                      aspectRatio="aspect-[16/9]"
+                    <TreatmentImage 
+                      category="contact"
+                      treatment="location"
+                      type="gallery"
+                      alt="Our location on the map"
+                      className="aspect-[16/9] object-cover"
                     />
                   </div>
                 </div>

@@ -649,6 +649,55 @@
       ],
       "createdAt": "2025-05-04T07:56:55.086Z",
       "updatedAt": "2025-05-04T07:56:55.086Z"
+    },
+    "memory-system-conversation-1746348627524": {
+      "name": "memory-system-conversation-1746348627524",
+      "entityType": "conversation",
+      "observations": [
+        "Updated About page to use TreatmentImage component",
+        "Updated Contact page to use TreatmentImage component",
+        "Created comprehensive TreatmentImage component documentation",
+        "Created and verified Playwright tests for About and Contact pages"
+      ],
+      "createdAt": "2025-05-04T08:50:27.524Z",
+      "updatedAt": "2025-05-04T08:50:27.524Z"
+    },
+    "memory-system-conversation-1746350356232": {
+      "name": "memory-system-conversation-1746350356232",
+      "entityType": "conversation",
+      "observations": [
+        "Implemented image optimization strategies in next.config.js",
+        "Enhanced TreatmentImage component with responsive sizing, placeholder support, and LCP optimization",
+        "Updated TreatmentImage component documentation with new features and best practices",
+        "Created blur placeholder generator script"
+      ],
+      "createdAt": "2025-05-04T09:19:16.232Z",
+      "updatedAt": "2025-05-04T09:19:16.233Z"
+    },
+    "memory-system-conversation-1746350383082": {
+      "name": "memory-system-conversation-1746350383082",
+      "entityType": "conversation",
+      "observations": [
+        "Tests revealed issues with Clerk authentication middleware affecting image loading",
+        "Created image optimization configuration in next.config.js",
+        "Enhanced TreatmentImage component with responsive sizing and automatic quality settings",
+        "Developed blur placeholder generator script for improved loading experience"
+      ],
+      "createdAt": "2025-05-04T09:19:43.082Z",
+      "updatedAt": "2025-05-04T09:19:43.082Z"
+    },
+    "memory-system-conversation-1746350737569": {
+      "name": "memory-system-conversation-1746350737569",
+      "entityType": "conversation",
+      "observations": [
+        "Implemented image optimization in next.config.js with WebP/AVIF support",
+        "Enhanced TreatmentImage component with responsive sizing and quality settings",
+        "Created blur placeholder generator script",
+        "Added middleware for bypassing authentication during tests",
+        "Created documentation for image optimization best practices"
+      ],
+      "createdAt": "2025-05-04T09:25:37.569Z",
+      "updatedAt": "2025-05-04T09:25:37.570Z"
     }
   },
   "relations": []
