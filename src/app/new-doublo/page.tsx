@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import PlaceholderImage from '@/components/PlaceholderImage'
 import TreatmentImage from '@/components/TreatmentImage'
 
 const treatments = [
@@ -174,7 +173,7 @@ export default function NewDoubloPage() {
                 <TreatmentImage 
                   category="new-doublo"
                   treatment="benefits"
-                  type="feature"
+                  type="benefits"
                   index={1}
                   alt="Skin Tightening"
                   className="h-full w-full object-cover"
@@ -191,7 +190,7 @@ export default function NewDoubloPage() {
                 <TreatmentImage 
                   category="new-doublo"
                   treatment="benefits"
-                  type="feature"
+                  type="benefits"
                   index={2}
                   alt="Collagen Boost"
                   className="h-full w-full object-cover"
@@ -208,7 +207,7 @@ export default function NewDoubloPage() {
                 <TreatmentImage 
                   category="new-doublo"
                   treatment="benefits"
-                  type="feature"
+                  type="benefits"
                   index={3}
                   alt="No Downtime"
                   className="h-full w-full object-cover"
@@ -285,7 +284,7 @@ export default function NewDoubloPage() {
                   <TreatmentImage 
                     category="new-doublo"
                     treatment="testimonials"
-                    type="avatar"
+                    type="testimonial"
                     index={1}
                     alt="Michelle Testimonial"
                     className="w-full h-full object-cover"
@@ -307,7 +306,7 @@ export default function NewDoubloPage() {
                   <TreatmentImage 
                     category="new-doublo"
                     treatment="testimonials"
-                    type="avatar"
+                    type="testimonial"
                     index={2}
                     alt="Sophia Testimonial"
                     className="w-full h-full object-cover"

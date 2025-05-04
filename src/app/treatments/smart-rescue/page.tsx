@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Carousel,
@@ -66,12 +66,14 @@ export default function SmartRescuePage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="smart-rescue"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
+              <TreatmentImage 
+                category="facial-treatments"
+                treatment="smart-rescue"
+                type="hero"
+                alt="360° Smart Rescue Treatment"
+                fill
                 className="object-cover w-full h-full"
+                priority
               />
             </div>
           </div>
@@ -166,11 +168,13 @@ export default function SmartRescuePage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="smart-rescue"
-                              section="benefits"
-                              number={num}
-                              aspectRatio="aspect-square"
+                            <TreatmentImage 
+                              category="facial-treatments"
+                              treatment="smart-rescue"
+                              type="benefits"
+                              index={num}
+                              alt={["Before & After", "Treatment Process", "Skin Recovery", "Clinical Results", "Advanced Technology"][num-1]}
+                              fill
                               className="object-cover w-full h-full transition duration-500 hover:scale-110"
                             />
                           </div>
@@ -266,11 +270,11 @@ export default function SmartRescuePage() {
             
             <div className="bg-white rounded-lg p-8 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Future Protection</h3>
+              <h3 className="text-xl font-bold mb-4">Strengthened Protection</h3>
               <p className="text-gray-600">
-                Strengthens your skin's defensive capabilities to better withstand environmental challenges
+                Builds up skin's natural defense capabilities to better withstand future environmental challenges
               </p>
             </div>
           </div>
@@ -322,24 +326,17 @@ export default function SmartRescuePage() {
               </div>
               
               <div className="rounded-lg border border-gray-200 p-6">
-                <h3 className="text-xl font-bold mb-3">Can the 360° Smart Rescue be combined with other treatments?</h3>
+                <h3 className="text-xl font-bold mb-3">Can I combine the 360° Smart Rescue treatment with other procedures?</h3>
                 <p className="text-gray-600">
-                  Yes, this treatment works exceptionally well as a complementary therapy to other services. It's particularly valuable following more intensive treatments like chemical peels, laser procedures, or microneedling to accelerate healing and minimize post-procedure sensitivity and redness.
-                </p>
-              </div>
-              
-              <div className="rounded-lg border border-gray-200 p-6">
-                <h3 className="text-xl font-bold mb-3">What should I do before and after my treatment?</h3>
-                <p className="text-gray-600">
-                  Before your treatment, avoid harsh exfoliants or active ingredients like retinol for 24-48 hours. After treatment, we recommend using gentle cleansers and following with the specialized at-home care products we'll recommend to extend and enhance your results. Staying well-hydrated and avoiding excessive sun exposure will also optimize your results.
+                  Absolutely! In fact, this treatment is designed to complement and enhance other skincare treatments. It's particularly beneficial when used after more aggressive treatments like chemical peels, laser therapy, or microneedling to accelerate healing and minimize downtime.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Book Now Section */}
+      
+      {/* Call to Action */}
       <section className="py-20 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">

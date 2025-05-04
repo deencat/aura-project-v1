@@ -13,7 +13,7 @@ const test = base.extend({
 });
 
 test.describe('Neck Rejuvenation Page', () => {
-  test('page loads successfully with placeholder images', async ({ page }) => {
+  test('page loads successfully with TreatmentImage components', async ({ page }) => {
     // Set a longer timeout for this test
     test.setTimeout(90000);
     
@@ -34,15 +34,16 @@ test.describe('Neck Rejuvenation Page', () => {
       const content = await page.textContent('body');
       expect(content?.length).toBeGreaterThan(0);
       
-      // Check for placeholder images being loaded correctly
-      const images = await page.locator('img[src*="new-doublo-neck"]').all();
-      console.log(`Found ${images.length} neck placeholder images`);
-      expect(images.length).toBeGreaterThan(0);
-      
-      // Check for major elements on the page
+      // Check for major elements on the page to verify content is loading properly
       await expect(page.locator('h1', { hasText: 'Neck' })).toBeVisible();
       await expect(page.locator('h2', { hasText: 'Your Age' })).toBeVisible();
       await expect(page.locator('h2', { hasText: 'Dual-Technology' })).toBeVisible();
+      await expect(page.locator('h2', { hasText: 'Key' })).toBeVisible();
+      
+      // Check that at least some images are present (without checking specific src)
+      const images = await page.locator('img').all();
+      console.log(`Found ${images.length} images on page`);
+      expect(images.length).toBeGreaterThan(0);
       
       console.log('Test completed successfully - page loads with all major elements visible');
     } catch (error) {

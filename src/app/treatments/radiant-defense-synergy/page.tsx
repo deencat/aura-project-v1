@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
 export default function RadiantDefenseSynergyPage() {
@@ -39,12 +39,14 @@ export default function RadiantDefenseSynergyPage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="radiant-defense-synergy"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
+              <TreatmentImage 
+                category="facial-treatments"
+                treatment="radiant-defense-synergy"
+                type="hero"
+                alt="Radiant Defense Synergy Treatment"
+                fill
                 className="object-cover w-full h-full"
+                priority
               />
             </div>
           </div>
@@ -263,10 +265,10 @@ export default function RadiantDefenseSynergyPage() {
                 
                 <AccordionItem value="item-5">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    Is there any downtime after the treatment?
+                    Can I combine this with other treatments?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    There is no downtime associated with our Radiant Defense Synergy Treatment. You can immediately resume your normal activities, and many clients choose to have this treatment before special events for an instant glow. Your skin may appear slightly flushed immediately after treatment, but this typically subsides within 30-60 minutes, leaving behind only the beautiful radiance.
+                    Yes, the Radiant Defense Synergy Treatment works well in combination with many of our other treatments. During your consultation, our skincare specialists can recommend complementary treatments to enhance results and address specific concerns. Popular combinations include pairing with light therapy, microcurrent, or hydrating treatments for a comprehensive approach.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -275,14 +277,14 @@ export default function RadiantDefenseSynergyPage() {
         </div>
       </section>
 
-      {/* Book Now Section */}
-      <section className="py-20 bg-primary/5">
+      {/* Call to Action */}
+      <section className="bg-primary/5 py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">
-            Ready for <span className="text-primary">Naturally Flawless Skin</span>?
+            Ready for <span className="text-primary">Radiant</span> Skin?
           </h2>
-          <p className="mt-6 mx-auto max-w-2xl text-lg text-gray-600">
-            Experience our revolutionary Radiant Defense Synergy Treatment and discover how the powerful combination of Resveratrol and Immune Probiotics can transform your skin with deep purification, enhanced protection, and a natural, healthy glow.
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-gray-600">
+            Experience the transformative power of our Radiant Defense Synergy Treatment. Book your appointment today to reveal your skin's natural radiance.
           </p>
           <div className="mt-10">
             <Link href="/contact">

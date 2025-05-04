@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import PlaceholderImage from '@/components/PlaceholderImage'
 import { Sparkles, Clock, Check, Star, ShieldCheck, Zap } from 'lucide-react'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function NeckRejuvenationPage() {
   return (
@@ -11,8 +12,10 @@ export default function NeckRejuvenationPage() {
       {/* Hero Section */}
       <section className="relative px-4 py-20">
         <div className="absolute inset-0 bg-gray-900">
-          <Image
-            src="/images/backgrounds/new-doublo-hero-3.jpg"
+          <TreatmentImage
+            category="new-doublo"
+            treatment="neck-rejuvenation"
+            type="hero"
             alt="Neck Rejuvenation Treatment"
             fill
             className="object-cover object-center opacity-80"
@@ -86,11 +89,13 @@ export default function NeckRejuvenationPage() {
           <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-2">
             <div className="relative overflow-hidden rounded-lg">
               <div className="aspect-[3/4] w-full">
-                <PlaceholderImage 
-                  page="new-doublo" 
-                  section="neck"
-                  number={1}
-                  aspectRatio="aspect-[3/4]"
+                <TreatmentImage
+                  category="new-doublo"
+                  treatment="neck-rejuvenation"
+                  type="gallery"
+                  index={1}
+                  alt="Why Your Neck Ages Faster"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
@@ -224,11 +229,13 @@ export default function NeckRejuvenationPage() {
               <div className="bg-gray-50 flex items-center justify-center">
                 <div className="p-8 w-full">
                   <div className="aspect-video w-full rounded-lg overflow-hidden">
-                    <PlaceholderImage 
-                      page="new-doublo" 
-                      section="neck"
-                      number={2}
-                      aspectRatio="aspect-video"
+                    <TreatmentImage
+                      category="new-doublo"
+                      treatment="neck-rejuvenation"
+                      type="technology"
+                      index={1}
+                      alt="Dual-Technology Neck Treatment"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="mt-8 flex items-center justify-center space-x-8">
@@ -363,11 +370,13 @@ export default function NeckRejuvenationPage() {
           <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-2">
             <div className="space-y-4">
               <div className="overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  page="new-doublo" 
-                  section="neck"
-                  number={3}
-                  aspectRatio="aspect-[4/3]"
+                <TreatmentImage
+                  category="new-doublo"
+                  treatment="neck-rejuvenation"
+                  type="before-after"
+                  index={1}
+                  alt="Before and After - Client Age 48"
+                  className="w-full h-full object-cover aspect-[4/3]"
                 />
               </div>
               <div className="bg-white p-4 rounded-lg">
@@ -390,11 +399,13 @@ export default function NeckRejuvenationPage() {
             
             <div className="space-y-4">
               <div className="overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  page="new-doublo" 
-                  section="neck"
-                  number={4}
-                  aspectRatio="aspect-[4/3]"
+                <TreatmentImage
+                  category="new-doublo"
+                  treatment="neck-rejuvenation"
+                  type="before-after"
+                  index={2}
+                  alt="Before and After - Client Age 52"
+                  className="w-full h-full object-cover aspect-[4/3]"
                 />
               </div>
               <div className="bg-white p-4 rounded-lg">
@@ -420,10 +431,15 @@ export default function NeckRejuvenationPage() {
             <div className="flex items-start">
               <div className="flex-shrink-0 mr-4">
                 <div className="h-16 w-16 overflow-hidden rounded-full bg-gray-100">
-                  <PlaceholderImage 
-                    type="avatar" 
-                    number={4}
-                    aspectRatio="aspect-square"
+                  <TreatmentImage
+                    category="new-doublo"
+                    treatment="neck-rejuvenation"
+                    type="testimonial"
+                    index={1}
+                    alt="Client Testimonial"
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
@@ -69,12 +69,14 @@ export default function NewDoubloPage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="new-doublo"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
+              <TreatmentImage 
+                category="new-doublo"
+                treatment="main"
+                type="hero"
+                alt="New Doublo Treatment"
                 className="object-cover w-full h-full"
+                fill
+                priority
               />
             </div>
           </div>
@@ -143,21 +145,27 @@ export default function NewDoubloPage() {
             <div className="w-full max-w-3xl rounded-lg overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="aspect-square relative">
-                  <PlaceholderImage 
-                    page="new-doublo"
-                    section="device"
-                    number={1}
-                    aspectRatio="aspect-square"
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment="main"
+                    type="technology"
+                    index={1}
+                    alt="New Doublo Device"
                     className="object-cover w-full h-full rounded-lg"
+                    width={400}
+                    height={400}
                   />
                 </div>
                 <div className="aspect-square relative">
-                  <PlaceholderImage 
-                    page="new-doublo"
-                    section="device"
-                    number={2}
-                    aspectRatio="aspect-square"
+                  <TreatmentImage 
+                    category="new-doublo"
+                    treatment="main"
+                    type="technology"
+                    index={2}
+                    alt="New Doublo Application"
                     className="object-cover w-full h-full rounded-lg"
+                    width={400}
+                    height={400}
                   />
                 </div>
               </div>
@@ -284,12 +292,15 @@ export default function NewDoubloPage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="new-doublo"
-                              section="results"
-                              number={num}
-                              aspectRatio="aspect-square"
+                            <TreatmentImage 
+                              category="new-doublo"
+                              treatment="main"
+                              type="results"
+                              index={num}
+                              alt={["Before & After", "V-Shape Lifting", "Skin Tightening"][num-1]}
                               className="object-cover w-full h-full transition duration-500 hover:scale-110"
+                              width={400}
+                              height={400}
                             />
                           </div>
                           <div className="p-4 text-center">

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Carousel,
@@ -74,10 +74,13 @@ export default function CollagenRegenerationPage() {
             
             <div className="hidden md:block">
               <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={3}
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="facial-treatments"
+                  treatment="collagen-regeneration"
+                  type="hero"
+                  alt="Collagen Regeneration Treatment"
+                  fill
+                  priority
                 />
               </div>
             </div>
@@ -320,12 +323,15 @@ export default function CollagenRegenerationPage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="collagen-regeneration"
-                              section="results"
-                              number={num}
-                              aspectRatio="aspect-square"
+                            <TreatmentImage 
+                              category="facial-treatments"
+                              treatment="collagen-regeneration"
+                              type="results"
+                              index={num}
+                              alt={["Before & After", "Treatment Process", "Skin Rejuvenation", "Client Results", "Application Technique"][num-1]}
                               className="object-cover w-full h-full transition duration-500 hover:scale-110"
+                              width={400}
+                              height={400}
                             />
                           </div>
                           <div className="p-4 text-center">

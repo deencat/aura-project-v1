@@ -1,8 +1,11 @@
+"use client"
+
 import React from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function MicroNeedlingPage() {
   return (
@@ -31,9 +34,11 @@ export default function MicroNeedlingPage() {
               </div>
               
               <div className="mt-10 flex flex-wrap gap-4">
-                <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
-                  Book Treatment
-                </Button>
+                <Link href="/contact">
+                  <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+                    Book Treatment
+                  </Button>
+                </Link>
                 <Button variant="outline" className="rounded-full border-primary px-8 py-3 text-sm font-medium text-primary hover:bg-primary hover:text-white">
                   Learn More
                 </Button>
@@ -42,10 +47,14 @@ export default function MicroNeedlingPage() {
             
             <div className="hidden md:block">
               <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={4}
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="facial-treatments"
+                  treatment="micro-needling"
+                  type="hero"
+                  alt="Micro Needling Treatment"
+                  fill
+                  className="object-cover"
+                  priority
                 />
               </div>
             </div>
@@ -149,7 +158,19 @@ export default function MicroNeedlingPage() {
             </p>
           </div>
           
-          <div className="mx-auto mt-16 max-w-4xl">
+          <div className="mx-auto mt-12 max-w-4xl">
+            <div className="relative aspect-[16/9] w-full mb-12 overflow-hidden rounded-lg">
+              <TreatmentImage 
+                category="facial-treatments"
+                treatment="micro-needling"
+                type="how-it-works"
+                index={1}
+                alt="Micro Needling Treatment Process"
+                fill
+                className="object-cover"
+              />
+            </div>
+            
             <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
               <div className="space-y-12">
                 <div>
@@ -287,68 +308,121 @@ export default function MicroNeedlingPage() {
         </div>
       </section>
       
-      {/* FAQ Section */}
+      {/* Results Section */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="font-serif text-3xl font-bold text-black md:text-4xl text-center mb-12">
-              Frequently Asked <span className="text-primary">Questions</span>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-serif text-3xl font-bold md:text-4xl">
+              Treatment <span className="text-primary">Results</span>
             </h2>
+            <p className="mt-4 text-gray-600">
+              See the transformation with micro-needling
+            </p>
+          </div>
+          
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="overflow-hidden rounded-lg">
+              <div className="relative aspect-[4/3] w-full">
+                <TreatmentImage 
+                  category="facial-treatments"
+                  treatment="micro-needling"
+                  type="results"
+                  index={1}
+                  alt="Before Micro Needling Treatment"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute bottom-0 left-0 bg-primary/80 px-4 py-2 text-white">
+                  Before
+                </div>
+              </div>
+            </div>
             
-            <Accordion type="single" collapsible className="w-full">
-              {[
-                {
-                  question: "Is micro-needling painful?",
-                  answer: "Most clients experience minimal discomfort during treatment. We apply a topical numbing cream before the procedure, which significantly reduces any sensation. Clients typically describe the feeling as a mild tingling or vibrating sensation."
-                },
-                {
-                  question: "How many treatments will I need?",
-                  answer: "The number of treatments depends on your specific skin concerns. For general skin rejuvenation, a series of 3-4 treatments spaced 4-6 weeks apart is typically recommended. For acne scars or more significant concerns, 6 or more sessions may be needed for optimal results."
-                },
-                {
-                  question: "What is the downtime after micro-needling?",
-                  answer: "Downtime is minimal. Most clients experience mild redness and sensitivity for 24-48 hours, similar to a mild sunburn. Some may also experience slight swelling or dryness. Most people can return to normal activities and wear makeup within 24-48 hours after treatment."
-                },
-                {
-                  question: "When will I see results?",
-                  answer: "Many clients notice an immediate 'glow' and plumpness to their skin following treatment. However, the most significant results appear gradually over 4-6 weeks as collagen production increases. Final results from a series of treatments can last up to a year or longer."
-                },
-                {
-                  question: "Who is not a good candidate for micro-needling?",
-                  answer: "Micro-needling is not recommended for people with active skin infections, acne breakouts, keloid scarring, or certain skin conditions like psoriasis or eczema in the treatment area. It's also not suitable for pregnant women or those taking certain medications. A consultation will determine if you're a good candidate."
-                },
-                {
-                  question: "Can micro-needling be combined with other treatments?",
-                  answer: "Yes, micro-needling works well with many other treatments. It can be combined with PRP (platelet-rich plasma) therapy, specialized serums, LED light therapy, or chemical peels for enhanced results. Our specialists can recommend the best combination for your specific skin concerns."
-                }
-              ].map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left font-medium">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-600">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <div className="overflow-hidden rounded-lg">
+              <div className="relative aspect-[4/3] w-full">
+                <TreatmentImage 
+                  category="facial-treatments"
+                  treatment="micro-needling"
+                  type="results"
+                  index={2}
+                  alt="After Micro Needling Treatment"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute bottom-0 left-0 bg-primary/80 px-4 py-2 text-white">
+                  After
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
       
-      {/* Booking Section */}
-      <section className="bg-gray-50 py-16">
+      {/* FAQ Section */}
+      <section className="bg-gray-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="font-serif text-3xl font-bold md:text-4xl text-center">
+              Frequently Asked <span className="text-primary">Questions</span>
+            </h2>
+            
+            <div className="mt-12">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-left text-lg font-medium">How painful is micro-needling?</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    Micro-needling is generally well-tolerated with minimal discomfort. We apply a topical numbing cream before treatment, which significantly reduces any sensation. Most clients describe feeling a mild prickling or light pressure during the procedure. Discomfort levels depend on the treatment area and needle depth being used.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="text-left text-lg font-medium">How many treatments will I need?</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    Most clients see noticeable improvements after just one treatment. However, for optimal results, we typically recommend a series of 3-6 treatments spaced 4-6 weeks apart. The exact number depends on your specific skin concerns and goals. Maintenance treatments are recommended every 6-12 months to sustain results.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="text-left text-lg font-medium">What is the downtime after treatment?</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    Downtime is minimal with micro-needling. Most clients experience mild redness and slight swelling, similar to a sunburn, which typically subsides within 24-48 hours. Your skin may feel tight and dry for a few days afterward. You can usually return to your normal activities the next day, though we recommend avoiding makeup for 24 hours and intense exercise or sun exposure for 2-3 days.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-4">
+                  <AccordionTrigger className="text-left text-lg font-medium">When will I see results?</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    You'll notice an immediate glow and plumpness to your skin after treatment. However, the most significant improvements appear gradually as collagen production increases. Noticeable enhancements in skin texture and firmness typically develop within 2-4 weeks after treatment, with continued improvement for up to 6 months as collagen remodeling occurs.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-5">
+                  <AccordionTrigger className="text-left text-lg font-medium">Is micro-needling safe for all skin types?</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    Yes, micro-needling is generally safe for all skin types and colors, including darker skin tones. Unlike some laser treatments, it doesn't target melanin, so there's minimal risk of hyperpigmentation. However, the treatment may not be suitable for those with active skin infections, acne breakouts, keloid scarring, or certain skin conditions. A consultation will determine if you're an appropriate candidate.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Call to Action */}
+      <section className="bg-primary/5 py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="font-serif text-3xl font-bold text-black md:text-4xl">
-            Ready for <span className="text-primary">Transformative Results</span>?
+          <h2 className="font-serif text-3xl font-bold md:text-4xl">
+            Ready for <span className="text-primary">Rejuvenated Skin</span>?
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-            Book your micro-needling consultation today and take the first step toward healthier, more radiant skin.
+            Experience the transformative power of micro-needling at Aura Beauty. Book your consultation today and take the first step toward smoother, more youthful skin.
           </p>
           <div className="mt-10">
-            <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
-              Book Now
-            </Button>
+            <Link href="/contact">
+              <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90">
+                Book Consultation
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

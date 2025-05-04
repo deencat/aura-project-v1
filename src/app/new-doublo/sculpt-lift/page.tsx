@@ -111,11 +111,13 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, 
               BEFORE
             </div>
             <div className="absolute inset-0 bg-gradient-to-r from-gray-300 to-gray-200">
-              <PlaceholderImage 
-                page="new-doublo" 
-                section="results-before"
-                number={1} 
-                aspectRatio="aspect-[4/3]"
+              <TreatmentImage
+                category="new-doublo"
+                treatment="sculpt-lift"
+                type="before-after"
+                index={1}
+                alt="Before treatment"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -126,11 +128,13 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, 
               AFTER
             </div>
             <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-100">
-              <PlaceholderImage 
-                page="new-doublo" 
-                section="results-after"
-                number={1} 
-                aspectRatio="aspect-[4/3]"
+              <TreatmentImage
+                category="new-doublo"
+                treatment="sculpt-lift"
+                type="before-after"
+                index={2}
+                alt="After treatment"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -177,11 +181,13 @@ const TreatmentAreaVisualization = () => {
       <h3 className="text-xl font-bold text-center mb-6">Treatment Target Areas</h3>
       <div className="relative aspect-[3/4] bg-gray-50 rounded-lg overflow-hidden">
         <div className="absolute inset-0">
-          <PlaceholderImage 
-            page="new-doublo" 
-            section="face-diagram"
-            number={1} 
-            aspectRatio="aspect-[3/4]"
+          <TreatmentImage
+            category="new-doublo"
+            treatment="sculpt-lift"
+            type="technology"
+            index={1}
+            alt="Face diagram showing treatment target areas"
+            className="w-full h-full object-cover"
           />
         </div>
         
@@ -942,11 +948,13 @@ export default function SculptLiftPage() {
               <div className="relative">
                 <blockquote className="text-center">
                   <div className="mx-auto w-16 h-16 rounded-full overflow-hidden mb-4">
-                    <PlaceholderImage 
-                      page="new-doublo" 
-                      section="testimonial"
-                      number={1} 
-                      aspectRatio="aspect-square"
+                    <TreatmentImage 
+                      category="new-doublo" 
+                      treatment="sculpt-lift"
+                      type="testimonial"
+                      index={1} 
+                      alt="Sarah L. Testimonial"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   <p className="italic text-gray-600 max-w-2xl mx-auto">

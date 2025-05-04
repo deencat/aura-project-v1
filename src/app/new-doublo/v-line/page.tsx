@@ -212,8 +212,11 @@ export default function VLinePage() {
                     <div className="mb-4">
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <Image
-                            src="/images/treatments/avatars/client-1.jpg"
+                          <TreatmentImage
+                            category="new-doublo"
+                            treatment="v-line"
+                            type="testimonial"
+                            index={1}
                             alt="Lily C."
                             width={32}
                             height={32}
@@ -239,8 +242,11 @@ export default function VLinePage() {
                     <div className="mb-4">
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <Image
-                            src="/images/treatments/avatars/client-2.jpg"
+                          <TreatmentImage
+                            category="new-doublo"
+                            treatment="v-line"
+                            type="testimonial"
+                            index={2}
                             alt="Michelle T."
                             width={32}
                             height={32}
@@ -266,8 +272,11 @@ export default function VLinePage() {
                     <div>
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <Image
-                            src="/images/treatments/avatars/client-3.jpg"
+                          <TreatmentImage
+                            category="new-doublo"
+                            treatment="v-line"
+                            type="testimonial"
+                            index={3}
                             alt="James K."
                             width={32}
                             height={32}
@@ -294,8 +303,11 @@ export default function VLinePage() {
                     <div>
                       <div className="mb-2 flex items-center">
                         <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-100 mr-2 flex-shrink-0">
-                          <Image
-                            src="/images/treatments/avatars/client-4.jpg"
+                          <TreatmentImage
+                            category="new-doublo"
+                            treatment="v-line"
+                            type="testimonial"
+                            index={4}
                             alt="Sarah Wong"
                             width={32}
                             height={32}

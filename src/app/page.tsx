@@ -3,20 +3,32 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] bg-gray-50">
-        <div className="container mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 py-16">
+      <section className="relative min-h-[80vh] overflow-hidden">
+        <div className="absolute inset-0">
+          <TreatmentImage
+            category="homepage"
+            treatment="hero"
+            type="hero"
+            alt="Aura Beauty Hero Image"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/70 to-gray-900/50" />
+        </div>
+        <div className="container relative mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 py-16">
           <div className="relative z-10 mx-auto max-w-4xl text-center">
-            <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
+            <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-white md:text-6xl lg:text-7xl">
               <span className="block">Aura Beauty</span>
               <span className="mt-2 block text-primary">Transform Your Skin</span>
             </h1>
-            <p className="mt-6 text-xl leading-relaxed text-gray-600">
+            <p className="mt-6 text-xl leading-relaxed text-gray-200">
               Advanced beauty treatments using cutting-edge technology to enhance your natural beauty.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
@@ -26,7 +38,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="rounded-full border-primary px-8 py-6 text-base font-medium uppercase tracking-wide text-primary transition hover:bg-primary/10">
+                <Button variant="outline" className="rounded-full border-primary bg-white/10 px-8 py-6 text-base font-medium uppercase tracking-wide text-white transition hover:bg-primary hover:text-white">
                   Book a Consultation
                 </Button>
               </Link>
@@ -38,24 +50,36 @@ export default function Home() {
       {/* Our Story Section */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Our <span className="text-primary">Story</span>
-            </h2>
-            <div className="mt-6 text-lg leading-relaxed text-gray-600">
-              <p className="mb-4">
-                Aura Beauty is dedicated to providing diverse, effective, and safe beauty treatments. We bring together professional equipment and techniques from around the world to deliver the most caring, suitable, and optimal service experience for every client.
-              </p>
-              <p>
-                We protect and enhance every inch of your skin, inside and out, helping you achieve your beauty goals with personalized care.
-              </p>
+          <div className="grid grid-cols-1 gap-12 items-center md:grid-cols-2">
+            <div className="relative aspect-square overflow-hidden rounded-lg shadow-lg">
+              <TreatmentImage
+                category="homepage"
+                treatment="story"
+                type="gallery"
+                alt="Aura Beauty Story"
+                fill
+                className="object-cover object-center transition-transform duration-500 hover:scale-105"
+              />
             </div>
-            <div className="mt-10">
-              <Link href="/about">
-                <Button variant="ghost" className="rounded-full text-primary hover:bg-primary/10 hover:text-primary">
-                  Learn More About Us
-                </Button>
-              </Link>
+            <div className="mx-auto max-w-xl">
+              <h2 className="font-serif text-3xl font-bold md:text-4xl">
+                Our <span className="text-primary">Story</span>
+              </h2>
+              <div className="mt-6 text-lg leading-relaxed text-gray-600">
+                <p className="mb-4">
+                  Aura Beauty is dedicated to providing diverse, effective, and safe beauty treatments. We bring together professional equipment and techniques from around the world to deliver the most caring, suitable, and optimal service experience for every client.
+                </p>
+                <p>
+                  We protect and enhance every inch of your skin, inside and out, helping you achieve your beauty goals with personalized care.
+                </p>
+              </div>
+              <div className="mt-10">
+                <Link href="/about">
+                  <Button variant="ghost" className="rounded-full text-primary hover:bg-primary/10 hover:text-primary">
+                    Learn More About Us
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -71,10 +95,12 @@ export default function Home() {
             {/* Treatment 1 */}
             <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
               <div className="aspect-[4/3] w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={1} 
-                  aspectRatio="aspect-[4/3]"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="featured"
+                  type="gallery"
+                  index={1}
+                  alt="Royal Black Scan"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
@@ -92,10 +118,12 @@ export default function Home() {
             {/* Treatment 2 */}
             <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
               <div className="aspect-[4/3] w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={2} 
-                  aspectRatio="aspect-[4/3]"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="featured"
+                  type="gallery"
+                  index={2}
+                  alt="Peeled Egg Skin"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
@@ -113,10 +141,12 @@ export default function Home() {
             {/* Treatment 3 */}
             <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
               <div className="aspect-[4/3] w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={3} 
-                  aspectRatio="aspect-[4/3]"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="featured"
+                  type="gallery"
+                  index={3}
+                  alt="Collagen Regeneration"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
@@ -151,10 +181,12 @@ export default function Home() {
             {/* Category 1 */}
             <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
               <div className="aspect-square w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="beauty" 
-                  number={1} 
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="category"
+                  type="gallery"
+                  index={1}
+                  alt="Premium Beauty Treatments"
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
@@ -171,10 +203,12 @@ export default function Home() {
             {/* Category 2 */}
             <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
               <div className="aspect-square w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="beauty" 
-                  number={2} 
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="category"
+                  type="gallery"
+                  index={2}
+                  alt="Body Care Treatments"
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
@@ -191,10 +225,12 @@ export default function Home() {
             {/* Category 3 */}
             <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
               <div className="aspect-square w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="beauty" 
-                  number={3} 
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="category"
+                  type="gallery"
+                  index={3}
+                  alt="AI Facial Filters"
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
           </div>
@@ -211,10 +247,12 @@ export default function Home() {
             {/* Category 4 */}
             <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
               <div className="aspect-square w-full overflow-hidden">
-                <PlaceholderImage 
-                  type="beauty" 
-                  number={4} 
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="homepage"
+                  treatment="category"
+                  type="gallery"
+                  index={4}
+                  alt="Cell Beauty Technology"
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
@@ -266,10 +304,11 @@ export default function Home() {
                   </Link>
                 </div>
                 <div className="h-40 w-full overflow-hidden rounded-lg md:w-1/3">
-                  <PlaceholderImage 
-                    type="beauty" 
-                    number={1} 
-                    aspectRatio="aspect-[1/1]"
+                  <TreatmentImage 
+                    category="homepage"
+                    treatment="offer"
+                    type="gallery"
+                    alt="New Client Special"
                     className="h-full w-full object-cover"
                   />
                 </div>
