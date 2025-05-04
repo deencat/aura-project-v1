@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Set environment variables for test
 process.env.PLAYWRIGHT_TEST = 'true';
+// NODE_ENV is read-only in some environments, so we'll set it in the webServer env instead
 
 export default defineConfig({
   testDir: './tests',
@@ -46,5 +47,9 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
+    env: {
+      // Pass test environment variables to the web server
+      PLAYWRIGHT_TEST: 'true',
+    },
   },
 }); 

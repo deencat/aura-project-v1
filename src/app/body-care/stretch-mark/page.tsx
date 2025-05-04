@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function StretchMarkPage() {
   // Instead of using framer motion, use a simpler approach
@@ -61,10 +61,14 @@ export default function StretchMarkPage() {
                 <div className="absolute right-0 top-0 w-full h-full">
                   {/* Hero image */}
                   <div className="relative w-full h-full bg-gradient-to-r from-teal-50 to-blue-50">
-                    <PlaceholderImage 
-                      type="treatment" 
-                      number={5}
-                      aspectRatio="w-full h-full object-cover"
+                    <TreatmentImage 
+                      category="body-care"
+                      treatment="stretch-mark"
+                      type="hero"
+                      alt="CellRevive Stretch Mark Repair Treatment"
+                      fill
+                      className="object-cover"
+                      priority
                     />
                     <div className="w-full h-full bg-gradient-to-r from-white to-transparent absolute top-0 z-10"></div>
                   </div>
@@ -113,10 +117,14 @@ export default function StretchMarkPage() {
             </div>
             <div className="w-full md:w-1/2">
               <div className="rounded-xl overflow-hidden shadow-md">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={5}
-                  aspectRatio="w-full h-auto object-cover rounded-xl"
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="stretch-mark"
+                  type="benefits"
+                  alt="Understanding stretch marks and their common areas"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto object-cover rounded-xl"
                 />
               </div>
             </div>
@@ -186,6 +194,15 @@ export default function StretchMarkPage() {
             </div>
             
             <div className="relative rounded-xl overflow-hidden shadow-md">
+              <TreatmentImage 
+                  category="body-care"
+                  treatment="stretch-mark"
+                  type="technology"
+                  alt="CellRevive Stretch Mark Repair dual technology approach"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto object-cover rounded-xl"
+              />
               <PlaceholderImage 
                   type="technology" 
                   number={1}

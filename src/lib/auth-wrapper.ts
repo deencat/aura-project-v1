@@ -52,6 +52,11 @@ export const getSignInButton = () => {
   return authModule.SignInButton;
 };
 
+export const getSignUpButton = () => {
+  const authModule = useAuth();
+  return authModule.SignUpButton;
+};
+
 export const getUserButton = () => {
   const authModule = useAuth();
   return authModule.UserButton;

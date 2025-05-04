@@ -11,6 +11,9 @@ export const auth = () => {
     userId: 'test-user-id',
     sessionId: 'test-session-id',
     getToken: async () => 'test-token',
+    protect: async () => {
+      return true; // Always allow access in test environment
+    }
   };
 };
 
@@ -43,8 +46,12 @@ export const SignedOut: React.FC<{children: React.ReactNode}> = ({ children }) =
   return null; // Don't render anything in SignedOut during tests
 };
 
-export const SignInButton: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  return <button>{children}</button>;
+export const SignInButton: React.FC = () => {
+  return <button>Sign In</button>;
+};
+
+export const SignUpButton: React.FC = () => {
+  return <button>Sign Up</button>;
 };
 
 export const UserButton: React.FC = () => {

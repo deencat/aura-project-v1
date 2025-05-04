@@ -13,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function BreastEnhancementPage() {
   const [api, setApi] = useState<CarouselApi>()
@@ -89,10 +90,14 @@ export default function BreastEnhancementPage() {
                 <div className="absolute right-0 top-0 w-full h-full">
                   {/* Hero image */}
                   <div className="relative w-full h-full bg-gradient-to-r from-teal-50 to-blue-50">
-                    <img
-                      src="/images/placeholders/goddess-curves-hero.jpg" 
+                    <TreatmentImage 
+                      category="body-care"
+                      treatment="breast-enhancement"
+                      type="hero"
                       alt="Goddess Curves Enhancement Treatment"
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      priority
                     />
                     <div className="w-full h-full bg-gradient-to-r from-white to-transparent absolute top-0 z-10"></div>
                   </div>

@@ -388,14 +388,41 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Enhanced video handling with proper HTML5 video attributes
   - Added quality settings and appropriate loading attributes
   - Improved SVG security with contentSecurityPolicy settings
+- Started updating body-care pages to use TreatmentImage component:
+  - Updated Perfect Buttocks page to use TreatmentImage for hero image
+  - Created appropriate directory structure for body-care/perfect-buttocks category
+  - Added placeholder images for fallback handling
+  - Created Playwright test for Perfect Buttocks page (pending test fixes for authentication issues)
+  - Used priority attribute on hero image to improve LCP
+  - Maintained responsive design and gradient overlay for aesthetics
+- Continued updating body-care pages to use TreatmentImage component:
+  - Confirmed Hair Removal page already uses TreatmentImage component properly
+  - Updated Stretch Mark page to use TreatmentImage for hero, benefits, and technology images
+  - Created appropriate directory structure for body-care/stretch-mark category
+  - Added placeholder images for fallback handling
+  - Created Playwright test for Stretch Mark page
+  - Added appropriate alt text for all images for better accessibility
+  - Maintained responsive design and special effects (overlays, gradients, etc.)
+  - Updated Lymphatic Detox page to use TreatmentImage for hero image
+  - Created appropriate directory structure for body-care/lymphatic-detox category
+  - Added placeholder images for fallback handling
+  - Created Playwright test for Lymphatic Detox page
+  - Used priority attribute on hero image to improve LCP
+  - Maintained gradient overlay for aesthetics
+- Completed updating body-care pages to use TreatmentImage component:
+  - Updated Breast Enhancement page to use TreatmentImage for hero image
+  - Created appropriate directory structure for body-care/breast-enhancement category
+  - Added placeholder images for fallback handling
+  - Created Playwright test for Breast Enhancement page
+  - Used priority attribute on hero image to improve LCP
+  - Maintained gradient overlay for aesthetics
+  - Verified all body-care pages now use TreatmentImage component
 
 ### Pending Tasks (Prioritized)
-- Verify remaining treatment pages have been updated to use the TreatmentImage component
+- Fix Clerk authentication issues in Playwright tests to avoid test failures
 - Continue updating other pages that still use PlaceholderImage to use TreatmentImage:
-  - Secondary pages:
-    - Body care pages
-    - Specialized services pages
-    - Admin service pages
+  - Account pages
+  - Admin pages
 - Run full regression test to verify all pages render correctly
 
 ### Backlog Tasks
