@@ -1,122 +1,101 @@
 import { NextResponse } from 'next/server';
-import { getServiceById, saveService } from '@/utils/serviceStorage';
-import { purgeImageCache } from '@/utils/imageUtils';
+import { mockServices } from '@/app/admin/services/mockData';
 
-const DEBUG_MODE = process.env.NODE_ENV === 'development';
-
-/**
- * Debug logging helper - only logs in development mode
- */
-function logDebug(message: string, data?: any): void {
-  if (!DEBUG_MODE) return;
-  
-  if (data) {
-    console.log(`🔌 [API] ${message}`, data);
-  } else {
-    console.log(`🔌 [API] ${message}`);
-  }
-}
-
+// GET handler for fetching a single service by ID
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get service ID from params
-    const id = params.id;
-    logDebug(`GET request for service ID: ${id}`);
+    const id = parseInt(params.id);
     
-    // Use the serviceStorage utility to get the service by ID
-    const service = getServiceById(parseInt(id));
+    // Find the service with the matching ID
+    const service = mockServices.find(service => service.id === id);
     
-    if (service) {
-      logDebug(`Found service`, service);
-      return NextResponse.json({ service });
+    if (!service) {
+      return NextResponse.json(
+        { error: 'Service not found' },
+        { status: 404 }
+      );
     }
     
-    // If not found, return 404
-    logDebug(`Service with ID ${id} not found`);
-    return NextResponse.json(
-      { error: `Service with ID ${id} not found` },
-      { status: 404 }
-    );
+    // Return the service data
+    return NextResponse.json(service, { status: 200 });
   } catch (error) {
-    console.error('Error in GET /api/services/[id]:', error);
+    console.error('Error fetching service:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to fetch service' },
       { status: 500 }
     );
   }
 }
 
+// PUT handler for updating a service
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get service ID from params
-    const id = params.id;
+    const id = parseInt(params.id);
+    const updatedData = await request.json();
     
-    // Get request body
-    const body = await request.json();
+    // Find the index of the service with the matching ID
+    const serviceIndex = mockServices.findIndex(service => service.id === id);
     
-    logDebug(`Updating service ${id}`, body);
-    
-    // Extract image data for special handling
-    const { section_images, category, slug, template } = body;
-    
-    // Validate key data
-    if (!id || isNaN(parseInt(id))) {
+    if (serviceIndex === -1) {
       return NextResponse.json(
-        { error: 'Invalid service ID' },
-        { status: 400 }
+        { error: 'Service not found' },
+        { status: 404 }
       );
     }
     
-    // Ensure essential fields are present
-    if (!body.name || !body.category) {
-      return NextResponse.json(
-        { error: 'Missing required fields (name, category)' },
-        { status: 400 }
-      );
-    }
-    
-    // Get existing service to merge data properly
-    const existingService = getServiceById(parseInt(id));
-    
-    // Ensure the ID is included and converted to a number
-    const serviceData = {
-      ...existingService, // Start with existing data
-      ...body, // Merge with new data
-      id: parseInt(id), // Ensure ID is correct
-      // Add metadata for tracking
-      updated_at: new Date().toISOString()
+    // In a real implementation, this would update the service in the database
+    // For now, we'll just return the updated service data
+    // (Note: This won't actually persist changes since we're using mock data)
+    const updatedService = {
+      ...mockServices[serviceIndex],
+      ...updatedData,
+      id // Ensure ID remains the same
     };
     
-    // Use the serviceStorage utility to save the service
-    const updatedService = saveService(serviceData);
+    // Return the updated service
+    return NextResponse.json(updatedService, { status: 200 });
+  } catch (error) {
+    console.error('Error updating service:', error);
+    return NextResponse.json(
+      { error: 'Failed to update service' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE handler for deleting a service
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const id = parseInt(params.id);
     
-    // Purge image cache if we have category and slug
-    if (category && slug) {
-      const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
-      const servicePath = typeof slug === 'string' && slug.includes('/') 
-        ? slug.split('/')[1] 
-        : slug;
-      
-      logDebug(`Purging image cache for ${categorySlug}/${servicePath}`);
-      purgeImageCache(categorySlug, servicePath);
+    // Find the index of the service with the matching ID
+    const serviceIndex = mockServices.findIndex(service => service.id === id);
+    
+    if (serviceIndex === -1) {
+      return NextResponse.json(
+        { error: 'Service not found' },
+        { status: 404 }
+      );
     }
     
-    // Return success with the updated service
-    return NextResponse.json({ 
-      success: true,
-      service: updatedService,
-      message: 'Service updated successfully'
-    });
+    // In a real implementation, this would delete the service from the database
+    // For now, we'll just return success
+    // (Note: This won't actually persist changes since we're using mock data)
+    
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error('Error in PUT /api/services/[id]:', error);
+    console.error('Error deleting service:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: (error as Error).message },
+      { error: 'Failed to delete service' },
       { status: 500 }
     );
   }

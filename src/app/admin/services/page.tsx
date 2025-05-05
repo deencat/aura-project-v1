@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import useSWR from 'swr'
 import { 
   Plus, 
   Search, 
@@ -17,90 +18,23 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 
-// Mock data for services
-const mockServices = [
-  {
-    id: 1,
-    name: 'Lymphatic Detox',
-    category: 'Body Care',
-    price: '$980',
-    duration: '90 min',
-    status: 'Active',
-    slug: 'body-care/lymphatic-detox'
-  },
-  {
-    id: 2,
-    name: 'Stretch Mark Treatment',
-    category: 'Body Care',
-    price: '$850',
-    duration: '75 min',
-    status: 'Active',
-    slug: 'body-care/stretch-mark'
-  },
-  {
-    id: 3,
-    name: 'Hair Removal',
-    category: 'Body Care',
-    price: '$650',
-    duration: '60 min',
-    status: 'Active',
-    slug: 'body-care/hair-removal'
-  },
-  {
-    id: 4,
-    name: 'Perfect Buttocks',
-    category: 'Body Care',
-    price: '$1,100',
-    duration: '90 min',
-    status: 'Active',
-    slug: 'body-care/perfect-buttocks'
-  },
-  {
-    id: 5,
-    name: 'Breast Enhancement',
-    category: 'Body Care',
-    price: '$1,200',
-    duration: '90 min',
-    status: 'Active',
-    slug: 'body-care/breast-enhancement'
-  },
-  {
-    id: 6,
-    name: 'Neck Rejuvenation',
-    category: 'New Doublo',
-    price: '$1,350',
-    duration: '60 min',
-    status: 'Active',
-    slug: 'new-doublo/neck-rejuvenation'
-  },
-  {
-    id: 7,
-    name: 'Youth Revival',
-    category: 'New Doublo',
-    price: '$1,450',
-    duration: '75 min',
-    status: 'Active',
-    slug: 'new-doublo/youth-revival'
-  },
-  {
-    id: 8,
-    name: 'V-Line Perfection',
-    category: 'New Doublo',
-    price: '$1,500',
-    duration: '60 min',
-    status: 'Active',
-    slug: 'new-doublo/v-line'
-  },
-  {
-    id: 9,
-    name: 'Sculpt & Lift',
-    category: 'New Doublo',
-    price: '$1,400',
-    duration: '60 min',
-    status: 'Active',
-    slug: 'new-doublo/sculpt-lift'
-  }
-]
+// Define Service interface
+interface Service {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  duration: string;
+  status: string;
+  slug: string;
+  short_description?: string;
+  long_description?: string;
+  benefits?: string;
+  suitable_for?: string;
+  contraindications?: string;
+  preparation?: string;
+  aftercare?: string;
+}
 
 // Categories for filtering
 const categories = [
@@ -120,6 +54,9 @@ const statusOptions = [
   'Draft',
 ]
 
+// Create a fetcher function for SWR
+const fetcher = (url: string) => fetch(url).then(res => res.json())
+
 export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All Categories')
@@ -127,8 +64,61 @@ export default function ServicesPage() {
   const [sortField, setSortField] = useState('name')
   const [sortDirection, setSortDirection] = useState('asc')
 
+  // Fetch services data with SWR
+  const { data: services, error, isLoading, mutate } = useSWR<Service[]>('/api/services', fetcher)
+
+  // Handle error and loading states
+  if (error) return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">Services</h1>
+        <Link href="/admin/services/new">
+          <Button className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Add New Service
+          </Button>
+        </Link>
+      </div>
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="mb-4 text-lg font-medium text-red-500">Error loading services</p>
+            <p className="text-sm text-gray-500">
+              {error.message || 'Failed to load data'}
+            </p>
+            <Button className="mt-4" onClick={() => mutate()}>
+              Try Again
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  if (isLoading || !services) return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">Services</h1>
+        <Link href="/admin/services/new">
+          <Button className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Add New Service
+          </Button>
+        </Link>
+      </div>
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="mb-4 text-lg font-medium">Loading services...</p>
+            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900"></div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
   // Filter services based on search query, category, and status
-  const filteredServices = mockServices.filter(service => {
+  const filteredServices = services.filter(service => {
     const matchesSearch = service.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === 'All Categories' || service.category === selectedCategory
     const matchesStatus = selectedStatus === 'All Status' || service.status === selectedStatus
@@ -137,8 +127,8 @@ export default function ServicesPage() {
 
   // Sort services based on sort field and direction
   const sortedServices = [...filteredServices].sort((a, b) => {
-    const fieldA = a[sortField as keyof typeof a].toString().toLowerCase()
-    const fieldB = b[sortField as keyof typeof b].toString().toLowerCase()
+    const fieldA = a[sortField as keyof Service]?.toString().toLowerCase() || ''
+    const fieldB = b[sortField as keyof Service]?.toString().toLowerCase() || ''
     
     if (sortDirection === 'asc') {
       return fieldA.localeCompare(fieldB)
@@ -146,6 +136,7 @@ export default function ServicesPage() {
       return fieldB.localeCompare(fieldA)
     }
   })
+
   // Handle sort toggle
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -153,6 +144,25 @@ export default function ServicesPage() {
     } else {
       setSortField(field)
       setSortDirection('asc')
+    }
+  }
+
+  // Handle delete service
+  const handleDelete = async (id: number) => {
+    if (confirm('Are you sure you want to delete this service?')) {
+      try {
+        const res = await fetch(`/api/services/${id}`, {
+          method: 'DELETE',
+        })
+        
+        if (!res.ok) throw new Error('Failed to delete service')
+        
+        // Refetch services data after successful deletion
+        mutate()
+      } catch (error) {
+        console.error('Error deleting service:', error)
+        alert('Failed to delete service')
+      }
     }
   }
 
@@ -270,15 +280,7 @@ export default function ServicesPage() {
                       <ArrowUpDown className="h-3 w-3" />
                     </button>
                   </th>
-                  <th className="px-4 py-3 text-left">
-                    <button 
-                      className="flex items-center gap-1"
-                      onClick={() => handleSort('status')}
-                    >
-                      Status
-                      <ArrowUpDown className="h-3 w-3" />
-                    </button>
-                  </th>
+                  <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -288,23 +290,21 @@ export default function ServicesPage() {
                     <td className="px-4 py-3 font-medium">
                       {service.name}
                     </td>
-                    <td className="px-4 py-3 text-gray-700">
+                    <td className="px-4 py-3 text-gray-600">
                       {service.category}
                     </td>
-                    <td className="px-4 py-3 text-gray-700">
+                    <td className="px-4 py-3 text-gray-600">
                       {service.price}
                     </td>
-                    <td className="px-4 py-3 text-gray-700">
+                    <td className="px-4 py-3 text-gray-600">
                       {service.duration}
                     </td>
                     <td className="px-4 py-3">
-                      <span 
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          service.status === 'Active' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
+                      <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
+                        service.status === 'Active'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
                         {service.status}
                       </span>
                     </td>
@@ -320,7 +320,12 @@ export default function ServicesPage() {
                             <Eye className="h-4 w-4" />
                           </Button>
                         </Link>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-red-500"
+                          onClick={() => handleDelete(service.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

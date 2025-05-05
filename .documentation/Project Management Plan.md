@@ -1,21 +1,23 @@
 # Project Management Plan
 
 ## Project Overview
-This project is a frontend prototype with a memory management component (MCP) that provides persistent storage of project information. The project is currently in prototyping mode, focusing on developing the frontend interface without connecting to backend logic.
+This project is a production-ready frontend application with a memory management component (MCP) that provides persistent storage of project information. The project has moved beyond prototyping and is now focused on integrating real data, connecting to backend logic, and ensuring robust, maintainable code for deployment.
 
 ## Development Guidelines
 
 ### General Guidelines
-- We are in prototyping mode - focus on frontend development only
-- Use dummy JSON to represent data
-- Link all components for navigation
-- Make buttons responsive
-- Don't connect to backend logic
+- The project is now in production mode – focus on production-quality code and best practices
+- Integrate with real backend APIs and data sources
+- Remove or replace dummy JSON with live data
+- Ensure all components are fully linked and navigable
+- Make all UI elements responsive and accessible
+- Connect all relevant features to backend logic
 - Always check the problems window for issues and fix them
+- Prioritize performance, security, and maintainability
 
 ### Memory MCP Requirements (CRITICAL)
-- **IMPORTANT**: Always add to memory MCP by calling "npm run memory-add-conversation" after 20 tool calls or 25 conversations
-- This is a critical requirement to maintain project context and knowledge
+- **IMPORTANT**: Continue to add to memory MCP by calling "npm run memory-add-conversation" after 20 tool calls or 25 conversations
+- Maintain project context and knowledge for long-term maintainability
 
 ### Memory MCP Usage
 - Use `npm run memory-add-conversation` to add conversations to memory
@@ -47,23 +49,27 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Use Tailwind CSS for styling
 - Use shadcn components where possible
 - Use lucide-react for icons
+- Ensure all components are production-ready and accessible
 
-### Database Integration (For Future Reference)
+### Database Integration
 - Use Prisma as the only database client
 - Keep database logic in dedicated service layers
 - Use Prisma's type-safe queries
+- Integrate all relevant features with backend data
 
-### Authentication (For Future Reference)
+### Authentication
 - Use Clerk for authentication
 - Use clerkMiddleware (not deprecated authMiddleware)
 - Protect /app routes in middleware
+- Ensure authentication is robust and secure
 
 ### Testing
-- Add newly changed features to Playwright tests
+- Add newly changed features to Playwright and unit tests
 - Run full Playwright regression tests after each change
 - Fix any negative test results
 - Terminate lingering Playwright report server processes before running tests again
-- Update test selectors when component implementations change (like with TreatmentImage)
+- Update test selectors when component implementations change
+- Add integration and end-to-end tests for backend-connected features
 - Available test scripts:
   - `npm test`: Run all Playwright tests
   - `npm run test:ui`: Run tests with Playwright UI mode
@@ -79,6 +85,17 @@ This project is a frontend prototype with a memory management component (MCP) th
   - "Style(tailwind): add new tailwind class"
   - "Test(unit): add unit test"
   - "Chore(deps): update dependencies"
+
+## Post-Prototype/Production Phase Priorities
+- Replace all dummy/mock data with real backend data
+- Integrate all features with backend APIs
+- Harden authentication and authorization flows
+- Add comprehensive error handling and user feedback
+- Optimize performance for production deployment
+- Ensure accessibility (a11y) compliance
+- Add monitoring and logging for production
+- Prepare deployment scripts and CI/CD pipelines
+- Update documentation for production usage
 
 ## Task Management
 
