@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { mockServices } from '@/app/admin/services/mockData';
+import { getServiceById, updateService, deleteService } from '@/lib/db';
+import { ServiceUpdateSchema } from '@/lib/validation/service-schema';
 
 // GET handler for fetching a single service by ID
 export async function GET(
@@ -9,8 +10,8 @@ export async function GET(
   try {
     const id = parseInt(params.id);
     
-    // Find the service with the matching ID
-    const service = mockServices.find(service => service.id === id);
+    // Get service from database
+    const service = await getServiceById(id);
     
     if (!service) {
       return NextResponse.json(
@@ -37,26 +38,34 @@ export async function PUT(
 ) {
   try {
     const id = parseInt(params.id);
-    const updatedData = await request.json();
+    const body = await request.json();
     
-    // Find the index of the service with the matching ID
-    const serviceIndex = mockServices.findIndex(service => service.id === id);
+    // Validate the input data
+    const validationResult = ServiceUpdateSchema.safeParse(body);
     
-    if (serviceIndex === -1) {
+    if (!validationResult.success) {
+      // Return validation errors
+      return NextResponse.json(
+        { 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Check if service exists
+    const existingService = await getServiceById(id);
+    
+    if (!existingService) {
       return NextResponse.json(
         { error: 'Service not found' },
         { status: 404 }
       );
     }
     
-    // In a real implementation, this would update the service in the database
-    // For now, we'll just return the updated service data
-    // (Note: This won't actually persist changes since we're using mock data)
-    const updatedService = {
-      ...mockServices[serviceIndex],
-      ...updatedData,
-      id // Ensure ID remains the same
-    };
+    // Update service in database
+    const updatedService = await updateService(id, validationResult.data);
     
     // Return the updated service
     return NextResponse.json(updatedService, { status: 200 });
@@ -77,19 +86,18 @@ export async function DELETE(
   try {
     const id = parseInt(params.id);
     
-    // Find the index of the service with the matching ID
-    const serviceIndex = mockServices.findIndex(service => service.id === id);
+    // Check if service exists
+    const existingService = await getServiceById(id);
     
-    if (serviceIndex === -1) {
+    if (!existingService) {
       return NextResponse.json(
         { error: 'Service not found' },
         { status: 404 }
       );
     }
     
-    // In a real implementation, this would delete the service from the database
-    // For now, we'll just return success
-    // (Note: This won't actually persist changes since we're using mock data)
+    // Delete service from database
+    await deleteService(id);
     
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

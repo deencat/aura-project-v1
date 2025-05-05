@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { mockServices } from '@/app/admin/services/mockData';
+import { getAllServices } from '@/lib/db';
 
 // GET handler for fetching all services
 export async function GET() {
   try {
-    // In a real implementation, this would fetch from a database
-    // For now, we're using our mock data
+    // Use the database function to get all services
+    const services = await getAllServices();
     
-    // Return the mock services data
-    return NextResponse.json(mockServices, { status: 200 });
+    // Return the services data
+    return NextResponse.json(services, { status: 200 });
   } catch (error) {
     console.error('Error fetching services:', error);
     return NextResponse.json(
