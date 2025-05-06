@@ -29,6 +29,26 @@ interface StoredService {
 }
 
 /**
+ * Initialize the service storage system
+ * This should be called once when the app starts on the client side
+ */
+export async function initializeServiceStorage() {
+  try {
+    // Fetch initial services data
+    const services = await getServices();
+    
+    // Store in memory cache
+    localStorage.setItem('services', JSON.stringify(services));
+    localStorage.setItem('lastUpdated', Date.now().toString());
+    
+    return true;
+  } catch (error) {
+    console.error('Failed to initialize service storage:', error);
+    return false;
+  }
+}
+
+/**
  * Fetch all services from backend API
  */
 export async function getServices(): Promise<StoredService[]> {

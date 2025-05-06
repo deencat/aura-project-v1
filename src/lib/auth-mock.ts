@@ -31,20 +31,28 @@ export const currentUser = async () => {
   };
 };
 
-export const ClerkProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+interface ProviderProps {
+  children: React.ReactNode;
+}
+
+export const ClerkProvider: React.FC<ProviderProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export const SignedIn: React.FC<{children: React.ReactNode}> = ({ children }) => {
+export const SignedIn: React.FC<ProviderProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export const SignedOut: React.FC<{children: React.ReactNode}> = ({ children }) => {
+export const SignedOut: React.FC<ProviderProps> = ({ children }) => {
   return null; // Don't render anything in SignedOut during tests
 };
 
-export const SignInButton: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  return <button>{children}</button>;
+export const SignInButton: React.FC = () => {
+  return <button>Sign In</button>;
+};
+
+export const SignUpButton: React.FC = () => {
+  return <button>Sign Up</button>;
 };
 
 export const UserButton: React.FC = () => {

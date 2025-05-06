@@ -5,21 +5,13 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ServiceInitializer from '@/components/ServiceInitializer'
 import {
-  getClerkProvider as getCP,
-  getSignInButton as getSIB,
-  getSignUpButton as getSUB,
-  getSignedIn as getSI,
-  getSignedOut as getSO,
-  getUserButton as getUB
-} from '@/lib/auth-wrapper'
-
-// Get the components based on environment
-const ClerkProvider = getCP();
-const SignInButton = getSIB();
-const SignUpButton = getSUB();
-const SignedIn = getSI();
-const SignedOut = getSO();
-const UserButton = getUB();
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 export const metadata: Metadata = {
   title: 'Aura - Tech-Forward Beauty',
@@ -42,7 +34,7 @@ export default function RootLayout({
               <SignUpButton />
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <UserButton afterSignOutUrl="/" />
             </SignedIn>
           </div>
           <Header />

@@ -10,8 +10,16 @@ import { initializeServiceStorage } from '@/utils/serviceStorage';
 export default function ServiceInitializer() {
   useEffect(() => {
     // Initialize service storage
-    initializeServiceStorage();
-    console.log('Service storage initialized');
+    const init = async () => {
+      try {
+        await initializeServiceStorage();
+        console.log('Service storage initialized');
+      } catch (error) {
+        console.error('Failed to initialize service storage:', error);
+      }
+    };
+    
+    init();
   }, []);
 
   // This component doesn't render anything

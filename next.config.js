@@ -23,8 +23,8 @@ const nextConfig = {
     contentDispositionType: 'inline',
     
     // Configure image domains if using external images
-    domains: []
+    domains: ['images.unsplash.com']
   }
 }
 
-module.exports = nextConfig 
+export default nextConfig; 

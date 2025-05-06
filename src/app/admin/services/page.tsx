@@ -301,8 +301,8 @@ export default function ServicesPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
-                        service.status === 'Active'
-                          ? 'bg-green-100 text-green-800'
+                          service.status === 'Active' 
+                            ? 'bg-green-100 text-green-800' 
                           : 'bg-gray-100 text-gray-800'
                       }`}>
                         {service.status}

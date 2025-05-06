@@ -2,62 +2,61 @@
  * Authentication wrapper that automatically switches between
  * real Clerk authentication and mock authentication during tests
  */
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  auth,
+  currentUser,
+} from '@clerk/nextjs';
+
+import {
+  ClerkProvider as MockClerkProvider,
+  SignInButton as MockSignInButton,
+  SignUpButton as MockSignUpButton,
+  SignedIn as MockSignedIn,
+  SignedOut as MockSignedOut,
+  UserButton as MockUserButton,
+  auth as mockAuth,
+  currentUser as mockCurrentUser,
+} from './auth-mock';
 
 const isTestEnvironment = () => {
   return process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === 'true';
 };
 
-// Dynamically import the appropriate authentication module
-export const useAuth = () => {
-  if (isTestEnvironment()) {
-    // Use mock authentication for tests
-    // Using require instead of import for dynamic loading
-    const mockAuth = require('./auth-mock');
-    return mockAuth;
-  } else {
-    // Use real Clerk authentication for production
-    const realAuth = require('@clerk/nextjs');
-    return realAuth;
-  }
-};
-
 // Convenience exports
 export const getAuth = () => {
-  const authModule = useAuth();
-  return authModule.auth;
+  return isTestEnvironment() ? mockAuth : auth;
 };
 
 export const getCurrentUser = () => {
-  const authModule = useAuth();
-  return authModule.currentUser;
+  return isTestEnvironment() ? mockCurrentUser : currentUser;
 };
 
 export const getClerkProvider = () => {
-  const authModule = useAuth();
-  return authModule.ClerkProvider;
+  return isTestEnvironment() ? MockClerkProvider : ClerkProvider;
 };
 
 export const getSignedIn = () => {
-  const authModule = useAuth();
-  return authModule.SignedIn;
+  return isTestEnvironment() ? MockSignedIn : SignedIn;
 };
 
 export const getSignedOut = () => {
-  const authModule = useAuth();
-  return authModule.SignedOut;
+  return isTestEnvironment() ? MockSignedOut : SignedOut;
 };
 
 export const getSignInButton = () => {
-  const authModule = useAuth();
-  return authModule.SignInButton;
+  return isTestEnvironment() ? MockSignInButton : SignInButton;
 };
 
 export const getSignUpButton = () => {
-  const authModule = useAuth();
-  return authModule.SignUpButton;
+  return isTestEnvironment() ? MockSignUpButton : SignUpButton;
 };
 
 export const getUserButton = () => {
-  const authModule = useAuth();
-  return authModule.UserButton;
+  return isTestEnvironment() ? MockUserButton : UserButton;
 }; 

@@ -1,7 +1,7 @@
 const { fontFamily } = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   darkMode: ['class'],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -26,11 +26,11 @@ module.exports = {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			primary: {
-  				DEFAULT: '#F87558',
+  				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {
-  				DEFAULT: '#5CD7C9',
+  				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
   			destructive: {

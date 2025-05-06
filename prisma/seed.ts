@@ -1,7 +1,39 @@
-import { PrismaClient } from '@prisma/client';
-import { mockServices } from '../src/app/admin/services/mockData';
+import { PrismaClient } from '../src/generated/prisma/index.js';
 
 const prisma = new PrismaClient();
+
+const testServices = [
+  {
+    name: "Classic Facial",
+    slug: "classic-facial",
+    category: "Facial Treatments",
+    price: "$99",
+    duration: "60 minutes",
+    status: "Active",
+    short_description: "A deep cleansing facial treatment",
+    long_description: "Our classic facial includes cleansing, exfoliation, extraction, and mask treatment.",
+    benefits: "Improves skin texture, removes impurities, promotes relaxation",
+    suitable_for: "All skin types",
+    contraindications: "Active acne, recent sunburn",
+    preparation: "Arrive with clean skin, avoid sun exposure",
+    aftercare: "Use sunscreen, avoid heavy makeup for 24 hours",
+  },
+  {
+    name: "Deep Tissue Massage",
+    slug: "deep-tissue-massage",
+    category: "Body Treatments",
+    price: "$120",
+    duration: "90 minutes",
+    status: "Active",
+    short_description: "Intensive massage therapy",
+    long_description: "Targets deep layers of muscle and connective tissue",
+    benefits: "Relieves chronic muscle tension, improves circulation",
+    suitable_for: "Adults with muscle tension or pain",
+    contraindications: "Recent injuries, blood clots",
+    preparation: "Stay hydrated, arrive 10 minutes early",
+    aftercare: "Drink plenty of water, rest if needed",
+  }
+];
 
 async function main() {
   console.log('Start seeding the database...');
@@ -10,28 +42,10 @@ async function main() {
   await prisma.service.deleteMany();
   console.log('Cleared existing services data');
 
-  // Insert mock services data
-  for (const service of mockServices) {
-    // Convert mockService data to match our Prisma schema
-    const serviceData = {
-      id: service.id,
-      name: service.name,
-      slug: service.slug,
-      category: service.category,
-      price: service.price,
-      duration: service.duration,
-      status: service.status,
-      short_description: service.short_description,
-      long_description: service.long_description,
-      benefits: service.benefits,
-      suitable_for: service.suitable_for,
-      contraindications: service.contraindications,
-      preparation: service.preparation,
-      aftercare: service.aftercare,
-    };
-
+  // Insert test services data
+  for (const service of testServices) {
     await prisma.service.create({
-      data: serviceData,
+      data: service,
     });
     console.log(`Created service: ${service.name}`);
   }
