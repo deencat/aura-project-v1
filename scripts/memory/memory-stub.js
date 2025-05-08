@@ -6,12 +6,16 @@
  * external MCP server while maintaining basic memory capabilities.
  */
 
-const fs = require('fs');
-const path = require('path');
-const http = require('http');
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { createServer } from 'http';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Configuration
-const MEMORY_FILE = path.join(__dirname, 'memory.json');
+const MEMORY_FILE = join(__dirname, 'memory.json');
 const SERVER_PORT = 3100;  // Same port as MCP would use
 
 // Initialize memory storage
@@ -21,12 +25,17 @@ let memoryStore = {
 };
 
 // Load existing memory if available
-function loadMemory() {
+async function loadMemory() {
   try {
-    if (fs.existsSync(MEMORY_FILE)) {
-      const data = fs.readFileSync(MEMORY_FILE, 'utf8');
+    try {
+      const data = await fs.readFile(MEMORY_FILE, 'utf8');
       memoryStore = JSON.parse(data);
       console.log('Memory loaded from file');
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+      // File doesn't exist yet, that's okay
     }
   } catch (error) {
     console.error('Error loading memory:', error.message);
@@ -34,9 +43,9 @@ function loadMemory() {
 }
 
 // Save memory to file
-function saveMemory() {
+async function saveMemory() {
   try {
-    fs.writeFileSync(MEMORY_FILE, JSON.stringify(memoryStore, null, 2), 'utf8');
+    await fs.writeFile(MEMORY_FILE, JSON.stringify(memoryStore, null, 2), 'utf8');
     console.log('Memory saved to file');
   } catch (error) {
     console.error('Error saving memory:', error.message);
@@ -44,40 +53,42 @@ function saveMemory() {
 }
 
 // Handle RPC-style methods
-function handleRpcMethod(method, params) {
+async function handleRpcMethod(method, params) {
   switch (method) {
     case 'initialize':
       return { status: 'ok', message: 'Stub server initialized' };
     
-    case 'memory/create_entities':
-      if (!params.entities || !Array.isArray(params.entities)) {
-        return { error: 'Invalid entities format' };
+    case 'upsertEntity':
+      if (!params.name || !params.entityType) {
+        return { error: 'Entity name and type are required' };
       }
       
-      params.entities.forEach(entity => {
-        if (!entity.name) return;
-        memoryStore.entities[entity.name] = entity;
-      });
+      memoryStore.entities[params.name] = {
+        ...params,
+        updatedAt: new Date().toISOString()
+      };
       
-      saveMemory();
-      return { status: 'ok', created: params.entities.length };
+      await saveMemory();
+      return { status: 'ok', entity: memoryStore.entities[params.name] };
     
-    case 'memory/create_relations':
-      if (!params.relations || !Array.isArray(params.relations)) {
-        return { error: 'Invalid relations format' };
+    case 'createRelation':
+      if (!params.from || !params.to || !params.relationType) {
+        return { error: 'From, to, and relationType are required' };
       }
       
-      params.relations.forEach(relation => {
-        memoryStore.relations.push(relation);
-      });
+      const relation = {
+        ...params,
+        createdAt: new Date().toISOString()
+      };
       
-      saveMemory();
-      return { status: 'ok', created: params.relations.length };
+      memoryStore.relations.push(relation);
+      await saveMemory();
+      return { status: 'ok', relation };
     
-    case 'memory/entities':
+    case 'getEntities':
       return { entities: Object.values(memoryStore.entities) };
     
-    case 'memory/delete_entity':
+    case 'deleteEntity':
       if (!params.name) {
         return { error: 'Entity name is required' };
       }
@@ -92,13 +103,13 @@ function handleRpcMethod(method, params) {
           relation.from !== entityName && relation.to !== entityName
         );
         
-        saveMemory();
+        await saveMemory();
         return { status: 'ok', message: `Entity '${entityName}' deleted successfully` };
       } else {
         return { error: `Entity '${entityName}' not found` };
       }
     
-    case 'memory/delete_relation':
+    case 'deleteRelation':
       if (!params.from || !params.to) {
         return { error: 'Both from and to entity names are required' };
       }
@@ -122,7 +133,7 @@ function handleRpcMethod(method, params) {
       const deleted = originalLength - memoryStore.relations.length;
       
       if (deleted > 0) {
-        saveMemory();
+        await saveMemory();
         return { status: 'ok', deleted: deleted };
       } else {
         return { error: 'No matching relations found' };
@@ -134,10 +145,10 @@ function handleRpcMethod(method, params) {
 }
 
 // Start HTTP server
-function startServer() {
-  loadMemory();
+async function startServer() {
+  await loadMemory();
   
-  const server = http.createServer((req, res) => {
+  const server = createServer(async (req, res) => {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -158,10 +169,10 @@ function startServer() {
         body += chunk.toString();
       });
       
-      req.on('end', () => {
+      req.on('end', async () => {
         try {
           const request = JSON.parse(body);
-          const result = handleRpcMethod(request.method, request.params);
+          const result = await handleRpcMethod(request.method, request.params);
           
           res.setHeader('Content-Type', 'application/json');
           res.statusCode = 200;
@@ -198,27 +209,20 @@ function startServer() {
       return;
     }
     
-    // Default response for other methods
-    res.statusCode = 404;
-    res.end();
+    // Handle unsupported methods
+    res.statusCode = 405;
+    res.end('Method not allowed');
   });
   
   server.listen(SERVER_PORT, () => {
-    console.log(`Memory stub server running at http://localhost:${SERVER_PORT}`);
-    console.log('This is a replacement for the MCP server using local JSON storage');
+    console.log(`Memory stub server running on port ${SERVER_PORT}`);
   });
   
-  return server;
+  // Handle server errors
+  server.on('error', (error) => {
+    console.error('Server error:', error.message);
+  });
 }
 
-// Export functions
-module.exports = {
-  startServer,
-  loadMemory,
-  saveMemory
-};
-
-// Auto-start server if run directly
-if (require.main === module) {
-  startServer();
-} 
+// Start the server
+startServer().catch(console.error); 

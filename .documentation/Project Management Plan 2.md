@@ -1,16 +1,16 @@
 # Project Management Plan
 
 ## Project Overview
-This project is a frontend prototype with a memory management component (MCP) that provides persistent storage of project information. The project is currently in prototyping mode, focusing on developing the frontend interface without connecting to backend logic.
+This project is a frontend application with a memory management component (MCP) that provides persistent storage of project information. The project is currently in project mode, focusing on developing a fully functional frontend interface.
 
 ## Development Guidelines
 
 ### General Guidelines
-- We are in prototyping mode - focus on frontend development only
-- Use dummy JSON to represent data
-- Link all components for navigation
-- Make buttons responsive
-- Don't connect to backend logic
+- We are in project mode - focus on robust frontend development
+- Use structured data models
+- Ensure all components are fully functional and properly linked for navigation
+- Make all UI elements responsive and accessible
+- Implement proper error handling and user feedback
 - Always check the problems window for issues and fix them
 
 ### Memory MCP Requirements (CRITICAL)
@@ -518,19 +518,39 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Documented best practices from Context7 in the test suite
   - Added exponential backoff for retries to handle slow network conditions
   - Implemented parallel test execution for faster feedback
+- Fixed logo.svg image loading issue in Next.js Image component
+  - Added appropriate localPatterns configuration in next.config.js
+  - Updated localPatterns to include logo.svg path
+  - Verified server starts correctly with the updated configuration
 
 ### Pending Tasks (Prioritized)
-1. Improve image loading optimization
-   - Add WebP format support for modern browsers
-   - Implement proper image preloading strategies for hero images
-   - Optimize responsive image sizes based on actual viewport usage
-   - Add better blur placeholders for improved loading experience
-   - Implement content-visibility optimization for off-screen images
+1. Complete image optimization implementation
+   - Fine-tune WebP and AVIF format support for modern browsers
+   - Review memory usage in Next.js image optimization to prevent server hang
+   - Implement proper blur placeholders with createBlurPlaceholder utility
+   - Ensure proper lazy loading with Intersection Observer works as expected
+   - Verify content-visibility optimization for off-screen images
+   - Optimize image caching strategy with appropriate TTL settings
 
-2. Run full regression test after optimizations
+2. Enhance TreatmentImage component resilience
+   - Add more robust error handling and retry logic
+   - Implement more sophisticated fallback mechanisms
+   - Add logging for image loading performance metrics
+   - Create unit tests for TreatmentImage component
+   - Document common issues and solutions
+
+3. Optimize Next.js configuration
+   - Review experimental features for stability and performance
+   - Fine-tune memory management settings
+   - Optimize build and dev server performance
+   - Consider implementing a custom image loader for specific cases
+   - Review Content Security Policy for images
+
+4. Run full regression test after optimizations
    - Terminate any lingering Playwright report server processes first
    - Run tests in batches to isolate any new failures
    - Document and address any remaining performance issues
+   - Verify image loading metrics in tests
 
 ### Backlog Tasks
 - Implement Memory Viewer component for debugging
@@ -541,11 +561,14 @@ This project is a frontend prototype with a memory management component (MCP) th
 - Implement loyalty token configuration in CMS (earning rules, redemption options)
 - Add basic order management for online payments/retail
 - Create standardized error handling mechanism
-- Implement lazy loading for non-critical components
 - Add analytics integration for prototype testing
 - Create user preference settings UI
 - Add theme customization options
 - Implement additional language support interfaces
+- Create image processing utility scripts
+  - Batch convert images to WebP/AVIF formats
+  - Generate optimized thumbnails and placeholders
+  - Add metadata for better accessibility
 
 ## Project Phases
 
@@ -622,6 +645,11 @@ The TreatmentImage component is a standardized wrapper around Next.js Image that
 - Automatic fallback to placeholder images
 - Proper alt text handling for accessibility
 - Standardized image types (hero, gallery, before-after, testimonial, etc.)
+- Lazy loading with Intersection Observer
+- Content visibility optimization
+- Responsive sizing with appropriate breakpoints
+- Blur placeholders for better loading experience
+- Error handling with retry mechanism
 
 **Basic Usage:**
 ```jsx
@@ -654,17 +682,35 @@ Images are stored in a consistent directory structure:
 - how-it-works: Treatment process explanation images
 - results: Treatment results showcase images
 
-#### Current Issues and Fixes
-Based on test failures, several placeholder images are missing and need to be created:
-- Ensure all placeholder images exist in the correct directories
-- Fix image paths in components where needed
-- Resolve test selector issues, especially for elements like Book Now buttons
-- Update image optimization configuration for better performance
+#### Current Optimization Configuration
+The project's Next.js image optimization is configured with:
+- WebP and AVIF support for modern image formats
+- 31-day cache TTL to reduce unnecessary revalidations
+- Optimized device and image sizes for responsive serving
+- Content-Disposition set to 'inline' for proper display
+- SVG support with appropriate security settings
+- Proper localPatterns configuration for local images
 
-#### Next.js Image Optimization
-For production deployment, we have implemented:
-- Configure image formats: Added WebP support in next.config.js
-- Set appropriate cache TTL to reduce revalidations
-- Use responsive sizing with the sizes attribute
-- Implement blur placeholders for improved UX
-- Mark hero images with priority for better LCP metrics
+#### Next Steps for Image Optimization
+1. **Review memory usage** in the current configuration to prevent server hanging issues
+2. **Fine-tune the blur placeholder generation** for smoother loading transitions
+3. **Implement analytics** to measure image loading performance impacts
+4. **Create batch processing scripts** for generating WebP/AVIF versions and placeholders
+5. **Review and update documentation** with the latest best practices
+
+#### Benefits of Current Implementation
+- File size reduction: 50-80% smaller with WebP/AVIF compared to JPEG
+- Improved loading experience with blur placeholders
+- Better Core Web Vitals scores (LCP, CLS)
+- Consistent UI with standardized image handling
+- Reduced layout shifts with proper sizing
+- Better accessibility with required alt text
+
+## Recommendations for Next Steps
+Based on the current project status and the recent image optimization work:
+
+1. **Complete the image optimization configuration** to ensure the Next.js server runs stably without hanging issues
+2. **Enhance the TreatmentImage component** with more robust error handling and performance monitoring
+3. **Create comprehensive image processing scripts** for batch optimization of existing and new images
+4. **Run a full regression test suite** to verify all optimizations work properly across all pages
+5. **Document the image optimization approach** for future team members

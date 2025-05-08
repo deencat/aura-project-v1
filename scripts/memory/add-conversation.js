@@ -11,85 +11,56 @@
  * npm run memory-add -- "Observation 1" "Observation 2" "Observation 3"
  */
 
-const path = require('path');
-const fs = require('fs');
-const http = require('http');
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { spawn } from 'child_process';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Function to make a simple RPC-style request
 async function rpcRequest(method, params) {
-  return new Promise((resolve, reject) => {
-    const requestData = JSON.stringify({
-      jsonrpc: '2.0',
-      id: Date.now(),
-      method: method,
-      params: params
-    });
-    
-    const options = {
-      hostname: 'localhost',
-      port: 3100,
-      path: '/',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(requestData)
-      }
-    };
-    
-    const req = http.request(options, (res) => {
-      let data = '';
-      
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      
-      res.on('end', () => {
-        try {
-          const response = JSON.parse(data);
-          if (response.error) {
-            reject(new Error(response.error.message));
-          } else {
-            resolve(response.result);
-          }
-        } catch (error) {
-          reject(new Error(`Invalid JSON response: ${error.message}`));
-        }
-      });
-    });
-    
-    req.on('error', (error) => {
-      reject(new Error(`Request failed: ${error.message}`));
-    });
-    
-    req.write(requestData);
-    req.end();
+  const requestData = JSON.stringify({
+    jsonrpc: '2.0',
+    id: Date.now(),
+    method: method,
+    params: params
   });
+  
+  const response = await fetch('http://localhost:3100', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: requestData
+  });
+  
+  const data = await response.json();
+  
+  if (data.error) {
+    throw new Error(data.error.message);
+  }
+  
+  return data.result;
 }
 
 // Check if memory server is running
 async function isMemoryServerRunning() {
-  return new Promise((resolve) => {
-    const req = http.get('http://localhost:3100', (res) => {
-      resolve(res.statusCode === 200);
-    });
-    
-    req.on('error', () => {
-      resolve(false);
-    });
-    
-    req.end();
-  });
+  try {
+    const response = await fetch('http://localhost:3100');
+    return response.status === 200;
+  } catch {
+    return false;
+  }
 }
 
 // Start memory server if it's not running
 async function startMemoryServer() {
-  const { spawn } = require('child_process');
-  
   console.log('Starting memory server...');
   
   return new Promise((resolve) => {
     // Get absolute path to memory-stub.js
-    const scriptPath = path.join(process.cwd(), 'scripts', 'memory', 'memory-stub.js');
+    const scriptPath = join(__dirname, 'memory-stub.js');
     
     // Start server as detached process
     const serverProcess = spawn('node', [scriptPath], {
@@ -197,70 +168,12 @@ async function addConversationMemory() {
   // Add entity to memory
   try {
     console.log('Creating conversation memory entry...');
-    
-    const createResult = await rpcRequest('memory/create_entities', {
-      entities: [conversationEntity]
-    });
-    
-    console.log('✅ Memory entry created successfully');
-    console.log(`Created ${createResult.created} entities`);
-    
-    // Try to relate this to other relevant entities
-    console.log('Retrieving existing entities...');
-    const entitiesResult = await rpcRequest('memory/entities', {});
-    
-    // Try to find Project entity
-    const projectEntity = entitiesResult.entities.find(e => e.name === 'Project');
-    if (projectEntity) {
-      console.log('Creating relation to Project...');
-      await rpcRequest('memory/create_relations', {
-        relations: [{
-          from: conversationEntity.name,
-          to: 'Project',
-          relationType: 'relates_to',
-          createdAt: new Date().toISOString()
-        }]
-      });
-      console.log('✅ Relation to Project created');
-    }
-    
-    // Try to find development entities
-    const devEntities = entitiesResult.entities.filter(e => e.entityType === 'development');
-    if (devEntities.length > 0) {
-      console.log(`Creating relation to development entity '${devEntities[0].name}'...`);
-      await rpcRequest('memory/create_relations', {
-        relations: [{
-          from: conversationEntity.name,
-          to: devEntities[0].name,
-          relationType: 'part_of',
-          createdAt: new Date().toISOString()
-        }]
-      });
-      console.log('✅ Relation to development entity created');
-    }
-    
-    // Show success message
-    console.log(`
-Memory entry created with name: ${conversationEntity.name}
-Observations:
-${observations.map(obs => '- ' + obs).join('\n')}
-
-You can view memory entries using: npm run memory-get-latest
-    `);
-    
+    const result = await rpcRequest('upsertEntity', conversationEntity);
+    console.log('✅ Memory entry created successfully:', result);
   } catch (error) {
     console.error('❌ Failed to create memory entry:', error.message);
   }
 }
 
-// Run the function if called directly
-if (require.main === module) {
-  addConversationMemory().catch(error => {
-    console.error('Error:', error.message);
-  });
-}
-
-// Export the function for direct use in other modules
-module.exports = {
-  addConversationMemory
-}; 
+// Run the script
+addConversationMemory().catch(console.error); 

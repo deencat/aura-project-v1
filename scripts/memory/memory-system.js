@@ -1,39 +1,48 @@
 // Simple memory system for Social Media Marketing Agent
-const fs = require('fs');
-const path = require('path');
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class MemorySystem {
   constructor(filePath = 'memory.json') {
     this.filePath = filePath;
-    this.memory = this.loadMemory();
+    this.memory = null;
+    this.initMemory();
   }
 
   // Load memory from file or initialize if it doesn't exist
-  loadMemory() {
+  async initMemory() {
     try {
-      if (fs.existsSync(this.filePath)) {
-        const data = fs.readFileSync(this.filePath, 'utf8');
-        return JSON.parse(data);
-      } else {
-        // Initialize with empty structures
-        const initialMemory = {
-          entities: {},
-          relations: []
-        };
-        this.saveMemory(initialMemory);
-        return initialMemory;
+      try {
+        const data = await fs.readFile(this.filePath, 'utf8');
+        this.memory = JSON.parse(data);
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          // Initialize with empty structures
+          const initialMemory = {
+            entities: {},
+            relations: []
+          };
+          await this.saveMemory(initialMemory);
+          this.memory = initialMemory;
+        } else {
+          throw error;
+        }
       }
     } catch (error) {
       console.error(`Error loading memory: ${error.message}`);
       // Return empty memory on error
-      return { entities: {}, relations: [] };
+      this.memory = { entities: {}, relations: [] };
     }
   }
 
   // Save memory to file
-  saveMemory(memory = this.memory) {
+  async saveMemory(memory = this.memory) {
     try {
-      fs.writeFileSync(this.filePath, JSON.stringify(memory, null, 2));
+      await fs.writeFile(this.filePath, JSON.stringify(memory, null, 2));
       return true;
     } catch (error) {
       console.error(`Error saving memory: ${error.message}`);
@@ -42,7 +51,7 @@ class MemorySystem {
   }
 
   // Create or update an entity
-  upsertEntity(name, entityType, observations = []) {
+  async upsertEntity(name, entityType, observations = []) {
     if (!name || !entityType) {
       throw new Error('Entity name and type are required');
     }
@@ -63,12 +72,12 @@ class MemorySystem {
 
     entity.updatedAt = new Date().toISOString();
     this.memory.entities[name] = entity;
-    this.saveMemory();
+    await this.saveMemory();
     return entity;
   }
 
   // Create a relation between entities
-  createRelation(from, to, relationType) {
+  async createRelation(from, to, relationType) {
     if (!from || !to || !relationType) {
       throw new Error('From, to, and relationType are required');
     }
@@ -94,7 +103,7 @@ class MemorySystem {
         createdAt: new Date().toISOString()
       };
       this.memory.relations.push(relation);
-      this.saveMemory();
+      await this.saveMemory();
       return relation;
     }
     
@@ -161,9 +170,9 @@ class MemorySystem {
   }
 
   // Initialize with project information
-  initializeProjectMemory() {
+  async initializeProjectMemory() {
     // Project entity
-    this.upsertEntity('Project', 'project', [
+    await this.upsertEntity('Project', 'project', [
       'Social Media Marketing Agent',
       'Next.js web application',
       'Uses Tailwind CSS for styling',
@@ -171,21 +180,21 @@ class MemorySystem {
     ]);
 
     // Current phase
-    this.upsertEntity('CurrentPhase', 'project_phase', [
+    await this.upsertEntity('CurrentPhase', 'project_phase', [
       'Phase 2: SME Dashboard & Content Management',
       'Sprint 2: Dashboard Framework & Widgets',
       'Development Mode: Prototyping (frontend-only with mocked data)'
     ]);
 
     // Completed work
-    this.upsertEntity('CompletedWork', 'milestone', [
+    await this.upsertEntity('CompletedWork', 'milestone', [
       'Completed Sprint 1 and Phase 1 (Core UI Framework & Authentication Flow)',
       'Updated project management documents',
       'Setup authentication UI and navigation shell'
     ]);
 
     // Current focus
-    this.upsertEntity('CurrentFocus', 'task_group', [
+    await this.upsertEntity('CurrentFocus', 'task_group', [
       'Dashboard layout with widget grid',
       'Widget container component implementation',
       'Drag-and-drop functionality for widgets',
@@ -193,20 +202,17 @@ class MemorySystem {
     ]);
 
     // Create relations
-    this.createRelation('Project', 'CurrentPhase', 'is_in');
-    this.createRelation('Project', 'CompletedWork', 'has_achieved');
-    this.createRelation('Project', 'CurrentFocus', 'is_working_on');
+    await this.createRelation('Project', 'CurrentPhase', 'is_in');
+    await this.createRelation('Project', 'CompletedWork', 'has_achieved');
+    await this.createRelation('Project', 'CurrentFocus', 'is_working_on');
 
     console.log('Project memory initialized successfully');
-    return true;
   }
 }
 
-// Export as a singleton
-const memorySystem = new MemorySystem();
-module.exports = memorySystem;
+// Create and initialize memory system
+const memorySystem = new MemorySystem(join(__dirname, '../../memory.json'));
+await memorySystem.initMemory();
+await memorySystem.initializeProjectMemory();
 
-// If called directly, initialize the memory
-if (require.main === module) {
-  memorySystem.initializeProjectMemory();
-} 
+export default memorySystem; 

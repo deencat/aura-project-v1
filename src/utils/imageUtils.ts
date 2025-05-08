@@ -289,4 +289,62 @@ export function getImageCacheVersion(): string {
   }
   
   return Date.now().toString();
+}
+
+interface ImageDimensions {
+  width: number;
+  height: number;
+}
+
+export function getDefaultDimensions(type: string): ImageDimensions {
+  switch (type) {
+    case 'hero':
+      return { width: 1920, height: 1080 };
+    case 'benefits':
+    case 'how-it-works':
+    case 'technology':
+      return { width: 800, height: 600 };
+    case 'gallery':
+    case 'results':
+      return { width: 600, height: 400 };
+    case 'testimonial':
+      return { width: 400, height: 400 };
+    case 'comparison':
+    case 'before-after':
+      return { width: 1200, height: 800 };
+    default:
+      return { width: 800, height: 600 };
+  }
+}
+
+export function getImagePath(category: string, treatment: string, type: string, index: number = 0): string {
+  const basePath = `/images/treatments/${category}/${treatment}`;
+  const fileName = index > 0 ? `${type}-${index}` : type;
+  return `${basePath}/${fileName}`;
+}
+
+export function getBlurPlaceholder(category: string, treatment: string, type: string, index: number = 0): string {
+  const imagePath = getImagePath(category, treatment, type, index);
+  return `${imagePath}-blur.jpg`;
+}
+
+export function getDefaultSizes(type: string): string {
+  switch (type) {
+    case 'hero':
+      return '100vw';
+    case 'benefits':
+    case 'how-it-works':
+    case 'technology':
+      return '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px';
+    case 'gallery':
+    case 'results':
+      return '(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 600px';
+    case 'testimonial':
+      return '(max-width: 768px) 50vw, 400px';
+    case 'comparison':
+    case 'before-after':
+      return '(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 1200px';
+    default:
+      return '(max-width: 768px) 100vw, 800px';
+  }
 } 

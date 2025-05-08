@@ -1,13 +1,12 @@
 const { fontFamily } = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   darkMode: ['class'],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   prefix: '',
   theme: {
@@ -52,7 +51,19 @@ export default {
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
-  			}
+  			},
+  			pink: {
+  				50: '#fdf2f8',
+  				100: '#fce7f3',
+  				200: '#fbcfe8',
+  				300: '#f9a8d4',
+  				400: '#f472b6',
+  				500: '#ec4899',
+  				600: '#db2777',
+  				700: '#be185d',
+  				800: '#9d174d',
+  				900: '#831843',
+  			},
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -1,54 +1,40 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { isTestEnvironment, testAuthMiddleware } from './lib/test-auth-middleware';
+import { authMiddleware } from '@clerk/nextjs';
+import { NextRequest, NextResponse } from 'next/server';
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
-
-// Define public paths that don't require authentication
+// Define the public paths that don't require authentication
 const publicPaths = [
   '/',
   '/about',
   '/contact',
-  '/sign-in',
-  '/sign-up',
-  /^\/treatments/,
-  /^\/new-doublo/,
-  /^\/body-care/,
-  /^\/_next\//,
-  /^\/api\//,
-  /^\/images\//,
-  /^\/fonts\//,
+  '/treatments',
+  '/facials',
+  '/new-doublo/(.*)', // All new-doublo pages
+  '/facial-treatments/(.*)', // All facial treatments
+  '/body-care/(.*)', // All body care pages
+  '/api/(.*)', // API routes
+  '/sitemap.xml', // SEO files
+  '/robots.txt',
+  '/favicon.ico',
 ];
 
-// Create route matchers using Clerk's helper
-const isPublicRoute = createRouteMatcher(publicPaths);
+// Test environment detection
+const isTestEnvironment = process.env.PLAYWRIGHT_TEST === 'true';
 
-// Split the middleware based on environment
-// For test environments, use a simple bypass middleware
-// For non-test environments, use Clerk's middleware
-const handler = isTestEnvironment() 
-  ? testAuthMiddleware
-  : clerkMiddleware(async (auth, req) => {
-      // Allow access to public paths
-      if (isPublicRoute(req)) {
-        return NextResponse.next();
-      }
-      
-      // For protected routes, use Clerk's auth.protect()
-      await auth.protect();
-      return NextResponse.next();
+// Special middleware for test environments - bypass authentication
+function testMiddleware() {
+  return (request: NextRequest) => {
+    return NextResponse.next();
+  };
+}
+
+// Use the actual authMiddleware from Clerk, but only in non-test environments
+export default isTestEnvironment 
+  ? testMiddleware() 
+  : authMiddleware({
+      publicRoutes: publicPaths
     });
 
-export default handler;
-
-// Configure the middleware matcher
+// Configure exported matcher to catch all routes
 export const config = {
-  matcher: [
-    '/((?!.*\\..*|_next).*)',
-    '/',
-    '/(api|trpc)(.*)'
-  ],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

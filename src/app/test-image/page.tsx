@@ -1,5 +1,8 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function TestImagePage() {
   return (
@@ -9,46 +12,39 @@ export default function TestImagePage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="border p-4 rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-2">1. Basic img tag (spa01.jpg)</h2>
-            <div className="aspect-video bg-gray-200 relative">
-              <img 
-                src="/images/placeholders/spa01.jpg" 
-                alt="Spa Image" 
-                className="object-cover w-full h-full"
-              />
-            </div>
-          </div>
-          
-          <div className="border p-4 rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-2">2. Basic img tag (lymphatic-hero-1.jpg)</h2>
-            <div className="aspect-video bg-gray-200 relative">
-              <img 
-                src="/images/placeholders/lymphatic-hero-1.jpg" 
-                alt="Lymphatic Hero" 
-                className="object-cover w-full h-full"
-              />
-            </div>
-          </div>
-          
-          <div className="border p-4 rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-2">3. Next.js Image (spa01.jpg)</h2>
+            <h2 className="text-xl font-bold mb-2">1. Next.js Image (spa01.jpg)</h2>
             <div className="aspect-video bg-gray-200 relative">
               <Image 
                 src="/images/placeholders/spa01.jpg"
-                alt="Spa Image"
+                alt="Spa Image" 
                 width={600}
                 height={400}
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
           </div>
           
           <div className="border p-4 rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-2">4. Next.js Image (lymphatic-hero-1.jpg)</h2>
+            <h2 className="text-xl font-bold mb-2">2. Next.js Image (lymphatic-hero-1.jpg)</h2>
             <div className="aspect-video bg-gray-200 relative">
               <Image 
                 src="/images/placeholders/lymphatic-hero-1.jpg"
-                alt="Lymphatic Hero"
+                alt="Lymphatic Hero" 
+                width={600}
+                height={400}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          </div>
+          
+          <div className="border p-4 rounded shadow-sm">
+            <h2 className="text-xl font-bold mb-2">3. TreatmentImage Hero</h2>
+            <div className="aspect-video bg-gray-200 relative">
+              <TreatmentImage 
+                category="body-care"
+                treatment="lymphatic-detox"
+                type="hero"
+                alt="Lymphatic Detox Hero"
                 width={600}
                 height={400}
                 className="object-cover"
@@ -57,27 +53,50 @@ export default function TestImagePage() {
           </div>
           
           <div className="border p-4 rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-2">5. CSS Background (spa01.jpg)</h2>
-            <div 
-              className="aspect-video bg-gray-200"
-              style={{
-                backgroundImage: `url('/images/placeholders/spa01.jpg')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            ></div>
+            <h2 className="text-xl font-bold mb-2">4. TreatmentImage Gallery</h2>
+            <div className="aspect-video bg-gray-200 relative">
+              <TreatmentImage 
+                category="facial-treatments"
+                treatment="collagen-regeneration"
+                type="gallery"
+                index={1}
+                alt="Collagen Regeneration Gallery"
+                width={600}
+                height={400}
+                className="object-cover"
+              />
+            </div>
           </div>
           
           <div className="border p-4 rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-2">6. CSS Background (lymphatic-hero-1.jpg)</h2>
-            <div 
-              className="aspect-video bg-gray-200"
-              style={{
-                backgroundImage: `url('/images/placeholders/lymphatic-hero-1.jpg')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            ></div>
+            <h2 className="text-xl font-bold mb-2">5. TreatmentImage Benefits</h2>
+            <div className="aspect-video bg-gray-200 relative">
+              <TreatmentImage 
+                category="new-doublo"
+                treatment="v-line"
+                type="benefits"
+                alt="V-Line Benefits"
+                width={600}
+                height={400}
+                className="object-cover"
+              />
+            </div>
+          </div>
+          
+          <div className="border p-4 rounded shadow-sm">
+            <h2 className="text-xl font-bold mb-2">6. TreatmentImage with Priority</h2>
+            <div className="aspect-video bg-gray-200 relative">
+              <TreatmentImage 
+                category="new-doublo"
+                treatment="sculpt-lift"
+                type="hero"
+                alt="Sculpt & Lift Hero"
+                width={600}
+                height={400}
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
       </div>

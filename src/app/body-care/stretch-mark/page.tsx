@@ -203,11 +203,6 @@ export default function StretchMarkPage() {
                   height={400}
                   className="w-full h-auto object-cover rounded-xl"
               />
-              <PlaceholderImage 
-                  type="technology" 
-                  number={1}
-                  aspectRatio="w-full h-auto object-cover rounded-xl"
-              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-8">
                 <div className="mb-6">
                   <h3 className="text-white text-xl font-bold mb-2">Dual Approach Synergy</h3>
@@ -266,10 +261,13 @@ export default function StretchMarkPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02]">
               <div className="h-80 overflow-hidden">
-                <PlaceholderImage 
-                  type="before-after" 
-                  number={1}
-                  aspectRatio="w-full h-full object-cover"
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="stretch-mark"
+                  type="before-after"
+                  index={1}
+                  alt="Before and after stretch mark treatment - case 1"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-6 text-center">
@@ -280,10 +278,13 @@ export default function StretchMarkPage() {
             
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02]">
               <div className="h-80 overflow-hidden">
-                <PlaceholderImage 
-                  type="before-after" 
-                  number={2}
-                  aspectRatio="w-full h-full object-cover"
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="stretch-mark"
+                  type="before-after"
+                  index={2}
+                  alt="Before and after stretch mark treatment - case 2"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-6 text-center">
@@ -294,10 +295,13 @@ export default function StretchMarkPage() {
             
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02]">
               <div className="h-80 overflow-hidden">
-                <PlaceholderImage 
-                  type="before-after" 
-                  number={3}
-                  aspectRatio="w-full h-full object-cover"
+                <TreatmentImage 
+                  category="body-care"
+                  treatment="stretch-mark"
+                  type="before-after"
+                  index={3}
+                  alt="Before and after stretch mark treatment - case 3"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-6 text-center">

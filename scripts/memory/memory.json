@@ -772,6 +772,137 @@
       ],
       "createdAt": "2025-05-05T10:10:48.556Z",
       "updatedAt": "2025-05-05T10:10:48.557Z"
+    },
+    "memory-system-conversation-1746539219346": {
+      "name": "memory-system-conversation-1746539219346",
+      "entityType": "conversation",
+      "observations": [
+        "Implemented AVIF image format generation in optimize-images.js",
+        "Added error boundary and retry logic to TreatmentImage component",
+        "Updated memory system scripts to use ES modules instead of CommonJS"
+      ],
+      "createdAt": "2025-05-06T13:46:59.346Z",
+      "updatedAt": "2025-05-06T13:46:59.348Z"
+    },
+    "memory-system-conversation-1746539840152": {
+      "name": "memory-system-conversation-1746539840152",
+      "entityType": "conversation",
+      "observations": [
+        "Updated TreatmentImage component with enhanced performance optimizations",
+        "Added WebP and AVIF image format generation",
+        "Created a comprehensive blur placeholder system for improved loading UX",
+        "Added responsive sizing and content visibility optimizations",
+        "Created documentation for image optimization system"
+      ],
+      "createdAt": "2025-05-06T13:57:20.152Z",
+      "updatedAt": "2025-05-06T13:57:20.153Z"
+    },
+    "memory-system-conversation-1746540305151": {
+      "name": "memory-system-conversation-1746540305151",
+      "entityType": "conversation",
+      "observations": [
+        "\"Enhanced",
+        "TreatmentImage",
+        "component",
+        "with",
+        "error",
+        "handling",
+        "and",
+        "retry",
+        "logic\"",
+        "\"Added",
+        "PlaceholderImage",
+        "compatibility\"",
+        "\"Created",
+        "blur",
+        "placeholder",
+        "generation",
+        "script\"",
+        "\"Added",
+        "comprehensive",
+        "documentation\"",
+        "\"Updated",
+        "next.config.js",
+        "with",
+        "proper",
+        "image",
+        "optimization",
+        "settings\""
+      ],
+      "createdAt": "2025-05-06T14:05:05.151Z",
+      "updatedAt": "2025-05-06T14:05:05.152Z"
+    },
+    "memory-system-conversation-1746540653790": {
+      "name": "memory-system-conversation-1746540653790",
+      "entityType": "conversation",
+      "observations": [
+        "Created a comprehensive image optimization system with enhanced TreatmentImage component",
+        "Implemented placeholder generation for improved image loading experience",
+        "Added WebP and AVIF format support for modern browsers",
+        "Created utilities for responsive images with custom imageLoader",
+        "Added analyzer script for image optimization insights"
+      ],
+      "createdAt": "2025-05-06T14:10:53.790Z",
+      "updatedAt": "2025-05-06T14:10:53.791Z"
+    },
+    "memory-system-conversation-1746541660428": {
+      "name": "memory-system-conversation-1746541660428",
+      "entityType": "conversation",
+      "observations": [
+        "Fixed logo.svg image loading error by adding to localPatterns in next.config.js",
+        "Reviewed and updated Next.js image optimization configuration with WebP/AVIF support",
+        "Enhanced TreatmentImage component with performance features like lazy loading, Intersection Observer, and content visibility",
+        "Updated project management plan with prioritized image optimization tasks",
+        "Created comprehensive documentation on image optimization approach and benefits"
+      ],
+      "createdAt": "2025-05-06T14:27:40.428Z",
+      "updatedAt": "2025-05-06T14:27:40.430Z"
+    },
+    "memory-system-conversation-1746630868732": {
+      "name": "memory-system-conversation-1746630868732",
+      "entityType": "conversation",
+      "observations": [
+        "Updated all documentation to reflect project mode instead of prototyping mode",
+        "Project Management Plan, Testing Strategy, and Design Mode now emphasize robust, production-quality frontend development",
+        "Testing and development guidelines now require integration with data services, accessibility, and error handling"
+      ],
+      "createdAt": "2025-05-07T15:14:28.732Z",
+      "updatedAt": "2025-05-07T15:14:28.733Z"
+    },
+    "memory-system-conversation-1746630915555": {
+      "name": "memory-system-conversation-1746630915555",
+      "entityType": "conversation",
+      "observations": [
+        "All documentation and guidelines now reflect project mode, not prototyping mode",
+        "Project Management Plan, Testing Strategy, and Design Mode emphasize robust, production-quality frontend development",
+        "Development server is running on port 3001 and project is ready for further feature development and testing"
+      ],
+      "createdAt": "2025-05-07T15:15:15.555Z",
+      "updatedAt": "2025-05-07T15:15:15.556Z"
+    },
+    "memory-system-conversation-1746631268911": {
+      "name": "memory-system-conversation-1746631268911",
+      "entityType": "conversation",
+      "observations": [
+        "Fixed auth-mock implementation for better compatibility and testing",
+        "Updated Next.js config to optimize memory usage and prevent server hangs",
+        "Updated test-image page to use TreatmentImage component as a best practice example",
+        "Fixed various linting issues to improve code quality in project mode"
+      ],
+      "createdAt": "2025-05-07T15:21:08.911Z",
+      "updatedAt": "2025-05-07T15:21:08.912Z"
+    },
+    "memory-system-conversation-1746631536742": {
+      "name": "memory-system-conversation-1746631536742",
+      "entityType": "conversation",
+      "observations": [
+        "Created comprehensive image processing utilities for client-side operations",
+        "Implemented batch processing script for WebP and AVIF conversion",
+        "Added blur placeholder generator for improved loading experience",
+        "Enhanced image optimization capabilities following Context7 best practices"
+      ],
+      "createdAt": "2025-05-07T15:25:36.742Z",
+      "updatedAt": "2025-05-07T15:25:36.743Z"
     }
   },
   "relations": []

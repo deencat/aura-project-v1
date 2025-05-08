@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the testing strategy for the frontend prototype. Since we're in prototyping mode, our focus is on ensuring the UI components work correctly, are responsive, and provide a good user experience without connecting to backend logic.
+This document outlines the testing strategy for the frontend application. Since we're in project mode, our focus is on ensuring all UI components work correctly, are responsive, provide a good user experience, and integrate properly with data services.
 
 ## Testing Objectives
 
@@ -257,4 +257,4 @@ test.describe('Navbar Responsive Behavior', () => {
 
 ## Conclusion
 
-This testing strategy ensures that our frontend prototype is thoroughly tested for functionality, responsiveness, and user experience. By following these guidelines, we can maintain high quality throughout the development process and identify issues early.
+This testing strategy ensures that our frontend application is thoroughly tested for functionality, responsiveness, and user experience. By following these guidelines, we can maintain high quality throughout the development process and identify issues early.
