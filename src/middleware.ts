@@ -1,11 +1,31 @@
-import { auth, clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import { authMiddleware } from '@clerk/nextjs/server';
 
-// Export the Clerk middleware as the default middleware
-const middleware = clerkMiddleware();
-
-// Export a modified middleware handler
-export default middleware;
+// Using authMiddleware instead of clerkMiddleware since your Clerk version uses this API
+export default authMiddleware({
+  // Add all public routes
+  publicRoutes: [
+    '/',
+    '/sign-in',
+    '/sign-up',
+    '/api/webhook/clerk',
+    '/about',
+    '/contact',
+    '/service',
+    '/body-care',
+    '/facial',
+    // Add specific image routes that were being blocked based on logs
+    '/images/placeholders/treatment-1.jpg',
+    '/images/placeholders/treatment-2.jpg',
+    '/images/placeholders/treatment-3.jpg',
+    '/logo.svg',
+    // Wildcard routes for images
+    '/images/(.*)',
+    // Static files pattern
+    '/_next/static/(.*)',
+    '/_next/image(.*)',
+    '/favicon.ico'
+  ],
+});
 
 export const config = {
   matcher: [
