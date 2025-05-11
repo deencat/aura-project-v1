@@ -1,5 +1,5 @@
 import './globals.css'
-import type { Metadata } from 'next'
+import { type Metadata } from 'next'
 import { inter, playfair } from './fonts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -20,15 +20,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
     <ClerkProvider>
       <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
         <body className="min-h-screen font-sans">
           <ServiceInitializer />
-          <div className="flex justify-end items-center p-4 gap-4 h-16">
+          <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedOut>
               <SignInButton />
               <SignUpButton />
@@ -36,7 +36,7 @@ export default function RootLayout({
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </div>
+          </header>
           <Header />
           <main>
             {children}
