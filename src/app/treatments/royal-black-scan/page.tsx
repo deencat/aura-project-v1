@@ -1,8 +1,7 @@
-import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function RoyalBlackScanPage() {
   return (
@@ -43,10 +42,12 @@ export default function RoyalBlackScanPage() {
             
             <div className="hidden md:block">
               <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={1}
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="treatments"
+                  treatment="royal-black-scan"
+                  type="hero"
+                  alt="Royal Black Scan Treatment"
+                  fill
                 />
               </div>
             </div>

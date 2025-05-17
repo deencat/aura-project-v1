@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
 export default function RadiantDefenseSynergyPage() {
@@ -39,12 +39,13 @@ export default function RadiantDefenseSynergyPage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="radiant-defense-synergy"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
-                className="object-cover w-full h-full"
+              <TreatmentImage 
+                category="treatments"
+                treatment="radiant-defense-synergy"
+                type="hero"
+                alt="Radiant Defense Synergy Treatment"
+                fill
+                className="object-cover"
               />
             </div>
           </div>

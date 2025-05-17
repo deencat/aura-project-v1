@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Carousel,
@@ -66,12 +66,13 @@ export default function PeeledEggSkinPage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="peeled-egg-skin"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
-                className="object-cover w-full h-full"
+              <TreatmentImage 
+                category="treatments"
+                treatment="peeled-egg-skin"
+                type="hero"
+                alt="Peeled Egg Skin Treatment"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -166,12 +167,14 @@ export default function PeeledEggSkinPage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="peeled-egg-skin"
-                              section="benefits"
-                              number={num}
-                              aspectRatio="aspect-square"
-                              className="object-cover w-full h-full transition duration-500 hover:scale-110"
+                            <TreatmentImage 
+                              category="treatments"
+                              treatment="peeled-egg-skin"
+                              type="benefits"
+                              index={num}
+                              alt={["Before & After", "Treatment Process", "Skin Transformation", "Client Results", "Application Technique"][num-1]}
+                              className="transition duration-500 hover:scale-110"
+                              fill
                             />
                           </div>
                           <div className="p-4 text-center">

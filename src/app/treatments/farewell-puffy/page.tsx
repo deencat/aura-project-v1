@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Carousel,
@@ -66,12 +66,13 @@ export default function FarewellPuffyPage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="farewell-puffy"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
-                className="object-cover w-full h-full"
+              <TreatmentImage 
+                category="treatments"
+                treatment="farewell-puffy"
+                type="hero"
+                alt="Farewell Puffy Treatment"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -166,12 +167,14 @@ export default function FarewellPuffyPage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="farewell-puffy"
-                              section="benefits"
-                              number={num}
-                              aspectRatio="aspect-square"
-                              className="object-cover w-full h-full transition duration-500 hover:scale-110"
+                            <TreatmentImage 
+                              category="treatments"
+                              treatment="farewell-puffy"
+                              type="benefits"
+                              index={num}
+                              alt={["Before & After", "Treatment Process", "V-Shape Results", "Jaw Definition", "Long-lasting Effects"][num-1]}
+                              fill
+                              className="transition duration-500 hover:scale-110"
                             />
                           </div>
                           <div className="p-4 text-center">

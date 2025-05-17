@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Carousel,
@@ -67,12 +67,13 @@ export default function LaserTreatmentPage() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
-              <PlaceholderImage 
-                page="laser-treatment"
-                section="hero"
-                number={1}
-                aspectRatio="aspect-[3/4]"
-                className="object-cover w-full h-full"
+              <TreatmentImage 
+                category="treatments"
+                treatment="laser-treatment"
+                type="hero"
+                alt="Advanced Laser Treatment"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -167,12 +168,14 @@ export default function LaserTreatmentPage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
-                              page="laser-treatment"
-                              section="benefits"
-                              number={num}
-                              aspectRatio="aspect-square"
-                              className="object-cover w-full h-full transition duration-500 hover:scale-110"
+                            <TreatmentImage 
+                              category="treatments"
+                              treatment="laser-treatment"
+                              type="benefits"
+                              index={num}
+                              alt={["Before & After", "Treatment Process", "Skin Rejuvenation", "Client Results", "Advanced Technology"][num-1]}
+                              fill
+                              className="transition duration-500 hover:scale-110"
                             />
                           </div>
                           <div className="p-4 text-center">

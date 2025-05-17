@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 const treatments = [
   { id: 1, title: 'Royal Black Scan', slug: 'royal-black-scan', description: 'Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.' },
@@ -42,11 +42,14 @@ export default function TreatmentsPage() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {treatments.map((treatment) => (
               <Card key={treatment.id} className="overflow-hidden transition-shadow hover:shadow-md">
-                <div className="aspect-[4/3] w-full">
-                  <PlaceholderImage 
-                    type="treatment" 
-                    number={treatment.id <= 8 ? treatment.id : 1}
-                    aspectRatio="aspect-[4/3]"
+                <div className="aspect-[4/3] w-full relative">
+                  <TreatmentImage 
+                    category="treatments"
+                    treatment={treatment.slug}
+                    type="hero"
+                    alt={`${treatment.title} Treatment`}
+                    fill
+                    className="object-cover"
                   />
                 </div>
                 <CardContent className="p-6">

@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function MicroNeedlingPage() {
   return (
@@ -42,10 +42,12 @@ export default function MicroNeedlingPage() {
             
             <div className="hidden md:block">
               <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={4}
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="treatments"
+                  treatment="micro-needling"
+                  type="hero"
+                  alt="Micro-Needling Treatment"
+                  fill
                 />
               </div>
             </div>

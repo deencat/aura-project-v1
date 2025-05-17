@@ -13,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import TreatmentImage from '@/components/TreatmentImage'
 
 export default function PerfectButtocksPage() {
   const [api, setApi] = useState<CarouselApi>()
@@ -89,10 +90,13 @@ export default function PerfectButtocksPage() {
                 <div className="absolute right-0 top-0 w-full h-full">
                   {/* Hero image */}
                   <div className="relative w-full h-full bg-gradient-to-r from-teal-50 to-blue-50">
-                    <img
-                      src="/images/placeholders/peach-lift-hero.jpg" 
+                    <TreatmentImage
+                      category="body-care"
+                      treatment="perfect-buttocks"
+                      type="hero"
                       alt="Peach Lift Sculpting Treatment"
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                     <div className="w-full h-full bg-gradient-to-r from-white to-transparent absolute top-0 z-10"></div>
                   </div>

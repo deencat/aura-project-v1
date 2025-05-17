@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import PlaceholderImage from '@/components/PlaceholderImage'
+import TreatmentImage from '@/components/TreatmentImage'
 import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Carousel,
@@ -74,10 +74,12 @@ export default function CollagenRegenerationPage() {
             
             <div className="hidden md:block">
               <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <PlaceholderImage 
-                  type="treatment" 
-                  number={3}
-                  aspectRatio="aspect-square"
+                <TreatmentImage 
+                  category="treatments"
+                  treatment="collagen-regeneration"
+                  type="hero"
+                  alt="Collagen Regeneration Treatment"
+                  fill
                 />
               </div>
             </div>
@@ -320,7 +322,7 @@ export default function CollagenRegenerationPage() {
                       <div className="p-2">
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
-                            <PlaceholderImage 
+                            <TreatmentImage 
                               page="collagen-regeneration"
                               section="results"
                               number={num}
