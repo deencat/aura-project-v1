@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, Upload, Calendar, ImageIcon, Plus } from 'lucide-react'
+import { ChevronLeft, Upload, Calendar, ImageIcon, Plus, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -25,6 +25,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { useRouter } from 'next/navigation'
+import { BlogMultilingualData } from '@/utils/blogUtils'
 
 // Mock categories
 const categories = [
@@ -82,29 +84,40 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = ({ icon, action, isActive })
 );
 
 export default function NewBlogPostPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState<{
-    title: string
-    slug: string
-    category: string
-    content: string
-    metaDescription: string
-    author: string
-    publishDate: string
-    status: string
-    featuredImage: string | null
-  }>({
+  const [activeTab, setActiveTab] = useState('english')
+  
+  // Form data state with multilingual support
+  const [formData, setFormData] = useState({
     title: '',
     slug: '',
-    category: categories[0],
+    category: 'Skincare Tips',
     content: '',
     metaDescription: '',
     author: 'Sarah Johnson',
     publishDate: new Date().toISOString().split('T')[0],
     status: 'Draft',
-    featuredImage: null
+    featuredImage: null,
+    multilingual: {
+      english: {
+        title: '',
+        content: '',
+        metaDescription: ''
+      },
+      traditional_chinese: {
+        title: '',
+        content: '',
+        metaDescription: ''
+      },
+      simplified_chinese: {
+        title: '',
+        content: '',
+        metaDescription: ''
+      }
+    }
   })
   
   const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false)
@@ -116,10 +129,10 @@ export default function NewBlogPostPage() {
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [name]: value
-    })
+    }))
 
     // Automatically generate slug from title
     if (name === 'title') {
@@ -130,6 +143,60 @@ export default function NewBlogPostPage() {
       
       setFormData(prev => ({
         ...prev,
+        slug
+      }))
+    }
+  }
+
+  // Handle multilingual content changes
+  const handleMultilingualChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, 
+    language: 'english' | 'traditional_chinese' | 'simplified_chinese'
+  ) => {
+    const { name, value } = e.target
+    
+    setFormData(prev => ({
+      ...prev,
+      multilingual: {
+        ...prev.multilingual,
+        [language]: {
+          ...prev.multilingual[language],
+          [name]: value
+        }
+      }
+    }))
+    
+    // Also update the main fields if editing English content
+    if (language === 'english') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
+  }
+
+  // Generate slug from title
+  const handleTitleChange = (
+    e: React.ChangeEvent<HTMLInputElement>, 
+    language: 'english' | 'traditional_chinese' | 'simplified_chinese'
+  ) => {
+    const title = e.target.value
+    
+    // Update the multilingual title
+    handleMultilingualChange(e, language)
+    
+    // Only generate slug from English title
+    if (language === 'english') {
+      const slug = title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')  // Remove special characters
+        .replace(/\s+/g, '-')      // Replace spaces with hyphens
+        .replace(/--+/g, '-')      // Replace multiple hyphens with single hyphen
+        .trim()
+      
+      setFormData(prev => ({
+        ...prev,
+        title,
         slug
       }))
     }
@@ -267,37 +334,69 @@ export default function NewBlogPostPage() {
         setFormData({
           title: '',
           slug: '',
-          category: categories[0],
+          category: 'Skincare Tips',
           content: '',
           metaDescription: '',
           author: 'Sarah Johnson',
           publishDate: new Date().toISOString().split('T')[0],
           status: 'Draft',
-          featuredImage: null
+          featuredImage: null,
+          multilingual: {
+            english: {
+              title: '',
+              content: '',
+              metaDescription: ''
+            },
+            traditional_chinese: {
+              title: '',
+              content: '',
+              metaDescription: ''
+            },
+            simplified_chinese: {
+              title: '',
+              content: '',
+              metaDescription: ''
+            }
+          }
         })
         if (contentEditorRef.current) {
           contentEditorRef.current.innerHTML = ''
         }
         setSuccess(false)
       }, 2000)
+      
+      // Simulate API call to create new blog post
+      setTimeout(() => {
+        console.log('Creating new blog post with data:', formData)
+        
+        // In a real app, you would send this data to your API
+        alert('Blog post created successfully (mock)')
+        setLoading(false)
+        router.push('/admin/blog')
+      }, 1000)
     } catch (err) {
       setError('Failed to create blog post. Please try again.')
       console.error('Error submitting form:', err)
-    } finally {
-      setLoading(false)
     }
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/admin/blog">
-          <Button variant="ghost" size="icon">
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-        </Link>
-        <h1 className="text-3xl font-bold tracking-tight">New Blog Post</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href="/admin/blog">
+            <Button variant="ghost" className="flex items-center gap-2">
+              <ChevronLeft className="h-4 w-4" />
+              Back to Blog
+            </Button>
+          </Link>
+          <h1 className="text-3xl font-bold tracking-tight">New Blog Post</h1>
+        </div>
+        <Button onClick={handleSubmit} disabled={loading}>
+          <Save className="mr-2 h-4 w-4" />
+          {loading ? 'Saving...' : 'Save Post'}
+        </Button>
       </div>
 
       {/* Alert messages */}
@@ -316,202 +415,254 @@ export default function NewBlogPostPage() {
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title">Blog Title</Label>
-            <Input
-              id="title"
-              name="title"
-              placeholder="Enter blog title"
-              value={formData.title}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="slug">URL Slug</Label>
-            <Input
-              id="slug"
-              name="slug"
-              placeholder="url-friendly-slug"
-              value={formData.slug}
-              onChange={handleInputChange}
-              required
-            />
-            <p className="text-xs text-gray-500">
-              This will be used for the blog post URL: /blog/{formData.slug}
-            </p>
-          </div>
-
-          {/* Category */}
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleInputChange}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              required
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Publish Date */}
-          <div className="space-y-2">
-            <Label htmlFor="publishDate">Publish Date</Label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Main content */}
+        <div className="lg:col-span-2 space-y-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="english">English</TabsTrigger>
+              <TabsTrigger value="traditional_chinese">Traditional Chinese</TabsTrigger>
+              <TabsTrigger value="simplified_chinese">Simplified Chinese</TabsTrigger>
+            </TabsList>
+            
+            {/* English Content */}
+            <TabsContent value="english" className="space-y-4">
+              <div>
+                <Label htmlFor="english-title">Title (English)</Label>
+                <Input
+                  id="english-title"
+                  name="title"
+                  placeholder="Enter title in English"
+                  value={formData.multilingual.english.title}
+                  onChange={(e) => handleTitleChange(e, 'english')}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="english-content">Content (English)</Label>
+                <Textarea
+                  id="english-content"
+                  name="content"
+                  placeholder="Enter blog content in English"
+                  rows={12}
+                  value={formData.multilingual.english.content}
+                  onChange={(e) => handleMultilingualChange(e, 'english')}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="english-metaDescription">Meta Description (English)</Label>
+                <Textarea
+                  id="english-metaDescription"
+                  name="metaDescription"
+                  placeholder="Enter meta description in English"
+                  rows={3}
+                  value={formData.multilingual.english.metaDescription}
+                  onChange={(e) => handleMultilingualChange(e, 'english')}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Brief description for search engines. Keep it under 160 characters.
+                </p>
+              </div>
+            </TabsContent>
+            
+            {/* Traditional Chinese Content */}
+            <TabsContent value="traditional_chinese" className="space-y-4">
+              <div>
+                <Label htmlFor="tc-title">Title (Traditional Chinese)</Label>
+                <Input
+                  id="tc-title"
+                  name="title"
+                  placeholder="Enter title in Traditional Chinese"
+                  value={formData.multilingual.traditional_chinese.title}
+                  onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="tc-content">Content (Traditional Chinese)</Label>
+                <Textarea
+                  id="tc-content"
+                  name="content"
+                  placeholder="Enter blog content in Traditional Chinese"
+                  rows={12}
+                  value={formData.multilingual.traditional_chinese.content}
+                  onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="tc-metaDescription">Meta Description (Traditional Chinese)</Label>
+                <Textarea
+                  id="tc-metaDescription"
+                  name="metaDescription"
+                  placeholder="Enter meta description in Traditional Chinese"
+                  rows={3}
+                  value={formData.multilingual.traditional_chinese.metaDescription}
+                  onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Brief description for search engines. Keep it under 160 characters.
+                </p>
+              </div>
+            </TabsContent>
+            
+            {/* Simplified Chinese Content */}
+            <TabsContent value="simplified_chinese" className="space-y-4">
+              <div>
+                <Label htmlFor="sc-title">Title (Simplified Chinese)</Label>
+                <Input
+                  id="sc-title"
+                  name="title"
+                  placeholder="Enter title in Simplified Chinese"
+                  value={formData.multilingual.simplified_chinese.title}
+                  onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="sc-content">Content (Simplified Chinese)</Label>
+                <Textarea
+                  id="sc-content"
+                  name="content"
+                  placeholder="Enter blog content in Simplified Chinese"
+                  rows={12}
+                  value={formData.multilingual.simplified_chinese.content}
+                  onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="sc-metaDescription">Meta Description (Simplified Chinese)</Label>
+                <Textarea
+                  id="sc-metaDescription"
+                  name="metaDescription"
+                  placeholder="Enter meta description in Simplified Chinese"
+                  rows={3}
+                  value={formData.multilingual.simplified_chinese.metaDescription}
+                  onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Brief description for search engines. Keep it under 160 characters.
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        {/* Sidebar */}
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="category">Category</Label>
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <Label htmlFor="author">Author</Label>
+              <Input
+                id="author"
+                name="author"
+                placeholder="Author name"
+                value={formData.author}
+                onChange={handleInputChange}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="publishDate">Publication Date</Label>
               <Input
                 id="publishDate"
                 name="publishDate"
                 type="date"
                 value={formData.publishDate}
                 onChange={handleInputChange}
-                className="pl-10"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Author */}
-          <div className="space-y-2">
-            <Label htmlFor="author">Author</Label>
-            <Input
-              id="author"
-              name="author"
-              placeholder="Author name"
-              value={formData.author}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          {/* Status */}
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleInputChange}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              required
-            >
-              <option value="Draft">Draft</option>
-              <option value="Published">Published</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Featured Image */}
-        <div className="space-y-2">
-          <Label htmlFor="featuredImage">Featured Image</Label>
-          <div className="flex items-center gap-4">
-            <div
-              className={`relative flex h-40 w-40 cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 ${
-                formData.featuredImage ? 'bg-gray-50' : 'bg-white'
-              }`}
-              onClick={() => openMediaLibrary(true)}
-            >
-              {formData.featuredImage ? (
-                <img
-                  src={formData.featuredImage}
-                  alt="Featured image preview"
-                  className="h-full w-full rounded-md object-cover"
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center space-y-2 p-4 text-center">
-                  <Upload className="h-8 w-8 text-gray-400" />
-                  <p className="text-sm text-gray-500">
-                    Click to select image
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium">Image requirements:</p>
-              <ul className="text-xs text-gray-500">
-                <li>Recommended size: 1200 × 630 pixels</li>
-                <li>Maximum file size: 2MB</li>
-                <li>Formats: JPG, PNG, or WebP</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Rich Text Editor */}
-        <div className="space-y-2">
-          <Label htmlFor="content">Content</Label>
-          <div className="border rounded-md overflow-hidden">
-            {/* Toolbar */}
-            <div className="flex flex-wrap items-center gap-1 border-b p-2 bg-gray-50">
-              <ToolbarButton icon={<strong>B</strong>} action={handleBold} />
-              <ToolbarButton icon={<em>I</em>} action={handleItalic} />
-              <ToolbarButton icon={<span className="underline">U</span>} action={handleUnderline} />
-              <div className="w-px h-6 bg-gray-300 mx-1"></div>
-              <ToolbarButton icon={<span>H1</span>} action={() => handleHeading(1)} />
-              <ToolbarButton icon={<span>H2</span>} action={() => handleHeading(2)} />
-              <ToolbarButton icon={<span>H3</span>} action={() => handleHeading(3)} />
-              <ToolbarButton icon={<span>P</span>} action={handleParagraph} />
-              <div className="w-px h-6 bg-gray-300 mx-1"></div>
-              <ToolbarButton icon={<span>🔗</span>} action={handleLink} />
-              <ToolbarButton icon={<span>🚫🔗</span>} action={handleUnlink} />
-              <div className="w-px h-6 bg-gray-300 mx-1"></div>
-              <ToolbarButton icon={<span>1.</span>} action={() => handleList('ol')} />
-              <ToolbarButton icon={<span>•</span>} action={() => handleList('ul')} />
-              <div className="w-px h-6 bg-gray-300 mx-1"></div>
-              <ToolbarButton 
-                icon={<ImageIcon className="h-4 w-4" />} 
-                action={() => openMediaLibrary(false)} 
               />
             </div>
             
-            {/* Editor */}
-            <div
-              ref={contentEditorRef}
-              className="min-h-[300px] p-4 outline-none focus:ring-0"
-              contentEditable
-              onInput={handleContentChange}
-              dangerouslySetInnerHTML={{ __html: formData.content }}
-            />
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <select
+                id="status"
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="Draft">Draft</option>
+                <option value="Published">Published</option>
+              </select>
+            </div>
           </div>
-        </div>
-
-        {/* Meta Description */}
-        <div className="space-y-2">
-          <Label htmlFor="metaDescription">Meta Description</Label>
-          <Textarea
-            id="metaDescription"
-            name="metaDescription"
-            placeholder="Brief description for search engines (max 160 characters)"
-            value={formData.metaDescription}
-            onChange={handleInputChange}
-            className="resize-none"
-            maxLength={160}
-          />
-          <p className="text-xs text-gray-500">
-            {formData.metaDescription.length}/160 characters
-          </p>
-        </div>
-
-        {/* Form Actions */}
-        <div className="flex justify-end gap-4">
-          <Link href="/admin/blog">
-            <Button variant="outline" type="button">Cancel</Button>
-          </Link>
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Creating...' : 'Create Post'}
-          </Button>
+          
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="featuredImage">Featured Image</Label>
+              <div className="flex items-center gap-4">
+                <div
+                  className={`relative flex h-40 w-40 cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 ${
+                    formData.featuredImage ? 'bg-gray-50' : 'bg-white'
+                  }`}
+                  onClick={() => openMediaLibrary(true)}
+                >
+                  {formData.featuredImage ? (
+                    <img
+                      src={formData.featuredImage}
+                      alt="Featured image preview"
+                      className="h-full w-full rounded-md object-cover"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center space-y-2 p-4 text-center">
+                      <Upload className="h-8 w-8 text-gray-400" />
+                      <p className="text-sm text-gray-500">
+                        Click to select image
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm font-medium">Image requirements:</p>
+                  <ul className="text-xs text-gray-500">
+                    <li>Recommended size: 1200 × 630 pixels</li>
+                    <li>Maximum file size: 2MB</li>
+                    <li>Formats: JPG, PNG, or WebP</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="featuredImage">Image URL</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="featuredImage"
+                  name="featuredImage"
+                  placeholder="https://example.com/image.jpg"
+                  value={formData.featuredImage}
+                  onChange={handleInputChange}
+                />
+                <Button type="button" variant="outline" className="flex-shrink-0">
+                  <Image className="h-4 w-4 mr-2" />
+                  Browse
+                </Button>
+              </div>
+              <p className="mt-1 text-xs text-gray-500">
+                Enter a URL or upload an image. Recommended size: 1200×630px.
+              </p>
+            </div>
+          </div>
         </div>
       </form>
 

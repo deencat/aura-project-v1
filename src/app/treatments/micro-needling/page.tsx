@@ -1,356 +1,437 @@
-import React from 'react'
+"use client"
+
+import React, { useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import TreatmentImage from '@/components/TreatmentImage'
+import type { CarouselApi } from "@/components/ui/carousel"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
 export default function MicroNeedlingPage() {
+  const [api, setApi] = useState<CarouselApi>()
+  const [activeIndex, setActiveIndex] = useState(0)
+  const totalSlides = 5
+
+  // Set up the carousel API and event listener
+  React.useEffect(() => {
+    if (!api) return
+
+    api.on("select", () => {
+      setActiveIndex(api.selectedScrollSnap())
+    })
+  }, [api])
+
+  // Handle indicator clicks
+  const scrollTo = React.useCallback(
+    (index: number) => {
+      api?.scrollTo(index)
+    },
+    [api]
+  )
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative flex min-h-[50vh] items-center bg-gray-50">
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
+      <section className="relative py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
-                Micro <span className="text-primary">Needling</span>
+              <h1 className="font-serif text-4xl md:text-5xl font-bold leading-tight">
+                Advanced <span className="text-primary">Micro-Needling</span> Therapy
               </h1>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-gray-600">
-                Unlock radiant skin with our advanced micro-needling treatment, stimulating natural collagen production for smoother, more youthful skin.
-              </p>
-              
-              <div className="mt-4 space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">Skin Rejuvenation</span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">Collagen Induction</span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">Acne Scars</span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">Fine Lines</span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">Uneven Texture</span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">Enlarged Pores</span>
-                </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Collagen Induction</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Skin Rejuvenation</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Scar Reduction</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Enhanced Product Absorption</span>
               </div>
-              
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
-                  Book Treatment
-                </Button>
-                <Button variant="outline" className="rounded-full border-primary px-8 py-3 text-sm font-medium text-primary hover:bg-primary hover:text-white">
-                  Learn More
-                </Button>
+              <p className="mt-6 text-lg text-gray-600 leading-relaxed">
+                Our Advanced Micro-Needling Therapy uses state-of-the-art technology to create controlled micro-injuries that stimulate your skin's natural healing process, resulting in increased collagen production and skin rejuvenation.
+              </p>
+              <p className="mt-4 text-lg text-gray-600 leading-relaxed">
+                This minimally invasive treatment effectively addresses fine lines, wrinkles, acne scars, and uneven skin texture while enhancing the absorption of therapeutic serums for maximum benefits.
+              </p>
+              <div className="mt-8">
+                <Link href="/contact">
+                  <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90">
+                    Book Now
+                  </Button>
+                </Link>
               </div>
             </div>
-            
-            <div className="hidden md:block">
-              <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
-                <TreatmentImage 
-                  category="treatments"
-                  treatment="micro-needling"
-                  type="hero"
-                  alt="Micro-Needling Treatment"
-                  fill
-                />
-              </div>
+            <div className="relative h-[500px] rounded-lg overflow-hidden">
+              <TreatmentImage 
+                category="facials"
+                treatment="micro-needling"
+                type="hero"
+                alt="Advanced Micro-Needling Therapy"
+                fill
+                objectFit="cover"
+                priority
+              />
             </div>
           </div>
         </div>
       </section>
-      
-      {/* Treatment Info Section */}
-      <section className="bg-white py-20">
+
+      {/* Treatment Description */}
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="font-serif text-3xl font-bold text-black md:text-4xl">
-              Advanced <span className="text-primary">Skin Rejuvenation</span>
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold">
+              Micro-Needling: <span className="text-primary">Precision Skin Regeneration</span>
             </h2>
-            
-            <div className="mt-8 space-y-6 text-gray-700">
-              <p>
-                Micro-needling, also known as collagen induction therapy, is a minimally invasive procedure that uses fine needles 
-                to create thousands of microscopic punctures in the top layer of your skin, triggering your body's natural wound healing process.
-              </p>
-              
-              <p>
-                This controlled skin injury stimulates the production of collagen and elastin, the two proteins responsible 
-                for your skin's structure, strength, and elasticity. The result is smoother, firmer, more toned skin.
-              </p>
-              
-              <p>
-                Our advanced micro-needling treatments can be customized to address a variety of skin concerns, including 
-                fine lines, wrinkles, acne scars, uneven skin texture, enlarged pores, and hyperpigmentation.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Benefits Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="font-serif text-3xl font-bold text-black md:text-4xl text-center">
-              Treatment <span className="text-primary">Benefits</span>
-            </h2>
-            <p className="mt-4 text-center text-gray-600">
-              Experience the transformative effects of micro-needling
+            <p className="mt-6 text-lg text-gray-600">
+              Our Advanced Micro-Needling Therapy uses ultra-fine needles to create thousands of invisible micro-perforations in the skin's surface. This controlled process triggers the body's wound healing response, stimulating collagen and elastin production without causing actual damage to the epidermis.
             </p>
+            <p className="mt-4 text-lg text-gray-600">
+              Combined with our specialized serums containing growth factors, peptides, and antioxidants, this treatment accelerates skin regeneration and delivers profound improvements in skin texture, firmness, and overall appearance.
+            </p>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="flex flex-col">
+              <div className="bg-primary/10 rounded-t-lg p-6">
+                <h3 className="text-2xl font-bold text-primary">Precision Technology</h3>
+              </div>
+              <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
+                <p className="text-gray-600">
+                  Our advanced micro-needling device features adjustable needle depth settings, allowing our specialists to customize treatment intensity based on your skin concerns and treatment area. This precision ensures optimal results with minimal discomfort.
+                </p>
+              </div>
+            </div>
             
-            <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
-              <div className="rounded-lg bg-white p-8 shadow-sm">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.3 18a7 7 0 1 1 13.4 0"/><circle cx="12" cy="9" r="7"/><circle cx="12" cy="9" r="3"/><path d="M7 18h10"/></svg>
-                </div>
-                <h3 className="mb-4 text-xl font-bold">Reduced Acne Scarring</h3>
+            <div className="flex flex-col">
+              <div className="bg-primary/10 rounded-t-lg p-6">
+                <h3 className="text-2xl font-bold text-primary">Enhanced Serum Delivery</h3>
+              </div>
+              <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Breaks down scar tissue and stimulates new collagen formation, significantly improving the appearance of acne scars.
+                  The micro-channels created during treatment increase product absorption by up to 3000%, allowing our specialized serums to penetrate deeply into the skin where they can work most effectively to accelerate healing and rejuvenation.
                 </p>
               </div>
+            </div>
+            
+            <div className="flex flex-col">
+              <div className="bg-primary/10 rounded-t-lg p-6">
+                <h3 className="text-2xl font-bold text-primary">Collagen Induction</h3>
+              </div>
+              <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
+                <p className="text-gray-600">
+                  The controlled micro-injuries stimulate your skin's natural collagen and elastin production, resulting in firmer, more youthful skin. This process continues for up to 8 weeks after treatment, providing progressive improvement.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col">
+              <div className="bg-primary/10 rounded-t-lg p-6">
+                <h3 className="text-2xl font-bold text-primary">Minimal Downtime</h3>
+              </div>
+              <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
+                <p className="text-gray-600">
+                  Unlike more aggressive treatments, our micro-needling therapy requires minimal recovery time. Most clients experience only mild redness for 24-48 hours, making this an ideal "lunchtime" procedure with maximum benefits.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Treatment Benefits */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold">
+              Benefits of <span className="text-primary">Micro-Needling Therapy</span>
+            </h2>
+            <p className="mt-6 text-lg text-gray-600">
+              Experience transformative results with our advanced skin regeneration treatment
+            </p>
+          </div>
+
+          {/* Photo Gallery */}
+          <div className="mt-12 mb-16 mx-auto max-w-4xl">
+            <div className="relative rounded-xl overflow-hidden shadow-lg">
+              <Carousel 
+                className="w-full" 
+                setApi={setApi}
+              >
+                <CarouselContent>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <CarouselItem key={num} className="md:basis-1/2 lg:basis-1/3">
+                      <div className="p-2">
+                        <div className="overflow-hidden rounded-lg bg-white">
+                          <div className="aspect-square relative">
+                            <TreatmentImage 
+                              category="facials"
+                              treatment="micro-needling"
+                              type="benefits"
+                              index={num}
+                              alt={["Reduced Fine Lines", "Improved Skin Texture", "Diminished Acne Scars", "Enhanced Product Absorption", "Minimized Pore Size"][num-1]}
+                              className="w-full h-full transition duration-500 hover:scale-110"
+                            />
+                          </div>
+                          <div className="p-4 text-center">
+                            <h4 className="font-bold text-lg text-gray-800 mb-1">
+                              {["Reduced Fine Lines", "Improved Skin Texture", "Diminished Acne Scars", "Enhanced Product Absorption", "Minimized Pore Size"][num-1]}
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                              {[
+                                "Significant reduction in fine lines and wrinkles",
+                                "Smoother, more refined skin texture",
+                                "Visible improvement in acne scars and hyperpigmentation",
+                                "Up to 3000% better absorption of skincare products",
+                                "Noticeably smaller pores and improved skin clarity"
+                              ][num-1]}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-2 md:left-4 bg-white/80 hover:bg-white" />
+                <CarouselNext className="right-2 md:right-4 bg-white/80 hover:bg-white" />
+              </Carousel>
               
-              <div className="rounded-lg bg-white p-8 shadow-sm">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                </div>
-                <h3 className="mb-4 text-xl font-bold">Minimized Fine Lines</h3>
-                <p className="text-gray-600">
-                  Promotes collagen production to smooth fine lines and wrinkles, especially around the eyes, mouth, and forehead.
-                </p>
+              {/* Carousel Indicators */}
+              <div className="flex justify-center gap-2 mt-4">
+                {Array.from({ length: totalSlides }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => scrollTo(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all ${
+                      activeIndex === index ? 'bg-primary w-8' : 'bg-gray-300'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
               </div>
-              
-              <div className="rounded-lg bg-white p-8 shadow-sm">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                </div>
-                <h3 className="mb-4 text-xl font-bold">Even Skin Tone</h3>
-                <p className="text-gray-600">
-                  Reduces hyperpigmentation, sun spots, and melasma by stimulating cell turnover and encouraging even melanin distribution.
-                </p>
+            </div>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h20"></path><path d="M12 2v20"></path><path d="m4.93 4.93 14.14 14.14"></path><path d="m19.07 4.93-14.14 14.14"></path></svg>
               </div>
-              
-              <div className="rounded-lg bg-white p-8 shadow-sm">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-                </div>
-                <h3 className="mb-4 text-xl font-bold">Enhanced Product Absorption</h3>
-                <p className="text-gray-600">
-                  Creates microchannels in the skin that allow for better penetration and effectiveness of skincare products.
-                </p>
+              <h3 className="text-xl font-bold mb-4">Targets Multiple Concerns</h3>
+              <p className="text-gray-600">
+                Addresses fine lines, wrinkles, scars, stretch marks, and uneven skin tone in one treatment
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9 4.5 4.5 0 0 0 0-9 4.5 4.5 0 0 1 0-9Z"></path><path d="M12 8v8"></path></svg>
               </div>
+              <h3 className="text-xl font-bold mb-4">Natural Results</h3>
+              <p className="text-gray-600">
+                Stimulates your body's own regenerative processes for natural-looking rejuvenation
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Safe for All Skin Types</h3>
+              <p className="text-gray-600">
+                Customizable treatment suitable for all skin types and tones with minimal risk
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 6.5 17.5 17.5"></path><path d="M17.5 6.5 6.5 17.5"></path><circle cx="12" cy="12" r="10"></circle></svg>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Minimal Downtime</h3>
+              <p className="text-gray-600">
+                Resume normal activities within 24-48 hours with only mild redness
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22v-5"></path><path d="M9 7V2"></path><path d="M15 7V2"></path><path d="M6 13V8a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0v-1H9v1a3 3 0 0 1-3 0Z"></path><path d="M12 17a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Progressive Results</h3>
+              <p className="text-gray-600">
+                Continues to improve skin quality for weeks after treatment as collagen rebuilds
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8.8 20v-4.1l1.9.2a2.3 2.3 0 0 0 2.164-2.1V8.3A5.37 5.37 0 0 0 2 8.25c0 2.8.656 3.95 1 4.8a7.587 7.587 0 0 1 .5 2.5V20"></path><path d="M19.8 17.8a7.5 7.5 0 0 0-3.9-5.1"></path><path d="M22 20a9 9 0 0 0-9.3-9"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Customizable Treatment</h3>
+              <p className="text-gray-600">
+                Tailored to your specific skin concerns with adjustable intensity and specialized serums
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="bg-white py-20">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-bold text-black md:text-4xl">
-              The <span className="text-primary">Treatment Process</span>
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold">
+              How <span className="text-primary">Micro-Needling</span> Works
             </h2>
-            <p className="mt-4 text-gray-600">
-              Our professional micro-needling approach
+            <p className="mt-6 text-lg text-gray-600">
+              Understanding the science behind our advanced skin regeneration therapy
             </p>
           </div>
-          
-          <div className="mx-auto mt-16 max-w-4xl">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-              <div className="space-y-12">
-                <div>
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
-                    <span>1</span>
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Consultation & Preparation</h3>
-                  <p className="text-gray-600">
-                    We begin with a thorough skin assessment and customized treatment plan. Your skin is cleansed and a topical numbing cream is applied for comfort.
-                  </p>
-                </div>
-                
-                <div>
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
-                    <span>2</span>
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Micro-Needling Procedure</h3>
-                  <p className="text-gray-600">
-                    Using a professional-grade device, we create thousands of microscopic channels in your skin, adjusting needle depth based on treatment area and concerns.
-                  </p>
-                </div>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">1</div>
+              <div className="bg-gray-50 rounded-lg p-8 pt-12">
+                <h3 className="text-xl font-bold mb-4">Preparation</h3>
+                <p className="text-gray-600">
+                  Your skin is thoroughly cleansed and a topical numbing cream is applied for your comfort. Our specialist will discuss your concerns and customize the treatment accordingly.
+                </p>
               </div>
-              
-              <div className="space-y-12">
-                <div>
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
-                    <span>3</span>
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Serums Application</h3>
-                  <p className="text-gray-600">
-                    Therapeutic serums containing growth factors, peptides, or hyaluronic acid are applied, deeply penetrating through the microchannels for enhanced results.
-                  </p>
-                </div>
-                
-                <div>
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
-                    <span>4</span>
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Recovery & Results</h3>
-                  <p className="text-gray-600">
-                    A soothing mask is applied to calm the skin. You'll notice immediate plumpness, with continued improvement over 4-6 weeks as collagen production increases.
-                  </p>
-                </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">2</div>
+              <div className="bg-gray-50 rounded-lg p-8 pt-12">
+                <h3 className="text-xl font-bold mb-4">Micro-Needling Process</h3>
+                <p className="text-gray-600">
+                  Using our advanced device, thousands of microscopic channels are created in the skin. The depth is precisely controlled based on your treatment area and skin concerns.
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">3</div>
+              <div className="bg-gray-50 rounded-lg p-8 pt-12">
+                <h3 className="text-xl font-bold mb-4">Serum Application</h3>
+                <p className="text-gray-600">
+                  Specialized serums containing growth factors, peptides, and antioxidants are applied to the skin, where they can now penetrate deeply through the micro-channels.
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">4</div>
+              <div className="bg-gray-50 rounded-lg p-8 pt-12">
+                <h3 className="text-xl font-bold mb-4">Healing Response</h3>
+                <p className="text-gray-600">
+                  Your skin initiates its natural healing process, increasing blood flow and triggering the production of new collagen and elastin fibers.
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">5</div>
+              <div className="bg-gray-50 rounded-lg p-8 pt-12">
+                <h3 className="text-xl font-bold mb-4">Recovery</h3>
+                <p className="text-gray-600">
+                  Mild redness and sensitivity may occur for 24-48 hours. A specialized post-treatment skincare regimen is provided to optimize healing and results.
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">6</div>
+              <div className="bg-gray-50 rounded-lg p-8 pt-12">
+                <h3 className="text-xl font-bold mb-4">Progressive Results</h3>
+                <p className="text-gray-600">
+                  Initial improvements are visible within days, but the most significant results develop over 4-8 weeks as new collagen forms and skin regenerates.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
-      {/* Treatment Areas Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Treatment <span className="text-primary">Areas</span>
-            </h2>
-            <p className="mt-4 text-gray-600">
-              Micro-needling can effectively treat various areas of the body
-            </p>
-          </div>
-          
-          <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><circle cx="12" cy="8" r="6"/><path d="M15.5 14h.5a2 2 0 0 1 2 2v2H6v-2a2 2 0 0 1 2-2h.5"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-bold">Face</h3>
-                <p className="text-sm text-gray-600">
-                  Treats acne scars, fine lines, wrinkles, and improves overall skin texture and tone
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M17 6.1H3"/><path d="M21 12.1H3"/><path d="M15.1 18H3"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-bold">Neck</h3>
-                <p className="text-sm text-gray-600">
-                  Helps tighten loose skin and reduce fine lines and crepiness on the neck
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-bold">Chest/Décolletage</h3>
-                <p className="text-sm text-gray-600">
-                  Improves sun damage, uneven pigmentation, and texture issues on the chest area
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M8.35 3.5 5.5 1.65a1 1 0 0 0-1 0l-1.5 1"/><path d="M4 22V4"/><path d="M4 12h17"/><path d="M15 22h4a2 2 0 0 0 2-2V7.5L17.5 3h-7a2 2 0 0 0-2 2v2"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-bold">Hands</h3>
-                <p className="text-sm text-gray-600">
-                  Targets age spots, thin skin, and promotes a more youthful appearance of the hands
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M21 12c0-6-4-9-9-9s-9 3-9 9c0 6 4 9 9 9"/><path d="M9 15c0-6 3-9 9-9s9 3 9 9-3 9-9 9"/><circle cx="12" cy="12" r="1"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-bold">Scars</h3>
-                <p className="text-sm text-gray-600">
-                  Effective for reducing the appearance of various types of scars, including surgical and acne scars
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M5 7.5C5.82 4.6 8.71 3 12 3s6.18 1.6 7 4.5M5 19.5C5.82 16.6 8.71 15 12 15s6.18 1.6 7 4.5"/><path d="M5 12c0-2.37 3.97-4.5 7-4.5s7 2.13 7 4.5-3.97 4.5-7 4.5-7-2.13-7-4.5Z"/></svg>
-                </div>
-                <h3 className="mb-2 text-xl font-bold">Stretch Marks</h3>
-                <p className="text-sm text-gray-600">
-                  Helps diminish the appearance of stretch marks on areas like the abdomen and thighs
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-      
+
       {/* FAQ Section */}
-      <section className="bg-white py-20">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="font-serif text-3xl font-bold text-black md:text-4xl text-center mb-12">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-center">
               Frequently Asked <span className="text-primary">Questions</span>
             </h2>
             
-            <Accordion type="single" collapsible className="w-full">
-              {[
-                {
-                  question: "Is micro-needling painful?",
-                  answer: "Most clients experience minimal discomfort during treatment. We apply a topical numbing cream before the procedure, which significantly reduces any sensation. Clients typically describe the feeling as a mild tingling or vibrating sensation."
-                },
-                {
-                  question: "How many treatments will I need?",
-                  answer: "The number of treatments depends on your specific skin concerns. For general skin rejuvenation, a series of 3-4 treatments spaced 4-6 weeks apart is typically recommended. For acne scars or more significant concerns, 6 or more sessions may be needed for optimal results."
-                },
-                {
-                  question: "What is the downtime after micro-needling?",
-                  answer: "Downtime is minimal. Most clients experience mild redness and sensitivity for 24-48 hours, similar to a mild sunburn. Some may also experience slight swelling or dryness. Most people can return to normal activities and wear makeup within 24-48 hours after treatment."
-                },
-                {
-                  question: "When will I see results?",
-                  answer: "Many clients notice an immediate 'glow' and plumpness to their skin following treatment. However, the most significant results appear gradually over 4-6 weeks as collagen production increases. Final results from a series of treatments can last up to a year or longer."
-                },
-                {
-                  question: "Who is not a good candidate for micro-needling?",
-                  answer: "Micro-needling is not recommended for people with active skin infections, acne breakouts, keloid scarring, or certain skin conditions like psoriasis or eczema in the treatment area. It's also not suitable for pregnant women or those taking certain medications. A consultation will determine if you're a good candidate."
-                },
-                {
-                  question: "Can micro-needling be combined with other treatments?",
-                  answer: "Yes, micro-needling works well with many other treatments. It can be combined with PRP (platelet-rich plasma) therapy, specialized serums, LED light therapy, or chemical peels for enhanced results. Our specialists can recommend the best combination for your specific skin concerns."
-                }
-              ].map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left font-medium">
-                    {faq.question}
+            <div className="mt-12 space-y-6">
+              <Accordion type="single" collapsible>
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-left text-lg font-medium">
+                    Is micro-needling painful?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    {faq.answer}
+                    Most clients report minimal discomfort during the procedure. We apply a topical numbing cream before treatment to ensure your comfort. You may feel a slight prickling sensation, but our advanced device is designed to minimize discomfort while maximizing results. After treatment, your skin may feel similar to a mild sunburn, but this typically subsides within 24 hours.
                   </AccordionContent>
                 </AccordionItem>
-              ))}
-            </Accordion>
+                
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="text-left text-lg font-medium">
+                    How many treatments will I need?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    While you'll notice improvements after a single session, most clients achieve optimal results with a series of 3-6 treatments spaced 4-6 weeks apart. The exact number depends on your specific skin concerns and goals. For acne scarring or more significant textural issues, 6 or more sessions may be recommended. We'll create a personalized treatment plan during your consultation based on your unique needs.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="text-left text-lg font-medium">
+                    What is the downtime after micro-needling?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    One of the advantages of micro-needling is its minimal downtime. Most clients experience mild redness, similar to a sunburn, for 24-48 hours after treatment. Some may also experience slight swelling, dryness, or flaking as the skin heals. You can typically return to your normal activities the following day, though we recommend avoiding makeup for 24 hours and sun exposure for at least 72 hours. We provide detailed aftercare instructions to ensure optimal healing and results.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-4">
+                  <AccordionTrigger className="text-left text-lg font-medium">
+                    Is micro-needling safe for all skin types?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    Yes, micro-needling is generally safe for all skin types and tones, including darker skin. Unlike some laser treatments, micro-needling doesn't target pigment, so there's minimal risk of hyperpigmentation. However, certain conditions may make you unsuitable for treatment, including active acne, rosacea flares, open wounds, skin infections, or a history of keloid scarring. During your consultation, we'll review your medical history and skin condition to ensure micro-needling is appropriate for you.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-5">
+                  <AccordionTrigger className="text-left text-lg font-medium">
+                    How soon will I see results from micro-needling?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    Many clients notice an immediate "glow" and improved skin texture within days of treatment as initial healing occurs. However, the most significant results develop gradually over time as collagen production increases. You'll typically see noticeable improvements in skin texture, tone, and firmness within 2-4 weeks after treatment. These results continue to improve for up to 6 months as collagen remodeling progresses. For concerns like acne scars or stretch marks, multiple treatments are usually needed to achieve optimal results.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </div>
         </div>
       </section>
-      
-      {/* Booking Section */}
-      <section className="bg-gray-50 py-16">
+
+      {/* Book Now Section */}
+      <section className="py-20 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="font-serif text-3xl font-bold text-black md:text-4xl">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold">
             Ready for <span className="text-primary">Transformative Results</span>?
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-            Book your micro-needling consultation today and take the first step toward healthier, more radiant skin.
+          <p className="mt-6 mx-auto max-w-2xl text-lg text-gray-600">
+            Experience the power of Advanced Micro-Needling Therapy—rejuvenate your skin, boost collagen production, and achieve a smoother, more youthful complexion with minimal downtime!
           </p>
           <div className="mt-10">
-            <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
-              Book Now
-            </Button>
+            <Link href="/contact">
+              <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90">
+                Book Your Treatment
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

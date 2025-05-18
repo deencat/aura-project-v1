@@ -74,6 +74,23 @@ interface ServiceFormData {
   preparation: string;
   aftercare: string;
   status: string;
+  // Add multilingual fields
+  name_zh_hant: string;
+  name_zh_hans: string;
+  short_description_zh_hant: string;
+  short_description_zh_hans: string;
+  long_description_zh_hant: string;
+  long_description_zh_hans: string;
+  benefits_zh_hant: string;
+  benefits_zh_hans: string;
+  suitable_for_zh_hant: string;
+  suitable_for_zh_hans: string;
+  contraindications_zh_hant: string;
+  contraindications_zh_hans: string;
+  preparation_zh_hant: string;
+  preparation_zh_hans: string;
+  aftercare_zh_hant: string;
+  aftercare_zh_hans: string;
   [key: string]: string;
 }
 
@@ -787,6 +804,23 @@ export default function EditServicePage() {
     preparation: '',
     aftercare: '',
     status: '',
+    // Initialize multilingual fields
+    name_zh_hant: '',
+    name_zh_hans: '',
+    short_description_zh_hant: '',
+    short_description_zh_hans: '',
+    long_description_zh_hant: '',
+    long_description_zh_hans: '',
+    benefits_zh_hant: '',
+    benefits_zh_hans: '',
+    suitable_for_zh_hant: '',
+    suitable_for_zh_hans: '',
+    contraindications_zh_hant: '',
+    contraindications_zh_hans: '',
+    preparation_zh_hant: '',
+    preparation_zh_hans: '',
+    aftercare_zh_hant: '',
+    aftercare_zh_hans: '',
   })
   const [originalImages, setOriginalImages] = useState<ServiceImageSet>({});
   const [saving, setSaving] = useState(false);
@@ -829,6 +863,24 @@ export default function EditServicePage() {
           preparation: service.preparation || '',
           aftercare: service.aftercare || '',
           status: service.status || '',
+          // Initialize multilingual fields with empty strings
+          // In a real app, these would be loaded from the database
+          name_zh_hant: '',
+          name_zh_hans: '',
+          short_description_zh_hant: '',
+          short_description_zh_hans: '',
+          long_description_zh_hant: '',
+          long_description_zh_hans: '',
+          benefits_zh_hant: '',
+          benefits_zh_hans: '',
+          suitable_for_zh_hant: '',
+          suitable_for_zh_hans: '',
+          contraindications_zh_hant: '',
+          contraindications_zh_hans: '',
+          preparation_zh_hant: '',
+          preparation_zh_hans: '',
+          aftercare_zh_hant: '',
+          aftercare_zh_hans: '',
         })
 
         // Set template based on service category
@@ -965,8 +1017,8 @@ export default function EditServicePage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     
-    // Auto-generate slug from name if category exists
-    if (name === 'name' && formData.category) {
+    // Auto-generate slug from name if category exists and we're in English mode
+    if (name === 'name' && formData.category && activeTab === 'english') {
       const categorySlug = formData.category.toLowerCase().replace(/\s+/g, '-')
       const nameSlug = value
         .toLowerCase()
@@ -1005,11 +1057,46 @@ export default function EditServicePage() {
     // Show saving state
     setSaving(true);
     
-    // Include image data in the form submission
+    // Organize multilingual data for submission
+    const multilingualData = {
+      english: {
+        name: formData.name,
+        short_description: formData.short_description,
+        long_description: formData.long_description,
+        benefits: formData.benefits,
+        suitable_for: formData.suitable_for,
+        contraindications: formData.contraindications,
+        preparation: formData.preparation,
+        aftercare: formData.aftercare,
+      },
+      traditional_chinese: {
+        name: formData.name_zh_hant,
+        short_description: formData.short_description_zh_hant,
+        long_description: formData.long_description_zh_hant,
+        benefits: formData.benefits_zh_hant,
+        suitable_for: formData.suitable_for_zh_hant,
+        contraindications: formData.contraindications_zh_hant,
+        preparation: formData.preparation_zh_hant,
+        aftercare: formData.aftercare_zh_hant,
+      },
+      simplified_chinese: {
+        name: formData.name_zh_hans,
+        short_description: formData.short_description_zh_hans,
+        long_description: formData.long_description_zh_hans,
+        benefits: formData.benefits_zh_hans,
+        suitable_for: formData.suitable_for_zh_hans,
+        contraindications: formData.contraindications_zh_hans,
+        preparation: formData.preparation_zh_hans,
+        aftercare: formData.aftercare_zh_hans,
+      }
+    };
+    
+    // Include image data and multilingual data in the form submission
     const formDataWithImages = {
       ...formData,
       template: serviceTemplate,
-      section_images: sectionImages
+      section_images: sectionImages,
+      multilingual: multilingualData
     };
     console.log('Form submitted:', formDataWithImages);
     
@@ -1092,6 +1179,60 @@ export default function EditServicePage() {
       return `Select image for ${currentSection.name} (Position ${index + 1})`;
     }
     return `Select image for ${currentSection.name}`;
+  };
+
+  // Helper function to get field name based on active language tab
+  const getFieldName = (baseFieldName: string): string => {
+    if (activeTab === 'traditional_chinese') {
+      return `${baseFieldName}_zh_hant`;
+    } else if (activeTab === 'simplified_chinese') {
+      return `${baseFieldName}_zh_hans`;
+    }
+    return baseFieldName;
+  };
+
+  // Helper function to get field value based on active language tab
+  const getFieldValue = (baseFieldName: string): string => {
+    if (activeTab === 'traditional_chinese') {
+      return formData[`${baseFieldName}_zh_hant`] || '';
+    } else if (activeTab === 'simplified_chinese') {
+      return formData[`${baseFieldName}_zh_hans`] || '';
+    }
+    return formData[baseFieldName] || '';
+  };
+
+  // Helper function to check if a language has content
+  const hasLanguageContent = (language: 'english' | 'traditional_chinese' | 'simplified_chinese'): boolean => {
+    if (language === 'english') {
+      return !!formData.name && !!formData.short_description;
+    } else if (language === 'traditional_chinese') {
+      return !!formData.name_zh_hant && !!formData.short_description_zh_hant;
+    } else if (language === 'simplified_chinese') {
+      return !!formData.name_zh_hans && !!formData.short_description_zh_hans;
+    }
+    return false;
+  };
+  
+  // Helper function to get language completion percentage
+  const getLanguageCompletionPercentage = (language: 'english' | 'traditional_chinese' | 'simplified_chinese'): number => {
+    const fields = [
+      'name', 'short_description', 'long_description', 
+      'benefits', 'suitable_for', 'contraindications', 
+      'preparation', 'aftercare'
+    ];
+    
+    let filledFields = 0;
+    let suffix = '';
+    
+    if (language === 'traditional_chinese') suffix = '_zh_hant';
+    else if (language === 'simplified_chinese') suffix = '_zh_hans';
+    
+    fields.forEach(field => {
+      const fullFieldName = language === 'english' ? field : `${field}${suffix}`;
+      if (formData[fullFieldName]?.trim()) filledFields++;
+    });
+    
+    return Math.round((filledFields / fields.length) * 100);
   };
 
   if (loading) {
@@ -1415,7 +1556,12 @@ export default function EditServicePage() {
             onClick={() => setActiveTab('english')}
           >
             <Languages className="h-4 w-4" />
-            English
+            <span>English</span>
+            {hasLanguageContent('english') && (
+              <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                {getLanguageCompletionPercentage('english')}%
+              </span>
+            )}
           </button>
           <button
             className={`flex items-center gap-2 px-4 py-3 font-medium ${
@@ -1426,7 +1572,16 @@ export default function EditServicePage() {
             onClick={() => setActiveTab('traditional_chinese')}
           >
             <Languages className="h-4 w-4" />
-            Traditional Chinese
+            <span>Traditional Chinese</span>
+            {hasLanguageContent('traditional_chinese') ? (
+              <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                {getLanguageCompletionPercentage('traditional_chinese')}%
+              </span>
+            ) : (
+              <span className="ml-2 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800">
+                Empty
+              </span>
+            )}
           </button>
           <button
             className={`flex items-center gap-2 px-4 py-3 font-medium ${
@@ -1437,7 +1592,16 @@ export default function EditServicePage() {
             onClick={() => setActiveTab('simplified_chinese')}
           >
             <Languages className="h-4 w-4" />
-            Simplified Chinese
+            <span>Simplified Chinese</span>
+            {hasLanguageContent('simplified_chinese') ? (
+              <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                {getLanguageCompletionPercentage('simplified_chinese')}%
+              </span>
+            ) : (
+              <span className="ml-2 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800">
+                Empty
+              </span>
+            )}
           </button>
         </div>
       </Card>
@@ -1449,108 +1613,114 @@ export default function EditServicePage() {
             <form className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Service Name</Label>
+                  <Label htmlFor={getFieldName("name")}>Service Name</Label>
                   <Input
-                    id="name"
-                    name="name"
+                    id={getFieldName("name")}
+                    name={getFieldName("name")}
                     placeholder="e.g. Lymphatic Detox"
-                    value={formData.name}
+                    value={getFieldValue("name")}
                     onChange={handleChange}
                   />
                 </div>
                 
-                <div>
-                  <Label htmlFor="slug">URL Slug</Label>
-                  <Input
-                    id="slug"
-                    name="slug"
-                    placeholder="e.g. body-care/lymphatic-detox"
-                    value={formData.slug}
-                    onChange={handleChange}
-                  />
-                  <p className="mt-1 text-xs text-gray-500">
-                    This will be used in the URL: /{formData.slug || 'example/slug'}
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {activeTab === 'english' && (
                   <div>
-                    <Label htmlFor="category">Category</Label>
-                    <select
-                      id="category"
-                      name="category"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={formData.category}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select a category</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.name}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="status">Status</Label>
-                    <select
-                      id="status"
-                      name="status"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={formData.status}
-                      onChange={handleChange}
-                    >
-                      <option value="Draft">Draft</option>
-                      <option value="Active">Active</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div>
-                    <Label htmlFor="price">Price</Label>
+                    <Label htmlFor="slug">URL Slug</Label>
                     <Input
-                      id="price"
-                      name="price"
-                      placeholder="e.g. $1,200"
-                      value={formData.price}
+                      id="slug"
+                      name="slug"
+                      placeholder="e.g. body-care/lymphatic-detox"
+                      value={formData.slug}
                       onChange={handleChange}
                     />
+                    <p className="mt-1 text-xs text-gray-500">
+                      This will be used in the URL: /{formData.slug || 'example/slug'}
+                    </p>
                   </div>
-                  
-                  <div>
-                    <Label htmlFor="duration">Duration</Label>
-                    <Input
-                      id="duration"
-                      name="duration"
-                      placeholder="e.g. 120 min"
-                      value={formData.duration}
-                      onChange={handleChange}
-                    />
+                )}
+                
+                {activeTab === 'english' && (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="category">Category</Label>
+                      <select
+                        id="category"
+                        name="category"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        value={formData.category}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select a category</option>
+                        {categories.map((category) => (
+                          <option key={category.id} value={category.name}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="status">Status</Label>
+                      <select
+                        id="status"
+                        name="status"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        value={formData.status}
+                        onChange={handleChange}
+                      >
+                        <option value="Draft">Draft</option>
+                        <option value="Active">Active</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
+                )}
+                
+                {activeTab === 'english' && (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="price">Price</Label>
+                      <Input
+                        id="price"
+                        name="price"
+                        placeholder="e.g. $1,200"
+                        value={formData.price}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="duration">Duration</Label>
+                      <Input
+                        id="duration"
+                        name="duration"
+                        placeholder="e.g. 120 min"
+                        value={formData.duration}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                )}
                 
                 <div>
-                  <Label htmlFor="short_description">Short Description</Label>
+                  <Label htmlFor={getFieldName("short_description")}>Short Description</Label>
                   <Textarea
-                    id="short_description"
-                    name="short_description"
+                    id={getFieldName("short_description")}
+                    name={getFieldName("short_description")}
                     placeholder="Brief description of the service (displayed in listings)"
                     rows={3}
-                    value={formData.short_description}
+                    value={getFieldValue("short_description")}
                     onChange={handleChange}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="long_description">Full Description</Label>
+                  <Label htmlFor={getFieldName("long_description")}>Full Description</Label>
                   <Textarea
-                    id="long_description"
-                    name="long_description"
+                    id={getFieldName("long_description")}
+                    name={getFieldName("long_description")}
                     placeholder="Detailed description of the service"
                     rows={8}
-                    value={formData.long_description}
+                    value={getFieldValue("long_description")}
                     onChange={handleChange}
                   />
                 </div>
@@ -1563,13 +1733,13 @@ export default function EditServicePage() {
             <h2 className="mb-4 text-xl font-bold">Additional Details</h2>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="benefits">Benefits</Label>
+                <Label htmlFor={getFieldName("benefits")}>Benefits</Label>
                 <Textarea
-                  id="benefits"
-                  name="benefits"
+                  id={getFieldName("benefits")}
+                  name={getFieldName("benefits")}
                   placeholder="List the benefits of this service"
                   rows={4}
-                  value={formData.benefits}
+                  value={getFieldValue("benefits")}
                   onChange={handleChange}
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -1578,50 +1748,50 @@ export default function EditServicePage() {
               </div>
               
               <div>
-                <Label htmlFor="suitable_for">Suitable For</Label>
+                <Label htmlFor={getFieldName("suitable_for")}>Suitable For</Label>
                 <Textarea
-                  id="suitable_for"
-                  name="suitable_for"
+                  id={getFieldName("suitable_for")}
+                  name={getFieldName("suitable_for")}
                   placeholder="Who is this service suitable for?"
                   rows={3}
-                  value={formData.suitable_for}
+                  value={getFieldValue("suitable_for")}
                   onChange={handleChange}
                 />
               </div>
               
               <div>
-                <Label htmlFor="contraindications">Contraindications</Label>
+                <Label htmlFor={getFieldName("contraindications")}>Contraindications</Label>
                 <Textarea
-                  id="contraindications"
-                  name="contraindications"
+                  id={getFieldName("contraindications")}
+                  name={getFieldName("contraindications")}
                   placeholder="Any contraindications or warnings"
                   rows={3}
-                  value={formData.contraindications}
+                  value={getFieldValue("contraindications")}
                   onChange={handleChange}
                 />
               </div>
               
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <Label htmlFor="preparation">Preparation</Label>
+                  <Label htmlFor={getFieldName("preparation")}>Preparation</Label>
                   <Textarea
-                    id="preparation"
-                    name="preparation"
+                    id={getFieldName("preparation")}
+                    name={getFieldName("preparation")}
                     placeholder="How should clients prepare for this service?"
                     rows={3}
-                    value={formData.preparation}
+                    value={getFieldValue("preparation")}
                     onChange={handleChange}
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="aftercare">Aftercare</Label>
+                  <Label htmlFor={getFieldName("aftercare")}>Aftercare</Label>
                   <Textarea
-                    id="aftercare"
-                    name="aftercare"
+                    id={getFieldName("aftercare")}
+                    name={getFieldName("aftercare")}
                     placeholder="What aftercare is recommended?"
                     rows={3}
-                    value={formData.aftercare}
+                    value={getFieldValue("aftercare")}
                     onChange={handleChange}
                   />
                 </div>

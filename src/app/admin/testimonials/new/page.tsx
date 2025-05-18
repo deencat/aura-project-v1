@@ -2,14 +2,17 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Save, StarIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { ArrowLeft, Save, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { TestimonialMultilingualData } from '@/utils/testimonialUtils'
 
 // Mock services for dropdown
 const services = [
@@ -24,6 +27,11 @@ const services = [
 ]
 
 export default function NewTestimonialPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState('english')
+  
+  // Form data state with multilingual support
   const [formData, setFormData] = useState({
     clientName: '',
     service: '',
@@ -31,28 +39,69 @@ export default function NewTestimonialPage() {
     content: '',
     featured: false,
     status: 'Draft',
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    multilingual: {
+      english: {
+        clientName: '',
+        content: ''
+      },
+      traditional_chinese: {
+        clientName: '',
+        content: ''
+      },
+      simplified_chinese: {
+        clientName: '',
+        content: ''
+      }
+    }
   })
 
-  // Update form data for text inputs and selects
-  const handleChange = (e) => {
+  // Handle form field changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
   }
+  
+  // Handle multilingual content changes
+  const handleMultilingualChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, 
+    language: 'english' | 'traditional_chinese' | 'simplified_chinese'
+  ) => {
+    const { name, value } = e.target
+    
+    setFormData(prev => ({
+      ...prev,
+      multilingual: {
+        ...prev.multilingual,
+        [language]: {
+          ...prev.multilingual[language],
+          [name]: value
+        }
+      }
+    }))
+    
+    // Also update the main fields if editing English content
+    if (language === 'english') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
+  }
 
-  // Update rating
-  const handleRatingChange = (value) => {
+  // Handle rating change
+  const handleRatingChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
       rating: parseInt(value)
     }))
   }
 
-  // Toggle featured
-  const handleFeaturedChange = (checked) => {
+  // Handle featured toggle
+  const handleFeaturedChange = (checked: boolean) => {
     setFormData(prev => ({
       ...prev,
       featured: checked
@@ -60,11 +109,19 @@ export default function NewTestimonialPage() {
   }
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Here you would normally send the data to an API
-    alert('Testimonial saved successfully (mock)')
+    setLoading(true)
+    
+    // Simulate API call to create testimonial
+    setTimeout(() => {
+      console.log('Creating testimonial with data:', formData)
+      
+      // In a real app, you would send this data to your API
+      alert('Testimonial created successfully (mock)')
+      setLoading(false)
+      router.push('/admin/testimonials')
+    }, 1000)
   }
 
   return (
@@ -79,99 +136,165 @@ export default function NewTestimonialPage() {
           </Link>
           <h1 className="text-3xl font-bold tracking-tight">New Testimonial</h1>
         </div>
-        <Button className="flex items-center gap-2" onClick={handleSubmit}>
-          <Save className="h-4 w-4" />
-          Save Testimonial
+        <Button onClick={() => handleSubmit} disabled={loading}>
+          <Save className="mr-2 h-4 w-4" />
+          {loading ? 'Saving...' : 'Save Testimonial'}
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8 md:grid-cols-3">
         {/* Main Form */}
         <div className="md:col-span-2 space-y-8">
           <Card>
-            <CardContent className="p-6">
-              <form className="space-y-6">
-                <div className="space-y-4">
+            <CardHeader className="pb-3">
+              <CardTitle>Testimonial Content</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="mb-4">
+                  <TabsTrigger value="english">English</TabsTrigger>
+                  <TabsTrigger value="traditional_chinese">Traditional Chinese</TabsTrigger>
+                  <TabsTrigger value="simplified_chinese">Simplified Chinese</TabsTrigger>
+                </TabsList>
+                
+                {/* English Content */}
+                <TabsContent value="english" className="space-y-4">
                   <div>
-                    <Label htmlFor="clientName">Client Name</Label>
+                    <Label htmlFor="english-clientName">Client Name (English)</Label>
                     <Input
-                      id="clientName"
+                      id="english-clientName"
                       name="clientName"
-                      placeholder="Enter client name"
-                      value={formData.clientName}
-                      onChange={handleChange}
+                      placeholder="Enter client name in English"
+                      value={formData.multilingual.english.clientName}
+                      onChange={(e) => handleMultilingualChange(e, 'english')}
                     />
                   </div>
-
+                  
                   <div>
-                    <Label htmlFor="service">Service</Label>
-                    <select
-                      id="service"
-                      name="service"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={formData.service}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select a service</option>
-                      {services.map((service) => (
-                        <option key={service} value={service}>{service}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="content">Testimonial Content</Label>
+                    <Label htmlFor="english-content">Testimonial (English)</Label>
                     <Textarea
-                      id="content"
+                      id="english-content"
                       name="content"
-                      placeholder="Enter the client's testimonial"
+                      placeholder="Enter testimonial content in English"
                       rows={6}
-                      value={formData.content}
-                      onChange={handleChange}
+                      value={formData.multilingual.english.content}
+                      onChange={(e) => handleMultilingualChange(e, 'english')}
                     />
                   </div>
-
+                </TabsContent>
+                
+                {/* Traditional Chinese Content */}
+                <TabsContent value="traditional_chinese" className="space-y-4">
                   <div>
-                    <Label htmlFor="rating">Rating</Label>
-                    <RadioGroup 
-                      id="rating" 
-                      className="flex space-x-4 mt-2" 
-                      value={formData.rating.toString()}
-                      onValueChange={handleRatingChange}
-                    >
-                      {[1, 2, 3, 4, 5].map(num => (
-                        <div key={num} className="flex items-center space-x-1">
-                          <RadioGroupItem value={num.toString()} id={`rating-${num}`} />
-                          <Label htmlFor={`rating-${num}`} className="flex">
-                            {num}
-                            <StarIcon className="h-4 w-4 ml-1 text-yellow-400" />
-                          </Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="date">Date</Label>
+                    <Label htmlFor="tc-clientName">Client Name (Traditional Chinese)</Label>
                     <Input
-                      id="date"
-                      name="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={handleChange}
+                      id="tc-clientName"
+                      name="clientName"
+                      placeholder="Enter client name in Traditional Chinese"
+                      value={formData.multilingual.traditional_chinese.clientName}
+                      onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
                     />
                   </div>
-                </div>
-              </form>
+                  
+                  <div>
+                    <Label htmlFor="tc-content">Testimonial (Traditional Chinese)</Label>
+                    <Textarea
+                      id="tc-content"
+                      name="content"
+                      placeholder="Enter testimonial content in Traditional Chinese"
+                      rows={6}
+                      value={formData.multilingual.traditional_chinese.content}
+                      onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
+                    />
+                  </div>
+                </TabsContent>
+                
+                {/* Simplified Chinese Content */}
+                <TabsContent value="simplified_chinese" className="space-y-4">
+                  <div>
+                    <Label htmlFor="sc-clientName">Client Name (Simplified Chinese)</Label>
+                    <Input
+                      id="sc-clientName"
+                      name="clientName"
+                      placeholder="Enter client name in Simplified Chinese"
+                      value={formData.multilingual.simplified_chinese.clientName}
+                      onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="sc-content">Testimonial (Simplified Chinese)</Label>
+                    <Textarea
+                      id="sc-content"
+                      name="content"
+                      placeholder="Enter testimonial content in Simplified Chinese"
+                      rows={6}
+                      value={formData.multilingual.simplified_chinese.content}
+                      onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>
-
+        
         {/* Sidebar */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           <Card>
-            <CardContent className="p-6">
+            <CardHeader className="pb-3">
+              <CardTitle>Details</CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
+                <div>
+                  <Label htmlFor="service">Service</Label>
+                  <select
+                    id="service"
+                    name="service"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    value={formData.service}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select a service</option>
+                    {services.map((service) => (
+                      <option key={service} value={service}>{service}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="date">Date</Label>
+                  <Input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                  />
+                </div>
+                
+                <div>
+                  <Label>Rating</Label>
+                  <RadioGroup 
+                    value={formData.rating.toString()} 
+                    onValueChange={handleRatingChange}
+                    className="flex space-x-2 mt-2"
+                  >
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div key={rating} className="flex flex-col items-center">
+                        <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} className="sr-only" />
+                        <Label
+                          htmlFor={`rating-${rating}`}
+                          className={`cursor-pointer rounded-full p-1 ${formData.rating >= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                        >
+                          <Star className="h-6 w-6 fill-current" />
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+                
                 <div>
                   <Label htmlFor="status">Status</Label>
                   <select
@@ -184,53 +307,21 @@ export default function NewTestimonialPage() {
                     <option value="Draft">Draft</option>
                     <option value="Published">Published</option>
                   </select>
-                  <p className="mt-2 text-xs text-gray-500">
-                    Draft testimonials are only visible to administrators.
-                  </p>
                 </div>
-
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <Label htmlFor="featured" className="text-base">Featured Testimonial</Label>
-                    <p className="text-xs text-gray-500">
-                      Featured testimonials appear on the homepage and service pages.
-                    </p>
-                  </div>
+                
+                <div className="flex items-center space-x-2">
                   <Switch
                     id="featured"
                     checked={formData.featured}
                     onCheckedChange={handleFeaturedChange}
                   />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-medium mb-4">Client Photo (Optional)</h3>
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg p-12 text-center">
-                <div className="mb-4">
-                  <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="relative">
-                    Upload Photo
-                    <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" />
-                  </Button>
-                  <p className="text-xs text-gray-500">
-                    Recommended: Square 256×256px JPG or PNG
-                  </p>
+                  <Label htmlFor="featured">Featured Testimonial</Label>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
-      </div>
+      </form>
     </div>
   )
 } 

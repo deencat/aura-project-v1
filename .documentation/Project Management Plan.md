@@ -211,6 +211,23 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Added comprehensive documentation in src/components/README.md
   - Created an example page demonstrating proper TreatmentImage usage
   - Added Playwright tests specifically for TreatmentImage functionality
+- Created "Micro-Needling" treatment page with comprehensive content:
+  - Implemented detailed treatment description and benefits using the standardized layout
+  - Added interactive carousel for treatment benefits with TreatmentImage component
+  - Created step-by-step "How It Works" section with visual indicators
+  - Added comprehensive FAQ section with accordion functionality
+  - Implemented consistent styling following design system guidelines
+  - Created proper Playwright tests for the page functionality and content
+- Created "Stretch Mark Treatment" page with comprehensive content:
+  - Implemented detailed treatment description focusing on the multi-dimensional approach
+  - Added interactive carousel for treatment benefits with TreatmentImage component
+  - Created step-by-step "How It Works" section explaining the treatment process
+  - Added comprehensive FAQ section with accordion functionality
+  - Implemented consistent styling following design system guidelines
+  - Created proper Playwright tests for the page functionality and content
+  - Added placeholder images for the treatment
+  - Updated the main treatments page to include the new stretch mark treatment
+- Support multilingual content (Traditional Chinese, Simplified Chinese, and English)
 
 ### Pending Tasks (Prioritized)
 1. Create additional treatment pages for remaining services
@@ -219,7 +236,6 @@ This project is a frontend prototype with a memory management component (MCP) th
    - Ensure all pages use standardized components and structure
 2. Enhance CMS functionality for content management
    - Complete blog & testimonial management functionality
-   - Support multilingual content (Traditional Chinese, Simplified Chinese, English)
    - Implement promotion & coupon code management
    - Develop staff profile management interface
 3. Add more comprehensive test coverage
@@ -270,7 +286,7 @@ This project is a frontend prototype with a memory management component (MCP) th
   - Admin interface for content management
   - Service & pricing management
   - Blog & testimonial management
-  - Multilingual content support
+  - Multilingual content support (completed)
 - Add authentication UI (for prototype only)
 - Create booking workflow
 - Develop user profile section

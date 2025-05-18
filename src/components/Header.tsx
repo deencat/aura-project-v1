@@ -6,64 +6,70 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ChevronDown, Menu, Search, X, Phone, Mail, Facebook, Instagram } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-// Menu data structure
+// Menu data structure with translation keys
 const menuData = [
-  { title: 'Home', href: '/' },
-  { title: 'About Us', href: '/about' },
+  { title: 'Home', titleKey: 'home', href: '/' },
+  { title: 'About Us', titleKey: 'about', href: '/about' },
   {
     title: 'Premium Beauty',
+    titleKey: 'premium_beauty',
     href: '/treatments',
     submenu: [
-      { title: 'Royal Black Scan', href: '/treatments/royal-black-scan' },
-      { title: 'Peeled Egg Skin', href: '/treatments/peeled-egg-skin' },
-      { title: 'Collagen Regeneration', href: '/treatments/collagen-regeneration' },
-      { title: '360 Smart Rescue', href: '/treatments/smart-rescue' },
-      { title: 'Farewell Puffy Face', href: '/treatments/farewell-puffy' },
-      { title: 'Ultimate Stemcell Hydrating Repair', href: '/treatments/ultimate-stemcell-hydrating-repair' },
-      { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal' },
-      { title: 'Mole, Wart & Skin Growth Removal', href: '/treatments/mole-wart-removal' },
-      { title: 'Radiant Defense Synergy Treatment', href: '/treatments/radiant-defense-synergy' },
-      { title: 'New Doublo™', href: '/treatments/new-doublo' },
+      { title: 'Royal Black Scan', titleKey: 'royal_black_scan', href: '/treatments/royal-black-scan' },
+      { title: 'Peeled Egg Skin', titleKey: 'peeled_egg_skin', href: '/treatments/peeled-egg-skin' },
+      { title: 'Collagen Regeneration', titleKey: 'collagen_regeneration', href: '/treatments/collagen-regeneration' },
+      { title: '360 Smart Rescue', titleKey: 'smart_rescue', href: '/treatments/smart-rescue' },
+      { title: 'Farewell Puffy Face', titleKey: 'farewell_puffy', href: '/treatments/farewell-puffy' },
+      { title: 'Ultimate Stemcell Hydrating Repair', titleKey: 'ultimate_stemcell', href: '/treatments/ultimate-stemcell-hydrating-repair' },
+      { title: 'Ceramic Skin Renewal', titleKey: 'ceramic_skin', href: '/treatments/ceramic-skin-renewal' },
+      { title: 'Mole, Wart & Skin Growth Removal', titleKey: 'mole_wart_removal', href: '/treatments/mole-wart-removal' },
+      { title: 'Radiant Defense Synergy Treatment', titleKey: 'radiant_defense', href: '/treatments/radiant-defense-synergy' },
+      { title: 'New Doublo™', titleKey: 'new_doublo', href: '/treatments/new-doublo' },
     ]
   },
   {
     title: 'Body Care',
+    titleKey: 'body_care',
     href: '/body-care',
     submenu: [
-      { title: '2-in-1 Lymphatic Detox', href: '/body-care/lymphatic-detox' },
-      { title: 'Breast Enhancement', href: '/body-care/breast-enhancement' },
-      { title: 'Perfect Buttocks', href: '/body-care/perfect-buttocks' },
-      { title: 'Full Body Hair Removal', href: '/body-care/hair-removal' },
-      { title: 'Stretch Mark Repair', href: '/body-care/stretch-mark' },
+      { title: '2-in-1 Lymphatic Detox', titleKey: 'lymphatic_detox', href: '/body-care/lymphatic-detox' },
+      { title: 'Breast Enhancement', titleKey: 'breast_enhancement', href: '/body-care/breast-enhancement' },
+      { title: 'Perfect Buttocks', titleKey: 'perfect_buttocks', href: '/body-care/perfect-buttocks' },
+      { title: 'Full Body Hair Removal', titleKey: 'hair_removal', href: '/body-care/hair-removal' },
+      { title: 'Stretch Mark Repair', titleKey: 'stretch_mark', href: '/body-care/stretch-mark' },
     ]
   },
   {
     title: 'New Doublo',
+    titleKey: 'new_doublo',
     href: '/new-doublo',
     submenu: [
-      { title: 'Sculpt & Lift', href: '/new-doublo/sculpt-lift' },
-      { title: 'V-Line Perfection', href: '/new-doublo/v-line' },
-      { title: 'Youth Revival', href: '/new-doublo/youth-revival' },
-      { title: 'Neck Rejuvenation', href: '/new-doublo/neck-rejuvenation' },
+      { title: 'Sculpt & Lift', titleKey: 'sculpt_lift', href: '/new-doublo/sculpt-lift' },
+      { title: 'V-Line Perfection', titleKey: 'v_line', href: '/new-doublo/v-line' },
+      { title: 'Youth Revival', titleKey: 'youth_revival', href: '/new-doublo/youth-revival' },
+      { title: 'Neck Rejuvenation', titleKey: 'neck_rejuvenation', href: '/new-doublo/neck-rejuvenation' },
     ]
   },
   {
     title: 'Cell Beauty',
+    titleKey: 'cell_beauty',
     href: '/cell-beauty',
     submenu: [
-      { title: 'Baby Face Contouring', href: '/cell-beauty/baby-face' },
-      { title: 'Stretch Mark Repair', href: '/cell-beauty/stretch-mark' },
+      { title: 'Baby Face Contouring', titleKey: 'baby_face', href: '/cell-beauty/baby-face' },
+      { title: 'Stretch Mark Repair', titleKey: 'stretch_mark', href: '/cell-beauty/stretch-mark' },
     ]
   },
-  { title: 'Special Offers', href: '/offers' },
-  { title: 'Contact Us', href: '/contact' },
+  { title: 'Special Offers', titleKey: 'special_offers', href: '/offers' },
+  { title: 'Contact Us', titleKey: 'contact', href: '/contact' },
 ]
 
 export default function Header() {
   const [currentHover, setCurrentHover] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openMobileSubmenus, setOpenMobileSubmenus] = useState<string[]>([])
+  const { t } = useLanguage()
 
   const handleMouseEnter = (title: string) => {
     setCurrentHover(title)
@@ -147,7 +153,7 @@ export default function Header() {
               size="sm" 
               className="rounded-full bg-primary hover:bg-primary/90 text-white"
             >
-              Book Now
+              {t('book_now', 'Book Now')}
             </Button>
           </Link>
         </div>
@@ -171,7 +177,7 @@ export default function Header() {
                     "hover:text-primary relative"
                   )}
                 >
-                  {item.title}
+                  {t(item.titleKey, item.title)}
                   {item.submenu && (
                     <ChevronDown className="ml-1 h-4 w-4" />
                   )}
@@ -187,7 +193,7 @@ export default function Header() {
                         href={subItem.href}
                         className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary whitespace-nowrap"
                       >
-                        {subItem.title}
+                        {t(subItem.titleKey, subItem.title)}
                       </Link>
                     ))}
                   </div>
@@ -202,7 +208,7 @@ export default function Header() {
                 <Button 
                   className="ml-4 rounded-full bg-primary hover:bg-primary/90 text-white"
                 >
-                  Book Now
+                  {t('book_now', 'Book Now')}
                 </Button>
               </Link>
             </li>
@@ -250,32 +256,37 @@ export default function Header() {
                       className="block py-2 text-base font-medium"
                       onClick={() => !item.submenu && setMobileMenuOpen(false)}
                     >
-                      {item.title}
+                      {t(item.titleKey, item.title)}
                     </Link>
+                    
                     {item.submenu && (
                       <button
                         onClick={() => toggleMobileSubmenu(item.title)}
                         className="p-2 text-gray-600"
                       >
-                        <ChevronDown className={`h-5 w-5 transition-transform ${isMobileSubmenuOpen(item.title) ? 'rotate-180' : ''}`} />
+                        <ChevronDown 
+                          className={cn(
+                            "h-5 w-5 transition-transform",
+                            isMobileSubmenuOpen(item.title) && "rotate-180"
+                          )} 
+                        />
                       </button>
                     )}
                   </div>
                   
                   {item.submenu && isMobileSubmenuOpen(item.title) && (
-                    <ul className="mt-2 space-y-1 pl-4 border-l-2 border-gray-100">
+                    <div className="mt-2 pl-4 border-l border-gray-100">
                       {item.submenu.map((subItem) => (
-                        <li key={subItem.title}>
-                          <Link
-                            href={subItem.href}
-                            className="block py-2 text-sm text-gray-600 hover:text-primary"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {subItem.title}
-                          </Link>
-                        </li>
+                        <Link
+                          key={subItem.title}
+                          href={subItem.href}
+                          className="block py-2 text-sm text-gray-600 hover:text-primary"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {t(subItem.titleKey, subItem.title)}
+                        </Link>
                       ))}
-                    </ul>
+                    </div>
                   )}
                 </li>
               ))}
@@ -284,26 +295,12 @@ export default function Header() {
         </div>
         
         <div className="border-t border-gray-100 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <a href="tel:+85212345678" className="flex items-center gap-2 text-gray-600">
-              <Phone className="h-4 w-4" />
-              <span>+852 1234 5678</span>
-            </a>
-            <div className="flex gap-4">
-              <a href="#" className="text-gray-600 hover:text-primary">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-primary">
-                <Instagram className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-          <Link href="/contact" className="w-full">
+          <Link href="/contact">
             <Button 
               className="w-full rounded-full bg-primary hover:bg-primary/90 text-white"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Book Now
+              {t('book_now', 'Book Now')}
             </Button>
           </Link>
         </div>

@@ -1,27 +1,18 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Trash2, StarIcon } from 'lucide-react'
+import { useParams, useRouter } from 'next/navigation'
+import { ArrowLeft, Save, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
-import { 
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { TestimonialMultilingualData } from '@/utils/testimonialUtils'
 
 // Mock services for dropdown
 const services = [
@@ -45,7 +36,21 @@ const mockTestimonials = [
     date: "2023-08-15",
     status: "Published",
     featured: true,
-    content: "The Royal Black Scan treatment was amazing! My skin looks younger and more radiant than it has in years. The staff was professional and made me feel comfortable throughout the entire process."
+    content: "The Royal Black Scan treatment was amazing! My skin looks younger and more radiant than it has in years. The staff was professional and made me feel comfortable throughout the entire process.",
+    multilingual: {
+      english: {
+        clientName: "Emma Thompson",
+        content: "The Royal Black Scan treatment was amazing! My skin looks younger and more radiant than it has in years. The staff was professional and made me feel comfortable throughout the entire process."
+      },
+      traditional_chinese: {
+        clientName: "艾瑪·湯普森",
+        content: "皇家黑掃描療程真的很棒！我的皮膚看起來比過去幾年更年輕、更有光澤。工作人員非常專業，讓我在整個過程中感到舒適。"
+      },
+      simplified_chinese: {
+        clientName: "艾玛·汤普森",
+        content: "皇家黑扫描疗程真的很棒！我的皮肤看起来比过去几年更年轻、更有光泽。工作人员非常专业，让我在整个过程中感到舒适。"
+      }
+    }
   },
   {
     id: 2,
@@ -92,71 +97,137 @@ const mockTestimonials = [
 export default function EditTestimonialPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const testimonialId = parseInt(params.id)
+  
   const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('english')
+  
+  // Form state
   const [formData, setFormData] = useState({
+    id: 0,
     clientName: '',
     service: '',
     rating: 5,
-    content: '',
-    featured: false,
+    date: '',
     status: 'Draft',
-    date: new Date().toISOString().split('T')[0]
+    featured: false,
+    content: '',
+    multilingual: {
+      english: {
+        clientName: '',
+        content: ''
+      },
+      traditional_chinese: {
+        clientName: '',
+        content: ''
+      },
+      simplified_chinese: {
+        clientName: '',
+        content: ''
+      }
+    }
   })
-
+  
   // Fetch testimonial data
   useEffect(() => {
-    // Simulating API fetch
-    setTimeout(() => {
-      const testimonialsData = mockTestimonials
-      const testimonial = testimonialsData.find(t => t.id === testimonialId)
-      
-      if (testimonial) {
-        setFormData({
-          clientName: testimonial.clientName,
-          service: testimonial.service,
-          rating: testimonial.rating,
-          content: testimonial.content,
-          featured: testimonial.featured,
-          status: testimonial.status,
-          date: testimonial.date
-        })
+    const fetchTestimonial = async () => {
+      setIsLoading(true)
+      try {
+        // In a real app, you would fetch from your API
+        const testimonial = mockTestimonials.find(t => t.id === testimonialId)
+        
+        if (testimonial) {
+          // Initialize multilingual data if it doesn't exist
+          const multilingual: TestimonialMultilingualData = testimonial.multilingual || {
+            english: {
+              clientName: testimonial.clientName || '',
+              content: testimonial.content || ''
+            },
+            traditional_chinese: {
+              clientName: '',
+              content: ''
+            },
+            simplified_chinese: {
+              clientName: '',
+              content: ''
+            }
+          }
+          
+          setFormData({
+            ...testimonial,
+            multilingual
+          })
+        } else {
+          console.error('Testimonial not found')
+          router.push('/admin/testimonials')
+        }
+      } catch (error) {
+        console.error('Error fetching testimonial:', error)
+      } finally {
+        setIsLoading(false)
       }
-      
-      setIsLoading(false)
-    }, 500) // Simulate loading delay
-  }, [testimonialId])
-  // Update form data for text inputs and selects
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    }
+    
+    fetchTestimonial()
+  }, [testimonialId, router])
+  
+  // Handle form field changes
+  const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
   }
-
-  // Update rating
+  
+  // Handle multilingual content changes
+  const handleMultilingualChange = (e, language) => {
+    const { name, value } = e.target
+    
+    setFormData(prev => ({
+      ...prev,
+      multilingual: {
+        ...prev.multilingual,
+        [language]: {
+          ...prev.multilingual[language],
+          [name]: value
+        }
+      }
+    }))
+    
+    // Also update the main fields if editing English content
+    if (language === 'english') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
+  }
+  
+  // Handle rating change
   const handleRatingChange = (value) => {
     setFormData(prev => ({
       ...prev,
       rating: parseInt(value)
     }))
   }
-
-  // Toggle featured
+  
+  // Handle featured toggle
   const handleFeaturedChange = (checked) => {
     setFormData(prev => ({
       ...prev,
       featured: checked
     }))
   }
-
+  
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Here you would normally send the data to an API
+    
+    // Simulate API call to update testimonial
+    console.log('Updating testimonial with data:', formData)
+    
+    // In a real app, you would send this data to your API
     alert('Testimonial updated successfully (mock)')
-    router.push('/admin/testimonials')
   }
   
   // Handle deletion
@@ -189,30 +260,11 @@ export default function EditTestimonialPage({ params }: { params: { id: string }
           <h1 className="text-3xl font-bold tracking-tight">Edit Testimonial</h1>
         </div>
         <div className="flex items-center gap-2">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" className="text-red-500 border-red-200 hover:bg-red-50">
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete this testimonial
-                  and remove the data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          
-          <Button className="flex items-center gap-2" onClick={handleSubmit}>
-            <Save className="h-4 w-4" />
+          <Button variant="outline" onClick={handleDelete} className="text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600">
+            Delete
+          </Button>
+          <Button onClick={handleSubmit}>
+            <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>
         </div>
@@ -222,89 +274,155 @@ export default function EditTestimonialPage({ params }: { params: { id: string }
         {/* Main Form */}
         <div className="md:col-span-2 space-y-8">
           <Card>
-            <CardContent className="p-6">
-              <form className="space-y-6">
-                <div className="space-y-4">
+            <CardHeader className="pb-3">
+              <CardTitle>Testimonial Content</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="mb-4">
+                  <TabsTrigger value="english">English</TabsTrigger>
+                  <TabsTrigger value="traditional_chinese">Traditional Chinese</TabsTrigger>
+                  <TabsTrigger value="simplified_chinese">Simplified Chinese</TabsTrigger>
+                </TabsList>
+                
+                {/* English Content */}
+                <TabsContent value="english" className="space-y-4">
                   <div>
-                    <Label htmlFor="clientName">Client Name</Label>
+                    <Label htmlFor="english-clientName">Client Name (English)</Label>
                     <Input
-                      id="clientName"
+                      id="english-clientName"
                       name="clientName"
-                      placeholder="Enter client name"
-                      value={formData.clientName}
-                      onChange={handleChange}
+                      placeholder="Enter client name in English"
+                      value={formData.multilingual.english.clientName}
+                      onChange={(e) => handleMultilingualChange(e, 'english')}
                     />
                   </div>
-
+                  
                   <div>
-                    <Label htmlFor="service">Service</Label>
-                    <select
-                      id="service"
-                      name="service"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={formData.service}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select a service</option>
-                      {services.map((service) => (
-                        <option key={service} value={service}>{service}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="content">Testimonial Content</Label>
+                    <Label htmlFor="english-content">Testimonial (English)</Label>
                     <Textarea
-                      id="content"
+                      id="english-content"
                       name="content"
-                      placeholder="Enter the client's testimonial"
+                      placeholder="Enter testimonial content in English"
                       rows={6}
-                      value={formData.content}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange(e)}
+                      value={formData.multilingual.english.content}
+                      onChange={(e) => handleMultilingualChange(e, 'english')}
                     />
                   </div>
-
+                </TabsContent>
+                
+                {/* Traditional Chinese Content */}
+                <TabsContent value="traditional_chinese" className="space-y-4">
                   <div>
-                    <Label htmlFor="rating">Rating</Label>
-                    <RadioGroup 
-                      id="rating" 
-                      className="flex space-x-4 mt-2" 
-                      value={formData.rating.toString()}
-                      onValueChange={handleRatingChange}
-                    >
-                      {[1, 2, 3, 4, 5].map(num => (
-                        <div key={num} className="flex items-center space-x-1">
-                          <RadioGroupItem value={num.toString()} id={`rating-${num}`} />
-                          <Label htmlFor={`rating-${num}`} className="flex">
-                            {num}
-                            <StarIcon className="h-4 w-4 ml-1 text-yellow-400" />
-                          </Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="date">Date</Label>
+                    <Label htmlFor="tc-clientName">Client Name (Traditional Chinese)</Label>
                     <Input
-                      id="date"
-                      name="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={handleChange}
+                      id="tc-clientName"
+                      name="clientName"
+                      placeholder="Enter client name in Traditional Chinese"
+                      value={formData.multilingual.traditional_chinese.clientName}
+                      onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
                     />
                   </div>
-                </div>
-              </form>
+                  
+                  <div>
+                    <Label htmlFor="tc-content">Testimonial (Traditional Chinese)</Label>
+                    <Textarea
+                      id="tc-content"
+                      name="content"
+                      placeholder="Enter testimonial content in Traditional Chinese"
+                      rows={6}
+                      value={formData.multilingual.traditional_chinese.content}
+                      onChange={(e) => handleMultilingualChange(e, 'traditional_chinese')}
+                    />
+                  </div>
+                </TabsContent>
+                
+                {/* Simplified Chinese Content */}
+                <TabsContent value="simplified_chinese" className="space-y-4">
+                  <div>
+                    <Label htmlFor="sc-clientName">Client Name (Simplified Chinese)</Label>
+                    <Input
+                      id="sc-clientName"
+                      name="clientName"
+                      placeholder="Enter client name in Simplified Chinese"
+                      value={formData.multilingual.simplified_chinese.clientName}
+                      onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="sc-content">Testimonial (Simplified Chinese)</Label>
+                    <Textarea
+                      id="sc-content"
+                      name="content"
+                      placeholder="Enter testimonial content in Simplified Chinese"
+                      rows={6}
+                      value={formData.multilingual.simplified_chinese.content}
+                      onChange={(e) => handleMultilingualChange(e, 'simplified_chinese')}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>
-
+        
         {/* Sidebar */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           <Card>
-            <CardContent className="p-6">
+            <CardHeader className="pb-3">
+              <CardTitle>Details</CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
+                <div>
+                  <Label htmlFor="service">Service</Label>
+                  <select
+                    id="service"
+                    name="service"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    value={formData.service}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select a service</option>
+                    {services.map((service) => (
+                      <option key={service} value={service}>{service}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="date">Date</Label>
+                  <Input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                  />
+                </div>
+                
+                <div>
+                  <Label>Rating</Label>
+                  <RadioGroup 
+                    value={formData.rating.toString()} 
+                    onValueChange={handleRatingChange}
+                    className="flex space-x-2 mt-2"
+                  >
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div key={rating} className="flex flex-col items-center">
+                        <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} className="sr-only" />
+                        <Label
+                          htmlFor={`rating-${rating}`}
+                          className={`cursor-pointer rounded-full p-1 ${formData.rating >= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                        >
+                          <Star className="h-6 w-6 fill-current" />
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+                
                 <div>
                   <Label htmlFor="status">Status</Label>
                   <select
@@ -317,50 +435,15 @@ export default function EditTestimonialPage({ params }: { params: { id: string }
                     <option value="Draft">Draft</option>
                     <option value="Published">Published</option>
                   </select>
-                  <p className="mt-2 text-xs text-gray-500">
-                    Draft testimonials are only visible to administrators.
-                  </p>
                 </div>
-
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <Label htmlFor="featured" className="text-base">Featured Testimonial</Label>
-                    <p className="text-xs text-gray-500">
-                      Featured testimonials appear on the homepage and service pages.
-                    </p>
-                  </div>
+                
+                <div className="flex items-center space-x-2">
                   <Switch
                     id="featured"
                     checked={formData.featured}
                     onCheckedChange={handleFeaturedChange}
                   />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-medium mb-4">Client Photo</h3>
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg p-12 text-center">
-                <div className="mb-4">
-                  <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="relative">
-                    Replace Photo
-                    <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-red-500">
-                    Remove
-                  </Button>
-                  <p className="text-xs text-gray-500">
-                    Recommended: Square 256×256px JPG or PNG
-                  </p>
+                  <Label htmlFor="featured">Featured Testimonial</Label>
                 </div>
               </div>
             </CardContent>

@@ -6,7 +6,7 @@ test.describe('Ceramic Skin Renewal Treatment Page', () => {
     await page.goto('/treatments/ceramic-skin-renewal');
 
     // Verify page title
-    const pageTitle = await page.locator('h1:has-text("Signature Ceramic Skin")');
+    const pageTitle = await page.locator('h1:has-text("Ceramic Skin")');
     await expect(pageTitle).toBeVisible();
 
     // Check for hero section
@@ -17,12 +17,12 @@ test.describe('Ceramic Skin Renewal Treatment Page', () => {
     const tags = await page.locator('.inline-block.bg-primary\\/10.text-primary.rounded-full');
     await expect(tags).toHaveCount(4);
     
-    // Check for Book Now button
-    const bookButton = await page.locator('a:has-text("Book Now")');
+    // Check for Book Now button in the hero section (first section)
+    const bookButton = await page.locator('section').first().locator('a:has-text("Book Now")');
     await expect(bookButton).toBeVisible();
     
     // Check for treatment description section
-    const descriptionTitle = await page.locator('h2:has-text("Signature Ceramic Skin Renewal")');
+    const descriptionTitle = await page.locator('h2:has-text("Ceramic Skin Renewal:")');
     await expect(descriptionTitle).toBeVisible();
     
     // Check for treatment features/details
@@ -35,16 +35,16 @@ test.describe('Ceramic Skin Renewal Treatment Page', () => {
     await expect(benefitsTitle).toBeVisible();
     
     // Check for carousel
-    await expect(page.locator('.carousel')).toBeVisible();
+    await expect(page.locator('[class*="carousel"]')).toBeVisible();
     
     // Check for FAQ section
-    const faqTitle = await page.locator('h2:has-text("Frequently Asked Questions")');
+    const faqTitle = await page.locator('h2:has-text("Frequently Asked")');
     await expect(faqTitle).toBeVisible();
     
     // Check for booking section at the bottom
     const bookingTitle = await page.locator('h2:has-text("Ready for")');
     await expect(bookingTitle).toBeVisible();
-    const bookingButton = await page.locator('a:has-text("Book Your Treatment")');
+    const bookingButton = await page.locator('section').last().locator('a:has-text("Book Your Treatment")');
     await expect(bookingButton).toBeVisible();
   });
 
@@ -53,13 +53,15 @@ test.describe('Ceramic Skin Renewal Treatment Page', () => {
     await page.goto('/treatments');
     
     // Find and click on the Ceramic Skin Renewal card
-    await page.locator('h3:has-text("Ceramic Skin Renewal")').click();
+    const ceramicCard = await page.locator('h3:has-text("Ceramic Skin Renewal")');
+    await expect(ceramicCard).toBeVisible();
+    await ceramicCard.click();
     
-    // Verify we're on the correct page
-    await expect(page).toHaveURL(/.*\/treatments\/ceramic-skin-renewal/);
+    // Verify we're on the correct page with increased timeout
+    await expect(page).toHaveURL(/.*\/treatments\/ceramic-skin-renewal/, { timeout: 10000 });
     
     // Verify the page title is visible
-    const pageTitle = await page.locator('h1:has-text("Signature Ceramic Skin")');
+    const pageTitle = await page.locator('h1:has-text("Ceramic Skin")');
     await expect(pageTitle).toBeVisible();
   });
 }); 

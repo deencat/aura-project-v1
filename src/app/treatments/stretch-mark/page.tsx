@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/carousel"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
-export default function CeramicSkinRenewalPage() {
+export default function StretchMarkPage() {
   const [api, setApi] = useState<CarouselApi>()
   const [activeIndex, setActiveIndex] = useState(0)
   const totalSlides = 5
@@ -44,19 +44,19 @@ export default function CeramicSkinRenewalPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="font-serif text-4xl md:text-5xl font-bold leading-tight">
-                <span className="text-primary">Ceramic Skin</span> Renewal
+                Advanced <span className="text-primary">Stretch Mark</span> Treatment
               </h1>
               <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Porcelain Finish</span>
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Luminous Glow</span>
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Texture Refinement</span>
-                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Pore Minimization</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Skin Rejuvenation</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Scar Reduction</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Texture Improvement</span>
+                <span className="inline-block bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">Collagen Stimulation</span>
               </div>
               <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-                Our exclusive Ceramic Skin Renewal treatment delivers a flawless, porcelain-like complexion by combining advanced exfoliation technology with deep hydration and specialized ceramide-infused serums.
+                Our Advanced Stretch Mark Treatment combines cutting-edge technology with proven techniques to minimize the appearance of stretch marks and improve skin texture and tone.
               </p>
               <p className="mt-4 text-lg text-gray-600 leading-relaxed">
-                Experience the transformation as your skin achieves the smooth, radiant finish of fine porcelain—refined texture, minimized pores, and a luminous glow that reflects light beautifully.
+                This comprehensive approach targets both new and mature stretch marks, stimulating collagen production and promoting skin regeneration for smoother, more even-toned skin.
               </p>
               <div className="mt-8">
                 <Link href="/contact">
@@ -68,10 +68,10 @@ export default function CeramicSkinRenewalPage() {
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
               <TreatmentImage 
-                category="facials"
-                treatment="ceramic-skin-renewal"
+                category="body-care"
+                treatment="stretch-mark"
                 type="hero"
-                alt="Ceramic Skin Renewal Treatment"
+                alt="Advanced Stretch Mark Treatment"
                 fill
                 objectFit="cover"
                 priority
@@ -87,57 +87,57 @@ export default function CeramicSkinRenewalPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              Ceramic Skin Renewal: <span className="text-primary">The Art of Perfection</span>
+              Stretch Mark Treatment: <span className="text-primary">Multi-Dimensional Approach</span>
             </h2>
             <p className="mt-6 text-lg text-gray-600">
-              Inspired by the flawless finish of fine porcelain, our Ceramic Skin Renewal treatment combines cutting-edge technology with luxurious formulations to transform your skin's appearance and texture.
+              Our Advanced Stretch Mark Treatment utilizes a multi-dimensional approach that combines micro-needling, laser therapy, and specialized serums to target stretch marks at different layers of the skin.
             </p>
             <p className="mt-4 text-lg text-gray-600">
-              This multi-step treatment works at both the surface and cellular levels to refine texture, minimize pores, enhance luminosity, and create a smooth, even complexion that reflects light beautifully—just like fine ceramic.
+              This comprehensive treatment stimulates collagen production, promotes cell turnover, and enhances skin elasticity, effectively reducing the appearance of both red/purple (new) and white/silver (mature) stretch marks.
             </p>
           </div>
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Diamond Microdermabrasion</h3>
+                <h3 className="text-2xl font-bold text-primary">Micro-Needling Technology</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Our precision diamond-tip exfoliation system gently removes the outermost layer of dead skin cells, instantly revealing smoother, brighter skin. This controlled exfoliation creates the perfect canvas for the subsequent treatment steps while stimulating cellular renewal.
+                  Our advanced micro-needling device creates thousands of microscopic channels in the skin, triggering the body's natural healing response and stimulating collagen and elastin production. This helps to rebuild and strengthen the skin's structure where stretch marks have caused damage.
                 </p>
               </div>
             </div>
             
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Ceramide Infusion</h3>
+                <h3 className="text-2xl font-bold text-primary">Targeted Laser Therapy</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Our proprietary blend of ceramides, essential lipids, and hyaluronic acid is delivered deep into the skin using ultrasonic technology. This replenishes the skin's natural barrier, locks in moisture, and creates a smooth, refined surface texture.
+                  Precision laser technology delivers focused energy to the deeper layers of the skin, breaking down scar tissue and stimulating new cell growth. This is particularly effective for mature stretch marks that have developed a white or silvery appearance.
                 </p>
               </div>
             </div>
             
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Light Therapy</h3>
+                <h3 className="text-2xl font-bold text-primary">Growth Factor Serums</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Advanced LED light therapy stimulates collagen production and accelerates cellular repair. Different wavelengths target specific skin concerns—red light for anti-aging, blue light for purification, and near-infrared for deep tissue repair—resulting in firmer, more radiant skin.
+                  Our specialized serums contain growth factors, peptides, and antioxidants that penetrate deeply through the micro-channels created during treatment. These active ingredients accelerate healing, enhance collagen production, and improve overall skin quality.
                 </p>
               </div>
             </div>
             
             <div className="flex flex-col">
               <div className="bg-primary/10 rounded-t-lg p-6">
-                <h3 className="text-2xl font-bold text-primary">Porcelain Finish Mask</h3>
+                <h3 className="text-2xl font-bold text-primary">Customized Protocols</h3>
               </div>
               <div className="bg-gray-50 rounded-b-lg p-6 flex-1">
                 <p className="text-gray-600">
-                  Our exclusive cooling porcelain mask contains niacinamide, rice extract, and silk proteins that refine pores, even skin tone, and impart a luminous, light-reflecting quality to the skin. The mask also helps to set the treatment benefits for long-lasting results.
+                  Each treatment is tailored to your specific stretch marks, taking into account their age, color, depth, and location. This personalized approach ensures optimal results for your unique skin concerns, whether treating post-pregnancy stretch marks, growth-related marks, or those caused by weight fluctuations.
                 </p>
               </div>
             </div>
@@ -150,10 +150,10 @@ export default function CeramicSkinRenewalPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              Benefits of <span className="text-primary">Ceramic Skin Renewal</span>
+              Benefits of <span className="text-primary">Stretch Mark Treatment</span>
             </h2>
             <p className="mt-6 text-lg text-gray-600">
-              Experience the transformative results of our signature porcelain skin treatment
+              Experience transformative results with our advanced skin regeneration treatment
             </p>
           </div>
 
@@ -171,26 +171,26 @@ export default function CeramicSkinRenewalPage() {
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
                             <TreatmentImage 
-                              category="facials"
-                              treatment="ceramic-skin-renewal"
+                              category="body-care"
+                              treatment="stretch-mark"
                               type="benefits"
                               index={num}
-                              alt={["Refined Texture", "Minimized Pores", "Enhanced Luminosity", "Even Skin Tone", "Hydration Boost"][num-1]}
+                              alt={["Reduced Appearance", "Improved Skin Texture", "Enhanced Skin Tone", "Increased Confidence", "Long-lasting Results"][num-1]}
                               className="w-full h-full transition duration-500 hover:scale-110"
                               fallbackBehavior="placeholder"
                             />
                           </div>
                           <div className="p-4 text-center">
                             <h4 className="font-bold text-lg text-gray-800 mb-1">
-                              {["Refined Texture", "Minimized Pores", "Enhanced Luminosity", "Even Skin Tone", "Hydration Boost"][num-1]}
+                              {["Reduced Appearance", "Improved Skin Texture", "Enhanced Skin Tone", "Increased Confidence", "Long-lasting Results"][num-1]}
                             </h4>
                             <p className="text-gray-600 text-sm">
                               {[
-                                "Smoother, softer skin with dramatically improved texture",
-                                "Visibly reduced pore size for a flawless complexion",
-                                "Radiant glow that reflects light beautifully",
-                                "Reduced appearance of discoloration and redness",
-                                "Deep, long-lasting hydration for plump, supple skin"
+                                "Significant reduction in the visibility of stretch marks",
+                                "Smoother, more refined skin texture in treated areas",
+                                "More even skin tone with reduced discoloration",
+                                "Renewed confidence in your appearance",
+                                "Results that continue to improve over time"
                               ][num-1]}
                             </p>
                           </div>
@@ -224,9 +224,9 @@ export default function CeramicSkinRenewalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h20"></path><path d="M12 2v20"></path><path d="m4.93 4.93 14.14 14.14"></path><path d="m19.07 4.93-14.14 14.14"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Immediate Results</h3>
+              <h3 className="text-xl font-bold mb-4">Effective on All Types</h3>
               <p className="text-gray-600">
-                See visible improvement in skin texture and luminosity after just one treatment
+                Works on both new (red/purple) and mature (white/silver) stretch marks across all skin types
               </p>
             </div>
             
@@ -234,9 +234,9 @@ export default function CeramicSkinRenewalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9 4.5 4.5 0 0 0 0-9 4.5 4.5 0 0 1 0-9Z"></path><path d="M12 8v8"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Cumulative Benefits</h3>
+              <h3 className="text-xl font-bold mb-4">Natural Healing</h3>
               <p className="text-gray-600">
-                Progressive improvement with each session for truly transformative results
+                Stimulates your body's own regenerative processes for natural-looking improvement
               </p>
             </div>
             
@@ -244,9 +244,9 @@ export default function CeramicSkinRenewalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Non-Invasive</h3>
+              <h3 className="text-xl font-bold mb-4">Safe & Comfortable</h3>
               <p className="text-gray-600">
-                Achieve remarkable results without needles, surgery, or aggressive treatments
+                Minimally invasive treatment with topical numbing for maximum comfort
               </p>
             </div>
             
@@ -254,9 +254,9 @@ export default function CeramicSkinRenewalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 6.5 17.5 17.5"></path><path d="M17.5 6.5 6.5 17.5"></path><circle cx="12" cy="12" r="10"></circle></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Zero Downtime</h3>
+              <h3 className="text-xl font-bold mb-4">Minimal Downtime</h3>
               <p className="text-gray-600">
-                Return to your daily activities immediately with a radiant glow
+                Resume normal activities within 24-48 hours with only mild redness
               </p>
             </div>
             
@@ -264,9 +264,9 @@ export default function CeramicSkinRenewalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22v-5"></path><path d="M9 7V2"></path><path d="M15 7V2"></path><path d="M6 13V8a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0v-1H9v1a3 3 0 0 1-3 0Z"></path><path d="M12 17a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">All Skin Types</h3>
+              <h3 className="text-xl font-bold mb-4">Progressive Results</h3>
               <p className="text-gray-600">
-                Customized protocols suitable for all skin types, tones, and concerns
+                Continues to improve skin quality for weeks after treatment as collagen rebuilds
               </p>
             </div>
             
@@ -274,9 +274,9 @@ export default function CeramicSkinRenewalPage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8.8 20v-4.1l1.9.2a2.3 2.3 0 0 0 2.164-2.1V8.3A5.37 5.37 0 0 0 2 8.25c0 2.8.656 3.95 1 4.8a7.587 7.587 0 0 1 .5 2.5V20"></path><path d="M19.8 17.8a7.5 7.5 0 0 0-3.9-5.1"></path><path d="M22 20a9 9 0 0 0-9.3-9"></path></svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Long-Lasting Results</h3>
+              <h3 className="text-xl font-bold mb-4">All Body Areas</h3>
               <p className="text-gray-600">
-                Enjoy the benefits of your porcelain-like complexion for weeks after treatment
+                Effective for stretch marks on abdomen, thighs, buttocks, breasts, arms, and back
               </p>
             </div>
           </div>
@@ -288,10 +288,10 @@ export default function CeramicSkinRenewalPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              The <span className="text-primary">Ceramic Skin Renewal</span> Experience
+              How Our <span className="text-primary">Stretch Mark Treatment</span> Works
             </h2>
             <p className="mt-6 text-lg text-gray-600">
-              Our signature treatment protocol for achieving flawless, porcelain-like skin
+              Understanding the science behind our advanced skin regeneration therapy
             </p>
           </div>
 
@@ -299,9 +299,9 @@ export default function CeramicSkinRenewalPage() {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">1</div>
               <div className="bg-gray-50 rounded-lg p-8 pt-12">
-                <h3 className="text-xl font-bold mb-4">Skin Analysis</h3>
+                <h3 className="text-xl font-bold mb-4">Consultation & Assessment</h3>
                 <p className="text-gray-600">
-                  Our specialists perform a comprehensive assessment of your skin using advanced imaging technology to identify concerns, measure hydration levels, and customize your treatment protocol.
+                  Our specialists evaluate your stretch marks, considering their age, color, depth, and location. We develop a personalized treatment plan tailored to your specific concerns and skin type.
                 </p>
               </div>
             </div>
@@ -309,9 +309,9 @@ export default function CeramicSkinRenewalPage() {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">2</div>
               <div className="bg-gray-50 rounded-lg p-8 pt-12">
-                <h3 className="text-xl font-bold mb-4">Deep Cleansing</h3>
+                <h3 className="text-xl font-bold mb-4">Preparation</h3>
                 <p className="text-gray-600">
-                  A gentle yet thorough cleansing process removes all impurities, makeup, and environmental pollutants from your skin, preparing it for the treatment steps to follow.
+                  The treatment area is thoroughly cleansed, and a topical numbing cream is applied for your comfort. We prepare the specialized serums and equipment based on your customized protocol.
                 </p>
               </div>
             </div>
@@ -319,9 +319,9 @@ export default function CeramicSkinRenewalPage() {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">3</div>
               <div className="bg-gray-50 rounded-lg p-8 pt-12">
-                <h3 className="text-xl font-bold mb-4">Diamond Microdermabrasion</h3>
+                <h3 className="text-xl font-bold mb-4">Micro-Needling</h3>
                 <p className="text-gray-600">
-                  Our precision diamond-tip exfoliation system gently removes the outermost layer of dead skin cells, instantly revealing smoother, brighter skin and creating the perfect canvas for the next steps.
+                  Using our advanced device, thousands of microscopic channels are created in the skin over the stretch marks. The depth is precisely controlled based on the treatment area and your skin's thickness.
                 </p>
               </div>
             </div>
@@ -329,9 +329,9 @@ export default function CeramicSkinRenewalPage() {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">4</div>
               <div className="bg-gray-50 rounded-lg p-8 pt-12">
-                <h3 className="text-xl font-bold mb-4">Ceramide Infusion</h3>
+                <h3 className="text-xl font-bold mb-4">Laser Treatment</h3>
                 <p className="text-gray-600">
-                  Our proprietary blend of ceramides, essential lipids, and hyaluronic acid is delivered deep into the skin using ultrasonic technology, replenishing the skin's natural barrier and creating a smooth surface texture.
+                  For mature stretch marks, targeted laser therapy is applied to break down scar tissue and stimulate new cell growth. The laser energy penetrates to the deeper layers of skin without damaging the surface.
                 </p>
               </div>
             </div>
@@ -339,9 +339,9 @@ export default function CeramicSkinRenewalPage() {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">5</div>
               <div className="bg-gray-50 rounded-lg p-8 pt-12">
-                <h3 className="text-xl font-bold mb-4">LED Light Therapy</h3>
+                <h3 className="text-xl font-bold mb-4">Serum Application</h3>
                 <p className="text-gray-600">
-                  Advanced LED light therapy stimulates collagen production and accelerates cellular repair. Different wavelengths target specific skin concerns, resulting in firmer, more radiant skin with a porcelain-like quality.
+                  Specialized serums containing growth factors, peptides, and antioxidants are applied to the skin, where they can now penetrate deeply through the micro-channels to accelerate healing and collagen production.
                 </p>
               </div>
             </div>
@@ -349,9 +349,9 @@ export default function CeramicSkinRenewalPage() {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">6</div>
               <div className="bg-gray-50 rounded-lg p-8 pt-12">
-                <h3 className="text-xl font-bold mb-4">Porcelain Finish</h3>
+                <h3 className="text-xl font-bold mb-4">Recovery & Results</h3>
                 <p className="text-gray-600">
-                  Our exclusive cooling porcelain mask contains niacinamide, rice extract, and silk proteins that refine pores, even skin tone, and impart a luminous, light-reflecting quality to the skin for that coveted ceramic finish.
+                  You may experience mild redness and sensitivity for 24-48 hours. A specialized post-treatment skincare regimen is provided. Results develop gradually over 4-12 weeks as collagen remodeling occurs, with optimal results typically seen after a series of treatments.
                 </p>
               </div>
             </div>
@@ -371,46 +371,46 @@ export default function CeramicSkinRenewalPage() {
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    How soon will I see results from the Ceramic Skin Renewal treatment?
+                    Can all stretch marks be treated?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Most clients experience immediate results after their first Ceramic Skin Renewal treatment. You'll notice smoother texture, enhanced luminosity, and a visible "glow" right away. The full benefits continue to develop over the next 72 hours as the ceramides and active ingredients fully integrate with your skin. For optimal results, we recommend a series of 4-6 treatments spaced 2-3 weeks apart, which will progressively refine your skin's texture and tone for that true porcelain-like finish.
+                    Yes, our treatment is effective on all types of stretch marks, though results may vary based on several factors. New stretch marks (red or purple in color) typically respond more quickly to treatment than mature stretch marks (white or silver). However, our multi-dimensional approach combining micro-needling, laser therapy, and specialized serums can significantly improve even long-standing stretch marks. During your consultation, we'll assess your specific stretch marks and provide realistic expectations for improvement.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-2">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    Is there any downtime after the treatment?
+                    How many treatments will I need?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    The Ceramic Skin Renewal treatment is specifically designed to deliver remarkable results with zero downtime. Unlike more aggressive treatments, there's no redness, peeling, or recovery period. In fact, many clients schedule their treatments before special events because of the immediate "glow" effect. You can apply makeup immediately afterward if desired, though many clients prefer to showcase their natural luminosity. We do recommend avoiding direct sun exposure for 24 hours after treatment and using the provided SPF protection.
+                    Most clients achieve optimal results with a series of 3-6 treatments spaced 4-6 weeks apart. The exact number depends on the age, depth, and extent of your stretch marks. Newer stretch marks may show significant improvement after just 2-3 sessions, while older, more established stretch marks typically require a full series of treatments. We'll create a personalized treatment plan during your consultation based on your unique needs and goals.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-3">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    Is the Ceramic Skin Renewal treatment suitable for all skin types?
+                    Is the treatment painful?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    Yes, one of the advantages of our Ceramic Skin Renewal treatment is its suitability for all skin types, tones, and concerns. The treatment is customized for each client based on their specific skin analysis. We adjust the diamond microdermabrasion intensity, ceramide formulation, and LED light therapy wavelengths to address your unique skin needs. Whether you have dry, oily, combination, sensitive, or mature skin, the treatment can be tailored to deliver optimal results without irritation or adverse effects.
+                    Most clients report minimal discomfort during the procedure. We apply a topical numbing cream before treatment to ensure your comfort. You may feel a slight prickling sensation during the micro-needling portion and mild warmth during the laser treatment, but our advanced devices are designed to minimize discomfort while maximizing results. After treatment, your skin may feel similar to a mild sunburn, but this typically subsides within 24-48 hours.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-4">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    How does this treatment differ from regular facials?
+                    What is the downtime after treatment?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    The Ceramic Skin Renewal treatment goes far beyond a traditional facial. While regular facials typically focus on surface cleansing and temporary hydration, our treatment works at multiple skin levels to create lasting change. The combination of diamond microdermabrasion, ultrasonic ceramide infusion, and LED light therapy delivers active ingredients deeper into the skin and stimulates cellular renewal. Additionally, our exclusive porcelain finish mask contains specialized ingredients that create the distinctive light-reflecting quality that gives the treatment its name. The result is not just temporary improvement but progressive enhancement of your skin's texture, tone, and luminosity.
+                    One of the advantages of our stretch mark treatment is its minimal downtime. Most clients experience mild redness, similar to a sunburn, for 24-48 hours after treatment. Some may also experience slight swelling, dryness, or flaking as the skin heals. You can typically return to your normal activities the following day, though we recommend avoiding strenuous exercise, excessive heat (saunas, hot tubs), and sun exposure for at least 72 hours. We provide detailed aftercare instructions to ensure optimal healing and results.
                   </AccordionContent>
                 </AccordionItem>
                 
                 <AccordionItem value="item-5">
                   <AccordionTrigger className="text-left text-lg font-medium">
-                    How can I maintain my results between treatments?
+                    When will I see results?
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600">
-                    To maintain and enhance your Ceramic Skin Renewal results, we provide a customized home care regimen featuring our professional-grade ceramide products. Key components include our Ceramic Essence Toner, Porcelain Perfecting Serum, and Luminous Barrier Cream. Daily sun protection is essential, as is gentle exfoliation 2-3 times per week. We recommend scheduling maintenance treatments every 4-6 weeks after completing your initial series. During your consultation, our specialists will create a personalized maintenance plan based on your skin's specific needs and your lifestyle factors.
+                    Results develop gradually as your body produces new collagen and elastin. Many clients notice initial improvements in skin texture and stretch mark color within 2-4 weeks after the first treatment. However, the most significant results develop over time, with continued improvement for up to 6 months after completing your treatment series. Newer stretch marks typically respond more quickly, while mature stretch marks improve more gradually with each session. We recommend taking "before" photos to better track your progress throughout the treatment process.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -423,10 +423,10 @@ export default function CeramicSkinRenewalPage() {
       <section className="py-20 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold">
-            Ready for <span className="text-primary">Porcelain-Perfect Skin</span>?
+            Ready to <span className="text-primary">Transform Your Skin</span>?
           </h2>
           <p className="mt-6 mx-auto max-w-2xl text-lg text-gray-600">
-            Experience the transformative Ceramic Skin Renewal treatment and discover the flawless, luminous complexion you've always desired—with zero downtime and immediate results!
+            Experience the power of our Advanced Stretch Mark Treatment—reduce the appearance of stretch marks, improve skin texture, and regain your confidence with minimal downtime!
           </p>
           <div className="mt-10">
             <Link href="/contact">

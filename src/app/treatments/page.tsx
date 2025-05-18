@@ -17,6 +17,8 @@ const treatments = [
   { id: 10, title: 'Laser Treatment', slug: 'laser-treatment', description: 'Transform your skin with our advanced laser treatments targeting wrinkles, scars, pigmentation, and more with precision and minimal downtime.' },
   { id: 11, title: 'Mole, Wart & Skin Growth Removal', slug: 'mole-wart-removal', description: 'Advanced laser technology for precise removal of moles, warts, and skin growths with minimal scarring and downtime.' },
   { id: 12, title: 'New Doublo', slug: 'new-doublo', description: 'Advanced ultrasound technology that lifts and tightens skin by targeting deeper layers for natural-looking rejuvenation without surgery.' },
+  { id: 13, title: 'Micro-Needling', slug: 'micro-needling', description: 'Advanced skin rejuvenation treatment that stimulates collagen production, improving skin texture, reducing scars, and enhancing product absorption.' },
+  { id: 14, title: 'Stretch Mark Treatment', slug: 'stretch-mark', description: 'Multi-dimensional approach combining micro-needling, laser therapy, and specialized serums to reduce the appearance of stretch marks and improve skin texture.' },
 ]
 
 export default function TreatmentsPage() {
