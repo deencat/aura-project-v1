@@ -333,13 +333,13 @@ export default function GlowTreatmentPage() {
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
             {benefitsData.map((benefit, index) => (
               <div key={index} className="bg-white rounded-lg p-8 text-center shadow-sm">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                   {benefit.icon}
-                </div>
+              </div>
                 <h3 className="text-xl font-bold mb-4">{benefit.title[language]}</h3>
-                <p className="text-gray-600">
+              <p className="text-gray-600">
                   {benefit.description[language]}
-                </p>
+              </p>
               </div>
             ))}
           </div>

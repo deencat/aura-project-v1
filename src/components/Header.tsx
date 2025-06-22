@@ -277,14 +277,14 @@ export default function Header() {
                   {item.submenu && isMobileSubmenuOpen(item.title) && (
                     <div className="mt-2 pl-4 border-l border-gray-100">
                       {item.submenu.map((subItem) => (
-                        <Link
+                          <Link
                           key={subItem.title}
-                          href={subItem.href}
-                          className="block py-2 text-sm text-gray-600 hover:text-primary"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
+                            href={subItem.href}
+                            className="block py-2 text-sm text-gray-600 hover:text-primary"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
                           {t(subItem.titleKey, subItem.title)}
-                        </Link>
+                          </Link>
                       ))}
                     </div>
                   )}

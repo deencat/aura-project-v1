@@ -1624,81 +1624,81 @@ export default function EditServicePage() {
                 </div>
                 
                 {activeTab === 'english' && (
+                <div>
+                  <Label htmlFor="slug">URL Slug</Label>
+                  <Input
+                    id="slug"
+                    name="slug"
+                    placeholder="e.g. body-care/lymphatic-detox"
+                    value={formData.slug}
+                    onChange={handleChange}
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    This will be used in the URL: /{formData.slug || 'example/slug'}
+                  </p>
+                </div>
+                )}
+                
+                {activeTab === 'english' && (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <Label htmlFor="slug">URL Slug</Label>
+                    <Label htmlFor="category">Category</Label>
+                    <select
+                      id="category"
+                      name="category"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      value={formData.category}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="status">Status</Label>
+                    <select
+                      id="status"
+                      name="status"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      value={formData.status}
+                      onChange={handleChange}
+                    >
+                      <option value="Draft">Draft</option>
+                      <option value="Active">Active</option>
+                    </select>
+                  </div>
+                </div>
+                )}
+                
+                {activeTab === 'english' && (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="price">Price</Label>
                     <Input
-                      id="slug"
-                      name="slug"
-                      placeholder="e.g. body-care/lymphatic-detox"
-                      value={formData.slug}
+                      id="price"
+                      name="price"
+                      placeholder="e.g. $1,200"
+                      value={formData.price}
                       onChange={handleChange}
                     />
-                    <p className="mt-1 text-xs text-gray-500">
-                      This will be used in the URL: /{formData.slug || 'example/slug'}
-                    </p>
                   </div>
-                )}
-                
-                {activeTab === 'english' && (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                      <Label htmlFor="category">Category</Label>
-                      <select
-                        id="category"
-                        name="category"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        value={formData.category}
-                        onChange={handleChange}
-                      >
-                        <option value="">Select a category</option>
-                        {categories.map((category) => (
-                          <option key={category.id} value={category.name}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="status">Status</Label>
-                      <select
-                        id="status"
-                        name="status"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        value={formData.status}
-                        onChange={handleChange}
-                      >
-                        <option value="Draft">Draft</option>
-                        <option value="Active">Active</option>
-                      </select>
-                    </div>
+                  
+                  <div>
+                    <Label htmlFor="duration">Duration</Label>
+                    <Input
+                      id="duration"
+                      name="duration"
+                      placeholder="e.g. 120 min"
+                      value={formData.duration}
+                      onChange={handleChange}
+                    />
                   </div>
-                )}
-                
-                {activeTab === 'english' && (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                      <Label htmlFor="price">Price</Label>
-                      <Input
-                        id="price"
-                        name="price"
-                        placeholder="e.g. $1,200"
-                        value={formData.price}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="duration">Duration</Label>
-                      <Input
-                        id="duration"
-                        name="duration"
-                        placeholder="e.g. 120 min"
-                        value={formData.duration}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
+                </div>
                 )}
                 
                 <div>
