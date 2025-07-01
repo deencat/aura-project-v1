@@ -92,7 +92,7 @@ export default function Header() {
   }
 
   return (
-    <header className="w-full bg-white shadow-sm sticky top-0 z-50">
+    <header className="w-full bg-white shadow-sm sticky top-0 z-50" data-testid="main-header">
       {/* Top Bar with contact info and social media */}
       <div className="bg-primary text-white py-2 text-sm">
         <div className="container mx-auto flex justify-between items-center px-4">
@@ -152,6 +152,7 @@ export default function Header() {
             <Button 
               size="sm" 
               className="rounded-full bg-primary hover:bg-primary/90 text-white"
+              data-testid="header-book-now-tablet"
             >
               {t('book_now', 'Book Now')}
             </Button>
@@ -207,6 +208,7 @@ export default function Header() {
               <Link href="/contact">
                 <Button 
                   className="ml-4 rounded-full bg-primary hover:bg-primary/90 text-white"
+                  data-testid="header-book-now-desktop"
                 >
                   {t('book_now', 'Book Now')}
                 </Button>
@@ -299,6 +301,7 @@ export default function Header() {
             <Button 
               className="w-full rounded-full bg-primary hover:bg-primary/90 text-white"
               onClick={() => setMobileMenuOpen(false)}
+              data-testid="header-book-now-mobile"
             >
               {t('book_now', 'Book Now')}
             </Button>

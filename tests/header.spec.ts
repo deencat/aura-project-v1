@@ -8,16 +8,16 @@ test.describe('Header Navigation', () => {
     // Navigate to homepage
     await page.goto('/');
     
-    // Verify header exists
-    const header = page.locator('header');
+    // Verify main header exists
+    const header = page.locator('[data-testid="main-header"]');
     await expect(header).toBeVisible();
     
     // Check logo is visible
     const logo = page.locator('header a[href="/"]').first();
     await expect(logo).toBeVisible();
     
-    // Check Book Now button is visible
-    const bookButton = page.getByRole('link', { name: /Book Now/i });
+    // Check Book Now button is visible (use specific desktop button)
+    const bookButton = page.locator('[data-testid="header-book-now-desktop"]');
     await expect(bookButton).toBeVisible();
     
     // Verify at least some nav items are visible
@@ -31,6 +31,10 @@ test.describe('Header Navigation', () => {
     
     // Navigate to homepage
     await page.goto('/');
+    
+    // Verify main header exists
+    const header = page.locator('[data-testid="main-header"]');
+    await expect(header).toBeVisible();
     
     // Logo should be visible on mobile
     const logo = page.locator('header a[href="/"]').first();

@@ -8,8 +8,8 @@ test.describe('Micro-Needling Treatment Page', () => {
     // Check if the page title is present
     await expect(page.locator('h1')).toContainText('Advanced Micro-Needling Therapy');
     
-    // Verify hero section elements
-    await expect(page.getByRole('link', { name: 'Book Now' })).toBeVisible();
+    // Verify hero section elements (use specific data-testid)
+    await expect(page.locator('[data-testid="hero-book-now"]')).toBeVisible();
     
     // Check if TreatmentImage is loaded in hero section
     const heroImage = page.locator('.relative.h-\\[500px\\] img');
@@ -20,11 +20,11 @@ test.describe('Micro-Needling Treatment Page', () => {
   test('should display all treatment benefits', async ({ page }) => {
     await page.goto('/treatments/micro-needling');
     
-    // Check if the benefits section is present
-    await expect(page.locator('h2')).toContainText('Benefits of Micro-Needling Therapy');
+    // Check if the benefits section is present (use more specific selector)
+    await expect(page.locator('h2:has-text("Benefits of Micro-Needling Therapy")')).toBeVisible();
     
-    // Check if the carousel is present
-    const carousel = page.locator('div[role="region"]');
+    // Check if the carousel is present (use more specific selector)
+    const carousel = page.locator('div[role="region"][aria-roledescription="carousel"]');
     await expect(carousel).toBeVisible();
     
     // Check if carousel navigation buttons are present
@@ -45,8 +45,8 @@ test.describe('Micro-Needling Treatment Page', () => {
   test('should display and interact with the how it works section', async ({ page }) => {
     await page.goto('/treatments/micro-needling');
     
-    // Check if the how it works section is present
-    await expect(page.locator('h2')).toContainText('How Micro-Needling Works');
+    // Check if the how it works section is present (use more specific selector)
+    await expect(page.locator('h2:has-text("How Micro-Needling Works")')).toBeVisible();
     
     // Check if all steps are present
     const steps = page.locator('.bg-gray-50.rounded-lg.p-8.pt-12');
@@ -68,30 +68,28 @@ test.describe('Micro-Needling Treatment Page', () => {
   test('should display and interact with FAQ accordion', async ({ page }) => {
     await page.goto('/treatments/micro-needling');
     
-    // Check if the FAQ section is present
-    await expect(page.locator('h2')).toContainText('Frequently Asked Questions');
+    // Check if the FAQ section is present (use more specific selector)
+    await expect(page.locator('h2:has-text("Frequently Asked Questions")')).toBeVisible();
     
-    // Check if accordion items are present
-    const accordionItems = page.locator('[data-state="closed"]');
-    await expect(accordionItems).toHaveCount(5);
+    // Check specific FAQ questions exist
+    await expect(page.getByRole('button', { name: 'Is micro-needling painful?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'How many treatments will I need?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'What is the downtime after micro-needling?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Is micro-needling safe for all skin types?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'How soon will I see results from micro-needling?' })).toBeVisible();
     
     // Click on the first FAQ item
-    await page.locator('[data-state="closed"]').first().click();
-    
-    // Verify that the content is now visible
-    await expect(page.locator('[data-state="open"]')).toBeVisible();
+    await page.getByRole('button', { name: 'Is micro-needling painful?' }).click();
     
     // Check the content of the opened accordion
-    const openedContent = page.locator('[data-state="open"] div[data-state="open"]');
-    await expect(openedContent).toContainText('Most clients report minimal discomfort');
+    await expect(page.getByText('Most clients report minimal discomfort')).toBeVisible();
     
     // Close the first item and open another
-    await page.locator('[data-state="open"]').click();
-    await page.locator('[data-state="closed"]').nth(2).click();
+    await page.getByRole('button', { name: 'Is micro-needling painful?' }).click();
+    await page.getByRole('button', { name: 'What is the downtime after micro-needling?' }).click();
     
     // Verify the new opened content
-    const newOpenedContent = page.locator('[data-state="open"] div[data-state="open"]');
-    await expect(newOpenedContent).toContainText('One of the advantages of micro-needling is its minimal downtime');
+    await expect(page.getByText('One of the advantages of micro-needling is its minimal downtime')).toBeVisible();
   });
 
   test('should have a working booking call-to-action', async ({ page }) => {
@@ -100,9 +98,10 @@ test.describe('Micro-Needling Treatment Page', () => {
     // Check if the booking section is present
     await expect(page.locator('section').last()).toContainText('Ready for Transformative Results?');
     
-    // Check if the booking button is present and links to contact page
-    const bookingButton = page.locator('section').last().getByRole('link', { name: 'Book Your Treatment' });
+    // Check if the booking button is present and links to contact page (check parent link)
+    const bookingButton = page.locator('[data-testid="final-cta-book-treatment"]');
     await expect(bookingButton).toBeVisible();
-    await expect(bookingButton).toHaveAttribute('href', '/contact');
+    const bookingLink = page.locator('a:has([data-testid="final-cta-book-treatment"])');
+    await expect(bookingLink).toHaveAttribute('href', '/contact');
   });
 }); 
