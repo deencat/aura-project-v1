@@ -125,6 +125,18 @@ export default function TreatmentImage({
     );
   }
   
+  // Error handler for image loading failures
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    console.error(`TreatmentImage failed to load: ${imageSrc}`, {
+      category,
+      treatment,
+      type,
+      index,
+      alt
+    });
+    setError(true);
+  };
+
   // Handle fill mode
   if (fill) {
     return (
@@ -138,6 +150,7 @@ export default function TreatmentImage({
           objectFit === 'contain' ? 'object-contain' : 
           objectFit === 'fill' ? 'object-fill' : ''}`}
         priority={priority}
+        onError={handleImageError}
       />
     );
   }
@@ -153,6 +166,7 @@ export default function TreatmentImage({
       sizes={sizes}
       className={className}
       priority={priority}
+      onError={handleImageError}
     />
   );
 } 

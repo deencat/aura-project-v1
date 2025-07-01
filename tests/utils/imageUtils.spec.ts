@@ -15,7 +15,8 @@ test.describe('Image Utility Functions', () => {
     const images = fetchActualPageImages('v-line');
     
     expect(images.hero).toBe('/images/actual/new-doublo/v-line/hero.jpg');
-    expect(images.howItWorks).toBe('/images/actual/new-doublo/v-line/how-it-works.jpg');
+    expect(images.howItWorks.length).toBe(3);
+    expect(images.howItWorks[0]).toBe('/images/actual/new-doublo/v-line/how-it-works-1.jpg');
   });
 
   test('createPlaceholderImage returns correct URL', async () => {
@@ -35,8 +36,8 @@ test.describe('Image Utility Functions', () => {
 
   test('getValidImagePath uses function fallback when provided', async () => {
     const actualPath = '/images/actual/facials/glow/hero.jpg';
-    const fallbackFn = (width: number, height: number) => {
-      return `/images/fallback-${width}x${height}.jpg`;
+    const fallbackFn = (width?: number, height?: number) => {
+      return `/images/fallback-${width || 800}x${height || 600}.jpg`;
     };
     
     const result = await getValidImagePath(actualPath, fallbackFn);
