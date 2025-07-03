@@ -9,7 +9,7 @@ test.describe('Stretch Mark Treatment Page', () => {
     await expect(page.locator('h1')).toContainText('Advanced Stretch Mark Treatment');
     
     // Verify hero section elements - use a more specific selector
-    const bookNowButton = page.locator('section').first().getByRole('link', { name: 'Book Now' });
+    const bookNowButton = page.locator('[data-testid="hero-book-now"]');
     await expect(bookNowButton).toBeVisible();
     
     // Check if TreatmentImage is loaded in hero section
@@ -106,8 +106,9 @@ test.describe('Stretch Mark Treatment Page', () => {
     await expect(lastSection).toContainText('Ready to Transform Your Skin?');
     
     // Check if the booking button is present and links to contact page
-    const bookingButton = lastSection.getByRole('link', { name: 'Book Your Treatment' });
+    const bookingButton = page.locator('[data-testid="final-cta-book-treatment"]');
     await expect(bookingButton).toBeVisible();
-    await expect(bookingButton).toHaveAttribute('href', '/contact');
+    const bookingLink = page.locator('a:has([data-testid="final-cta-book-treatment"])');
+    await expect(bookingLink).toHaveAttribute('href', '/contact');
   });
 }); 

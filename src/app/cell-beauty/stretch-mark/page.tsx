@@ -30,7 +30,7 @@ export default function StretchMarkRepairPage() {
               </div>
               
               <div className="mt-10 flex flex-wrap gap-4">
-                <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+                <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90" data-testid="hero-book-now">
                   Book Treatment
                 </Button>
                 <Button variant="outline" className="rounded-full border-primary px-8 py-3 text-sm font-medium text-primary hover:bg-primary hover:text-white">
@@ -39,10 +39,10 @@ export default function StretchMarkRepairPage() {
               </div>
             </div>
             
-            <div className="hidden md:block">
+            <div>
               <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-lg">
                 <TreatmentImage 
-                  category="cell-beauty"
+                  category="treatments"
                   treatment="stretch-mark"
                   type="hero"
                   alt="Stretch Mark Repair Treatment"
@@ -315,7 +315,7 @@ export default function StretchMarkRepairPage() {
           </p>
           <div className="mt-10">
             <Link href="/contact">
-              <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+              <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90" data-testid="final-cta-book-treatment">
                 Book Now
               </Button>
             </Link>

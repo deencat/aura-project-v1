@@ -24,7 +24,7 @@ test.describe('Royal Black Scan Treatment Page', () => {
     await expect(page.getByRole('heading', { name: 'Frequently Asked Questions' })).toBeVisible();
     
     // Check that booking button exists
-    await expect(page.getByRole('button', { name: /book/i })).toBeVisible();
+    await expect(page.locator('[data-testid="hero-book-now"]')).toBeVisible();
   });
   
   test('should display accordion items when clicked', async ({ page }) => {

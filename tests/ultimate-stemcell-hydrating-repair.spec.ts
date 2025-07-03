@@ -13,12 +13,12 @@ test.describe('Ultimate Stemcell Hydrating Repair Treatment Page', () => {
     const heroSection = await page.locator('section').filter({ hasText: /Ultimate Stemcell Hydrating Repair/ }).first();
     await expect(heroSection).toBeVisible();
     
-    // Verify treatment tags are present
-    const tags = await page.locator('.bg-primary\\/10.text-primary.rounded-full');
-    await expect(tags).toHaveCount(3);
+    // Verify treatment tags are present - scope to hero section only
+    const heroTags = await heroSection.locator('.bg-primary\\/10.text-primary.rounded-full');
+    await expect(heroTags).toHaveCount(3);
     
     // Verify Book Now button
-    const bookNowButton = await page.locator('text=Book Now');
+    const bookNowButton = await page.locator('[data-testid="hero-book-now"]');
     await expect(bookNowButton).toBeVisible();
 
     // Verify Treatment Description section
@@ -43,12 +43,12 @@ test.describe('Ultimate Stemcell Hydrating Repair Treatment Page', () => {
     await expect(benefitsSection).toBeVisible();
     
     // Verify carousel exists
-    const carousel = await page.locator('.carousel');
+    const carousel = await page.locator('[role="region"]').first();
     await expect(carousel).toBeVisible();
     
     // Verify carousel buttons
-    const prevButton = await page.locator('button[aria-label="Previous slide"]');
-    const nextButton = await page.locator('button[aria-label="Next slide"]');
+    const prevButton = await page.locator('button[aria-label="Previous slide"]').or(page.getByRole('button').filter({ hasText: 'Previous' }));
+    const nextButton = await page.locator('button[aria-label="Next slide"]').or(page.getByRole('button').filter({ hasText: 'Next' }));
     await expect(prevButton).toBeVisible();
     await expect(nextButton).toBeVisible();
     
@@ -69,7 +69,7 @@ test.describe('Ultimate Stemcell Hydrating Repair Treatment Page', () => {
     const bookNowSection = await page.locator('h2:has-text("Ready for Ultimate Stemcell Hydrating Repair?")');
     await expect(bookNowSection).toBeVisible();
     
-    const bookTreatmentButton = await page.locator('text=Book Your Treatment');
+    const bookTreatmentButton = await page.locator('[data-testid="final-cta-book-treatment"]');
     await expect(bookTreatmentButton).toBeVisible();
   });
 

@@ -32,7 +32,7 @@ export default function RadiantDefenseSynergyPage() {
               </p>
               <div className="mt-8">
                 <Link href="/contact">
-                  <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90">
+                  <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90" data-testid="hero-book-now">
                     Book Now
                   </Button>
                 </Link>
@@ -287,7 +287,7 @@ export default function RadiantDefenseSynergyPage() {
           </p>
           <div className="mt-10">
             <Link href="/contact">
-              <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90">
+              <Button className="rounded-full bg-primary px-8 py-3 text-white hover:bg-primary/90" data-testid="final-cta-book-treatment">
                 Book Your Treatment
               </Button>
             </Link>

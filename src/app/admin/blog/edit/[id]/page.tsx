@@ -166,7 +166,7 @@ export default function EditBlogPostPage() {
   }, [postId, router])
   
   // Handle form field changes
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -175,7 +175,7 @@ export default function EditBlogPostPage() {
   }
   
   // Handle multilingual content changes
-  const handleMultilingualChange = (e, language) => {
+  const handleMultilingualChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, language: string) => {
     const { name, value } = e.target
     
     setFormData(prev => ({
@@ -183,7 +183,7 @@ export default function EditBlogPostPage() {
       multilingual: {
         ...prev.multilingual,
         [language]: {
-          ...prev.multilingual[language],
+          ...(prev.multilingual as any)[language],
           [name]: value
         }
       }
@@ -199,9 +199,17 @@ export default function EditBlogPostPage() {
   }
   
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    
+    savePost()
+  }
+
+  // Handle save button click
+  const handleSaveClick = () => {
+    savePost()
+  }
+
+  const savePost = () => {
     // Simulate API call to update post
     console.log('Updating post with data:', formData)
     
@@ -246,7 +254,7 @@ export default function EditBlogPostPage() {
             <Trash2 className="mr-2 h-4 w-4 text-red-500" />
             Delete
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button onClick={handleSaveClick}>
             <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>

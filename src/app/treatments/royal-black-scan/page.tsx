@@ -31,7 +31,7 @@ export default function RoyalBlackScanPage() {
               </div>
               
               <div className="mt-10 flex flex-wrap gap-4">
-                <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+                <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90" data-testid="hero-book-now">
                   Book Treatment
                 </Button>
                 <Button variant="outline" className="rounded-full border-primary px-8 py-3 text-sm font-medium text-primary hover:bg-primary hover:text-white">
@@ -311,7 +311,7 @@ export default function RoyalBlackScanPage() {
             Ready to transform your skin and eliminate pigmentation concerns? Book your appointment today.
           </p>
           <div className="mt-10">
-            <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+            <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90" data-testid="final-cta-book-treatment">
               Book Now
             </Button>
           </div>

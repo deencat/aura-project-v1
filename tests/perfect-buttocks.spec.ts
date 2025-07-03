@@ -9,7 +9,7 @@ test.describe('Perfect Buttocks (Peach Lift) Page', () => {
     await expect(title).toBeVisible();
     
     // Check if booking button is available
-    const bookButton = await page.getByRole('button', { name: /BOOK NOW/i });
+    const bookButton = await page.locator('[data-testid="hero-book-now"]');
     await expect(bookButton).toBeVisible();
     
     // Check if benefits section exists
@@ -45,10 +45,10 @@ test.describe('Perfect Buttocks (Peach Lift) Page', () => {
     await expect(page).toHaveURL(/body-care\/perfect-buttocks/);
     
     // Check for key content elements
-    const muscleBuildingText = await page.getByText(/Muscle Building/i);
+    const muscleBuildingText = await page.getByText(/Muscle Building/i).first();
     await expect(muscleBuildingText).toBeVisible();
     
-    const fatReductionText = await page.getByText(/Fat Reduction/i);
+    const fatReductionText = await page.getByText(/Fat Reduction/i).first();
     await expect(fatReductionText).toBeVisible();
   });
 }); 

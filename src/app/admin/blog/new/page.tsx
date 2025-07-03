@@ -100,7 +100,7 @@ export default function NewBlogPostPage() {
     author: 'Sarah Johnson',
     publishDate: new Date().toISOString().split('T')[0],
     status: 'Draft',
-    featuredImage: null,
+    featuredImage: null as string | null,
     multilingual: {
       english: {
         title: '',

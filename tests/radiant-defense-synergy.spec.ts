@@ -21,7 +21,7 @@ test.describe('Radiant Defense Synergy Treatment Page', () => {
     await expect(tags).toHaveCount(5);
     
     // Check for Book Now button
-    const bookButton = await page.locator('a:has-text("Book Now")');
+    const bookButton = await page.locator('[data-testid="hero-book-now"]');
     await expect(bookButton).toBeVisible();
     
     // Check for Key Joint Benefits section
@@ -56,7 +56,7 @@ test.describe('Radiant Defense Synergy Treatment Page', () => {
     // Check for booking section at the bottom
     const bookingTitle = await page.locator('h2:has-text("Ready for")');
     await expect(bookingTitle).toBeVisible();
-    const bookingButton = await page.locator('a:has-text("Book Your Treatment")');
+    const bookingButton = await page.locator('[data-testid="final-cta-book-treatment"]');
     await expect(bookingButton).toBeVisible();
   });
 
@@ -64,8 +64,10 @@ test.describe('Radiant Defense Synergy Treatment Page', () => {
     // Navigate to the treatments page
     await page.goto('/treatments');
     
-    // Find and click on the Radiant Defense Synergy card
-    await page.locator('h3:has-text("Radiant Defense Synergy")').click();
+    // Find the Radiant Defense Synergy card and click its Learn More button
+    const radiantDefenseCard = await page.locator('h3:has-text("Radiant Defense Synergy")').locator('..');
+    const learnMoreButton = await radiantDefenseCard.locator('text=Learn More');
+    await learnMoreButton.click();
     
     // Verify we're on the correct page
     await expect(page).toHaveURL(/.*\/treatments\/radiant-defense-synergy/);

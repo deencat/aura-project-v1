@@ -80,7 +80,7 @@ export default function PerfectButtocksPage() {
                 <p className="text-gray-600 leading-relaxed mb-8 max-w-xl">
                   Peach Lift Sculpting Machine combines High-Intensity Focused Electromagnetic and RF technologies for a groundbreaking, non-invasive body contouring experience. Each 30-minute session is equivalent to 20,000 squats or sit-ups, delivering simultaneous muscle building and fat reduction for a firmer, lifted, and more youthful buttocks.
                 </p>
-                <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-md transition-colors">
+                <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-md transition-colors" data-testid="hero-book-now">
                   BOOK NOW
                 </button>
               </div>
@@ -505,7 +505,7 @@ export default function PerfectButtocksPage() {
                 <h3 className="text-xl font-bold mb-2">Ready to enhance your curves?</h3>
                 <p className="text-teal-100">Experience the Peach Lift difference with just 4 short sessions.</p>
               </div>
-              <button className="whitespace-nowrap px-6 py-3 bg-white text-teal-600 font-medium rounded-md hover:bg-teal-50 transition-colors">
+              <button className="whitespace-nowrap px-6 py-3 bg-white text-teal-600 font-medium rounded-md hover:bg-teal-50 transition-colors" data-testid="final-cta-book-treatment">
                 Book Consultation
               </button>
             </div>
