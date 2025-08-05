@@ -11,7 +11,6 @@ const premiumTreatments = [
   { title: 'Royal Black Scan', href: '/treatments/royal-black-scan', description: 'Advanced technology for spots, pigmentation, and blemishes' },
   { title: 'Peeled Egg Skin', href: '/treatments/peeled-egg-skin', description: 'Creates silky smooth, flawless skin texture with radiant complexion' },
   { title: 'Collagen Regeneration', href: '/treatments/collagen-regeneration', description: 'Boosts natural collagen production for youthful appearance' },
-  { title: '360 Smart Rescue', href: '/treatments/smart-rescue', description: 'Complete skin revival addressing multiple concerns' },
   { title: 'Farewell Puffy Face', href: '/treatments/farewell-puffy', description: 'Reduces facial puffiness and bloating' },
   { title: 'Ultimate Stemcell Hydrating Repair', href: '/treatments/ultimate-stemcell-hydrating-repair', description: 'Deep hydration and cellular regeneration for dehydrated skin' },
   { title: 'Ceramic Skin Renewal', href: '/treatments/ceramic-skin-renewal', description: 'Achieve a flawless, porcelain-like complexion' },

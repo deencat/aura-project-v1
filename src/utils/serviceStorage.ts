@@ -27,6 +27,23 @@ interface StoredService {
   template?: string;
   last_updated?: number; // Timestamp for when service was last updated
   version?: number; // Version number for tracking changes
+  // Add multilingual fields
+  name_zh_hant?: string;
+  name_zh_hans?: string;
+  short_description_zh_hant?: string;
+  short_description_zh_hans?: string;
+  long_description_zh_hant?: string;
+  long_description_zh_hans?: string;
+  benefits_zh_hant?: string;
+  benefits_zh_hans?: string;
+  suitable_for_zh_hant?: string;
+  suitable_for_zh_hans?: string;
+  contraindications_zh_hant?: string;
+  contraindications_zh_hans?: string;
+  preparation_zh_hant?: string;
+  preparation_zh_hans?: string;
+  aftercare_zh_hant?: string;
+  aftercare_zh_hans?: string;
   [key: string]: any;
 }
 

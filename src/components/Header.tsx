@@ -20,7 +20,6 @@ const menuData = [
       { title: 'Royal Black Scan', titleKey: 'royal_black_scan', href: '/treatments/royal-black-scan' },
       { title: 'Peeled Egg Skin', titleKey: 'peeled_egg_skin', href: '/treatments/peeled-egg-skin' },
       { title: 'Collagen Regeneration', titleKey: 'collagen_regeneration', href: '/treatments/collagen-regeneration' },
-      { title: '360 Smart Rescue', titleKey: 'smart_rescue', href: '/treatments/smart-rescue' },
       { title: 'Farewell Puffy Face', titleKey: 'farewell_puffy', href: '/treatments/farewell-puffy' },
       { title: 'Ultimate Stemcell Hydrating Repair', titleKey: 'ultimate_stemcell', href: '/treatments/ultimate-stemcell-hydrating-repair' },
       { title: 'Ceramic Skin Renewal', titleKey: 'ceramic_skin', href: '/treatments/ceramic-skin-renewal' },

@@ -57,7 +57,7 @@ export default function TreatmentImage({
     const facialTreatments = [
       'micro-needling', 'ultimate-stemcell-hydrating-repair', 'laser-treatment',
       'mole-wart-removal', 'royal-black-scan', 'radiant-defense-synergy',
-      'farewell-puffy', 'smart-rescue', 'peeled-egg-skin', 'collagen-regeneration',
+      'farewell-puffy', 'peeled-egg-skin', 'collagen-regeneration',
       'baby-face', 'ceramic-skin-renewal', 'glow'
     ];
     

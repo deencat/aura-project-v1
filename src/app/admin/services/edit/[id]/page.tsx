@@ -117,6 +117,23 @@ interface Service {
   contraindications: string;
   preparation: string;
   aftercare: string;
+  // Add multilingual fields as optional
+  name_zh_hant?: string;
+  name_zh_hans?: string;
+  short_description_zh_hant?: string;
+  short_description_zh_hans?: string;
+  long_description_zh_hant?: string;
+  long_description_zh_hans?: string;
+  benefits_zh_hant?: string;
+  benefits_zh_hans?: string;
+  suitable_for_zh_hant?: string;
+  suitable_for_zh_hans?: string;
+  contraindications_zh_hant?: string;
+  contraindications_zh_hans?: string;
+  preparation_zh_hant?: string;
+  preparation_zh_hans?: string;
+  aftercare_zh_hant?: string;
+  aftercare_zh_hans?: string;
 }
 
 // Categories for dropdown - matching the categories in the services page
@@ -863,24 +880,23 @@ export default function EditServicePage() {
           preparation: service.preparation || '',
           aftercare: service.aftercare || '',
           status: service.status || '',
-          // Initialize multilingual fields with empty strings
-          // In a real app, these would be loaded from the database
-          name_zh_hant: '',
-          name_zh_hans: '',
-          short_description_zh_hant: '',
-          short_description_zh_hans: '',
-          long_description_zh_hant: '',
-          long_description_zh_hans: '',
-          benefits_zh_hant: '',
-          benefits_zh_hans: '',
-          suitable_for_zh_hant: '',
-          suitable_for_zh_hans: '',
-          contraindications_zh_hant: '',
-          contraindications_zh_hans: '',
-          preparation_zh_hant: '',
-          preparation_zh_hans: '',
-          aftercare_zh_hant: '',
-          aftercare_zh_hans: '',
+          // Load multilingual fields from saved service data if they exist
+          name_zh_hant: service.name_zh_hant || '',
+          name_zh_hans: service.name_zh_hans || '',
+          short_description_zh_hant: service.short_description_zh_hant || '',
+          short_description_zh_hans: service.short_description_zh_hans || '',
+          long_description_zh_hant: service.long_description_zh_hant || '',
+          long_description_zh_hans: service.long_description_zh_hans || '',
+          benefits_zh_hant: service.benefits_zh_hant || '',
+          benefits_zh_hans: service.benefits_zh_hans || '',
+          suitable_for_zh_hant: service.suitable_for_zh_hant || '',
+          suitable_for_zh_hans: service.suitable_for_zh_hans || '',
+          contraindications_zh_hant: service.contraindications_zh_hant || '',
+          contraindications_zh_hans: service.contraindications_zh_hans || '',
+          preparation_zh_hant: service.preparation_zh_hant || '',
+          preparation_zh_hans: service.preparation_zh_hans || '',
+          aftercare_zh_hant: service.aftercare_zh_hant || '',
+          aftercare_zh_hans: service.aftercare_zh_hans || '',
         })
 
         // Set template based on service category
