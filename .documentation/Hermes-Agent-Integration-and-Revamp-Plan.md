@@ -16,7 +16,7 @@ Consolidate **brainstorming, architecture choices, and a careful delivery sequen
 
 This plan **does not** assume every idea in external “Beauty × Crypto × AI” pitch decks is launch-safe (legal, clinical marketing, or engineering). It separates **MVP**, **phase 2**, and **explicitly deferred** items.
 
-**Implementation depth:** **§4.2** (WCAG-aligned chat UI + **Cantonese / Mandarin voice input**), **§7** (knowledge bank, RAG at scale, improvement without RL), and **§8** (optional **Ollama** CPU sidecar, model picks, hybrid routing) are the **execution specs** to follow after the executive roadmap in **§6**.
+**Implementation depth:** **§4.2** (WCAG-aligned chat UI + **Cantonese / Mandarin voice input** + optional **TTS read-aloud**), **§7** (knowledge bank, RAG at scale, improvement without RL), and **§8** (optional **Ollama** CPU sidecar, model picks, hybrid routing) are the **execution specs** to follow after the executive roadmap in **§6**.
 
 ---
 
@@ -32,6 +32,7 @@ This plan **does not** assume every idea in external “Beauty × Crypto × AI�
 | Local CPU LLM on Hostinger? | **§8:** **Optional** after KB-2; default **external** generation; local for **routing / redaction** only if needed; **no RL training** on VPS. |
 | HK default language & chatbot? | **§4.1:** **Traditional Chinese (Hong Kong) `zh-HK`** is the **default** for site UI, knowledge **T0**, system prompts, and **chatbot replies**; EN / 繁中（其他地區）/ 简中 as explicit switches. **Yes — chatbot** = AI Concierge (§6 Phase 1 + optional Phase 1b widget). |
 | Accessibility & voice? | **§4.2:** Chat UI targets **WCAG 2.1 AA**; **voice input** for **Cantonese + Mandarin** via managed STT (recommended) with browser fallback where possible; **Phase 2** for first production voice path. |
+| Read replies aloud (TTS)? | **§4.2.3:** Optional **per-message** play; **separate consent** from STT; **TTS-0** browser `speechSynthesis` and/or **TTS-1** cloud neural voices (`zh-HK` / Cantonese + Mandarin); **no autoplay** — user gesture per play; default **off**. |
 
 ---
 
@@ -116,6 +117,7 @@ Align with [Aura-Project - Product Requirements Document](./Aura-Project%20-%20P
 | **Visual** | **Contrast** for coral/turquoise on white and on chat bubbles (check both light states); **respect `prefers-reduced-motion`** for typing/streaming animations. |
 | **Input modes** | **Text input always available** — voice is an **add-on**, not a gate. |
 | **Testing** | Automated: **axe-core** or `@axe-core/playwright` on `/concierge`; manual: VoiceOver (iOS) + TalkBack (Android) smoke on composer + live region behaviour. |
+| **TTS controls (when §4.2.3 enabled)** | **Per-message** “朗讀 / Read aloud” control with **Stop**; **no autoplay** of assistant audio (WCAG **audio control**); keyboard-focusable; `aria-pressed` or `aria-busy` while fetching/playing cloud audio; respect **`prefers-reduced-motion`** (offer text-only or disable auto-scroll-to-speaker highlights). |
 
 **Phase placement:** ship **§4.2.1 checklist** together with **§6 Phase 1** (text MVP); do not defer WCAG to “after launch” if the chatbot is public.
 
@@ -155,6 +157,43 @@ After STT, run the same **PII redaction** policy as typed text (§8.1) before fo
 **Server environment (Voice-1, all server-only):** `STT_PROVIDER`, `STT_API_KEY`, optional `STT_REGION` / endpoint URL, `CONCIERGE_TRANSCRIBE_MAX_SECONDS`, `CONCIERGE_TRANSCRIBE_MAX_BYTES` — tune to prevent abuse and oversized uploads.
 
 **Map to §6:** **Voice-1** lands in **Phase 2** (after text concierge + booking glue are stable) unless product explicitly prioritises mic-first; **§4.2.1** ships with **Phase 1**.
+
+#### 4.2.3 TTS read-aloud (optional) — **Cantonese / Mandarin / English** assistant replies
+
+**Goal:** User can hear the **assistant’s** latest reply in **`zh-HK` (professional 繁體)**, **Mandarin**, or **EN**, matching the **reply `locale`** — hands-free on mobile, accessibility for low vision or heavy screen use, and convenience in Cantonese-first HK.
+
+**Consent (separate from STT §4.2.2)**
+
+- **First use:** one-time modal or inline panel explaining that **read-aloud** may use **browser** or **cloud** synthesis, what is sent (text of that message only unless using cloud streaming), retention (“we do not store audio for TTS-0”; for **TTS-1** see vendor), and link to privacy policy.
+- **Default:** TTS feature **off** until user opts in (store preference in `localStorage` + optional Clerk `publicMetadata` if signed in).
+- **Not bundled** with mic consent — user may want **text + listen** without ever uploading voice.
+
+**Implementation tiers**
+
+| Sub-phase | Mechanism | Pros / cons |
+|-----------|-----------|----------------|
+| **TTS-0** | Browser **`window.speechSynthesis`** with `SpeechSynthesisUtterance` — pick `lang` (`zh-HK`, `zh-CN`, `en-HK`) and **voice** from `speechSynthesis.getVoices()` | **No server cost**; quality **varies** by OS (iOS often better packaged voices); good **MVP** for read-back. |
+| **TTS-1** | **Cloud neural TTS** (Azure / Google / AWS / etc.) — `POST /api/concierge/synthesize` returns short-lived **audio URL** or streams bytes; server sends **sanitised plain text** only | **Best** Cantonese/Mandarin naturalness; **per-character** cost; needs **rate limit** + DPA. |
+| **TTS-2 (later)** | **SSML** / rate & pitch tuning for brand voice; **only** after TTS-1 stable | Marketing-controlled “Aura voice”. |
+
+**Locale / voice mapping (examples — validate per vendor catalogue)**
+
+| `locale` (reply) | Typical `utterance.lang` or TTS-1 voice id | Notes |
+|------------------|---------------------------------------------|--------|
+| `zh-HK` | `zh-HK` or vendor **Cantonese (Hong Kong)** neural | Prefer **female/male** voice consistent with brand guidelines. |
+| `zh-Hans` | `cmn-CN` / `zh-CN` neural Mandarin | Match simplified output. |
+| `zh-Hant` (non-HK) | `cmn-TW` or `zh-TW` per policy | Avoid accidental simplified glyphs in SSML input. |
+| `en` | `en-HK` or `en-US` | HK accent optional if vendor offers. |
+
+**WCAG / UX**
+
+- **No autoplay:** playback starts **only** on explicit **tap/click/Enter** on “朗讀”; stop control always visible during play.
+- **Interrupt:** new message or Stop cancels `speechSynthesis.cancel()` or aborts cloud fetch.
+- **Streaming replies:** if text streams in, either **disable TTS until message complete** or re-synthesize only on user tap “read updated message” — avoid mid-token babble.
+
+**Map to §6:** **TTS-0** can ship in **Phase 2** in parallel with **Voice-1** if capacity allows (separate consent). **TTS-1** recommended **after Voice-1** stabilises (**late Phase 2** or finish **before** §6 **Phase 3 Hermes** go-live) to control cost — avoid **same cutover week** as first Hermes production on a **single** squad; product may defer TTS entirely without blocking chat MVP.
+
+**Server environment (TTS-1 only, server-only):** `TTS_PROVIDER`, `TTS_API_KEY`, optional `TTS_REGION`, `CONCIERGE_SYNTHESIZE_MAX_CHARS`, `CONCIERGE_SYNTHESIZE_RATE_PER_USER_PER_DAY`.
 
 ### 4.3 Cross-domain gaps (this plan does not fully own — cross-link elsewhere)
 
@@ -200,6 +239,7 @@ After STT, run the same **PII redaction** policy as typed text (§8.1) before fo
 
 - Deep links: Cal.com / Calendly / WhatsApp Business **from** concierge replies.
 - **Voice input (§4.2.2):** `POST /api/concierge/transcribe` (or equivalent) with **vendor STT** — **Cantonese (HK)** + **Mandarin** (`cmn-Hans` / `cmn-Hant`) locales; transcript → same `locale` + `/api/concierge/chat`; **Voice-0** Web Speech optional behind flag for QA.
+- **TTS read-aloud (§4.2.3):** optional **朗讀** for assistant messages — **separate opt-in** from mic; **TTS-0** (`speechSynthesis`) and/or **TTS-1** cloud route + rate limits; **no autoplay**; ship **TTS-0** in Phase 2 if parallel; **TTS-1** late Phase 2 or Phase 3.
 - Email/SMS reminders per SRS (Resend/Twilio) — can be **outside** Hermes initially.
 - Optional: Hermes **cron** for internal summaries / staff digests (not customer medical content).
 
@@ -219,7 +259,7 @@ After STT, run the same **PII redaction** policy as typed text (§8.1) before fo
 - **Ship:** Clerk user + **Aura Circle / Aura Tokens** in app DB (per Product Owner doc).
 - **Explore later:** NFT tiers, USDT checkout — **only** with legal/accounting sign-off and support processes.
 
-**Alignment with detailed implementation:** **§4.2.1** ships with **Phase 1**; **§4.2.2 Voice-1** with **Phase 2** unless reprioritised. Phases **KB-0 → KB-3** and **LLM-0 → LLM-2** in §7–§8 map onto Phase 0–2 above; Hermes (§3–§4) layers in from **Phase 3–4** when messaging or agent-host is required.
+**Alignment with detailed implementation:** **§4.2.1** ships with **Phase 1**; **§4.2.2 Voice-1** and optional **§4.2.3 TTS-0** with **Phase 2** unless reprioritised; **§4.2.3 TTS-1** typically **late Phase 2** or **finished before Hermes go-live (§6 Phase 3)** on a single squad. Phases **KB-0 → KB-3** and **LLM-0 → LLM-2** in §7–§8 map onto Phase 0–2 above; Hermes (§3–§4) layers in from **Phase 3–4** when messaging or agent-host is required.
 
 ---
 
@@ -410,6 +450,7 @@ Ideas from market / strategy research, **classified**:
 | **Website AI chatbot (beauty concierge)** | High | Phase 1 (+ optional 1b widget) | **Default `zh-HK`** replies; §4.1; same stack as treatment Q&A. |
 | **Chat accessibility (WCAG 2.1 AA)** | High | Phase 1 | §4.2.1 — keyboard, live regions, contrast, reduced-motion, automated a11y tests. |
 | **Voice input (Cantonese + Mandarin STT)** | High | Phase 2 (Voice-1) | §4.2.2 — vendor STT + `/api/concierge/transcribe`; Web Speech = optional QA / progressive enhancement. |
+| **TTS read-aloud (assistant replies)** | Medium | Phase 2 (TTS-0) / Phase 2–3 (TTS-1) | §4.2.3 — **separate consent** from STT; browser or cloud; **`zh-HK` default voice** when `locale` is `zh-HK`; no autoplay. |
 | AI skin / treatment Q&A | High | Phase 1 | Ground in salon-approved facts; no diagnosis. |
 | AR try-on (Banuba / Perfect Corp) | Medium | Phase 2+ | Licensing, brand fit, performance on mobile. |
 | Smart booking agent | High | Phase 2 | Start with **links + structured intake**; full auto-booking is hard. |
@@ -432,6 +473,7 @@ Ideas from market / strategy research, **classified**:
 - [ ] If Ollama (§8): bound to **localhost** only; never exposed without auth; **model tags pinned** in deploy (avoid surprise `pull` upgrades).
 - [ ] **Voice (§4.2.2):** mic consent copy; **no** long-term storage of raw audio without explicit legal basis; delete upload after STT or on error; **rate limit** transcribe endpoint; **child / bystander** risk called out in UX copy (“請在私人環境使用”).
 - [ ] **STT vendor DPAs** signed where audio leaves HK; document subprocessors in privacy policy.
+- [ ] **TTS (§4.2.3):** **separate** opt-in copy from STT; **no autoplay**; **rate limit** `/api/concierge/synthesize` if using cloud; **TTS vendor DPA** if text leaves HK for synthesis; do not log full message bodies in TTS access logs unless necessary.
 
 ---
 
@@ -469,6 +511,12 @@ Ideas from market / strategy research, **classified**:
 16. **Voice-1:** Choose STT vendor after short POC (Cantonese HK + Mandarin); implement `POST /api/concierge/transcribe` + locale mapping table (§4.2.2); E2E test with **mocked** STT in CI, manual test with real audio in staging.
 17. **Voice-2:** Web Speech fallback / “unsupported browser” copy in **`zh-HK` first**; telemetry for `stt_low_confidence` → suggest re-record or type.
 
+**TTS read-aloud (§4.2.3)**
+
+18. **TTS-0:** Per-message **朗讀** using `speechSynthesis`; voice list detection (`zh-HK` / `yue` fallbacks); **Stop** + cancel on navigation; store **opt-in** preference; strings in **`zh-HK` first**.
+19. **TTS-1:** Cloud synthesize route + signed URL or stream; char caps; quota per user/IP; pick **Cantonese HK + Mandarin + EN** voices in vendor console; contract review.
+20. **TTS a11y:** Ensure play control is in tab order; screen reader announces “正在朗讀” / “Finished reading”; no conflict with **`aria-live`** streaming (pause live updates during TTS or defer TTS until message complete — §4.2.3).
+
 ---
 
 ## 12. When to reconsider a new repository
@@ -493,7 +541,9 @@ Otherwise: **tag + branch** from `main` (e.g. `revamp/concierge`) and merge incr
 - pgvector (if using Postgres embeddings): https://github.com/pgvector/pgvector  
 - WCAG 2.1 (W3C): https://www.w3.org/TR/WCAG21/  
 - MDN — Web Speech API (`SpeechRecognition`): https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API  
+- MDN — `SpeechSynthesis` / `SpeechSynthesisUtterance`: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis  
 - WAI-ARIA — `aria-live` regions: https://www.w3.org/WAI/ARIA/apg/practices/live-region/  
+- WCAG 2.1 — **Audio Control** (1.4.2): https://www.w3.org/TR/WCAG21/#audio-control  
 
 Internal: **Memory MCP** in this repo remains a **developer memory tool**, not the customer-facing concierge; do not conflate the two in architecture diagrams for stakeholders.
 
@@ -510,5 +560,6 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | Legal stance on NFT/crypto | Update §6 Phase 5 and §9 feature table. |
 | HK default locale / chatbot policy | Update §4.1, §6 Phase 1, §7.7 golden mix, and §11 items 11–12. |
 | Accessibility or voice/STT vendor change | Update §4.2, §6 Phases 1–2, §9 rows, §10 voice bullets, §11 items 15–17. |
+| TTS vendor or consent policy change | Update §4.2.3, §6 Phase 2–3, §9 TTS row, §10 TTS bullets, §11 items 18–20. |
 
 **Last updated:** 2026-04-20
