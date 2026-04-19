@@ -16,7 +16,7 @@ Consolidate **brainstorming, architecture choices, and a careful delivery sequen
 
 This plan **does not** assume every idea in external “Beauty × Crypto × AI” pitch decks is launch-safe (legal, clinical marketing, or engineering). It separates **MVP**, **phase 2**, and **explicitly deferred** items.
 
-**Implementation depth:** **§7** (knowledge bank, RAG at scale, improvement without RL) and **§8** (optional **Ollama** CPU sidecar, model picks, hybrid routing) are the **execution spec** to follow after the executive roadmap in **§6**.
+**Implementation depth:** **§4.2** (WCAG-aligned chat UI + **Cantonese / Mandarin voice input**), **§7** (knowledge bank, RAG at scale, improvement without RL), and **§8** (optional **Ollama** CPU sidecar, model picks, hybrid routing) are the **execution specs** to follow after the executive roadmap in **§6**.
 
 ---
 
@@ -31,6 +31,7 @@ This plan **does not** assume every idea in external “Beauty × Crypto × AI�
 | Beauty “databank” + trends? | **§7:** Postgres + vectors + **trust tiers** + ingestion + rollups; **not** “local LLM = infinite knowledge.” |
 | Local CPU LLM on Hostinger? | **§8:** **Optional** after KB-2; default **external** generation; local for **routing / redaction** only if needed; **no RL training** on VPS. |
 | HK default language & chatbot? | **§4.1:** **Traditional Chinese (Hong Kong) `zh-HK`** is the **default** for site UI, knowledge **T0**, system prompts, and **chatbot replies**; EN / 繁中（其他地區）/ 简中 as explicit switches. **Yes — chatbot** = AI Concierge (§6 Phase 1 + optional Phase 1b widget). |
+| Accessibility & voice? | **§4.2:** Chat UI targets **WCAG 2.1 AA**; **voice input** for **Cantonese + Mandarin** via managed STT (recommended) with browser fallback where possible; **Phase 2** for first production voice path. |
 
 ---
 
@@ -92,14 +93,70 @@ flowchart LR
 **Language & locale rules (engineering)**
 
 1. **Default locale:** `zh-HK` when no cookie/header/profile preference is set (align with HK-first positioning in PRD / Ideas doc).
-2. **Every** `POST /api/concierge/chat` body (or session) carries `locale`: `zh-HK` \| `en` \| `zh-Hant` (non-HK) \| `zh-Hans` as agreed enum — **never infer only from model**; optional `script_hint` if UI adds Colloquial Cantonese input mode later.
+2. **Every** `POST /api/concierge/chat` body (or session) carries `locale`: `zh-HK` \| `en` \| `zh-Hant` (non-HK) \| `zh-Hans` as agreed enum — **never infer only from model**; optional `script_hint` if UI adds Colloquial Cantonese input mode later. If **voice** is used (§4.2), the client sends the same `locale` chosen **before** recording (or derived from site language), plus optional `asr_provider` metadata for debugging — **not** raw audio to analytics.
 3. **System prompt** is **locale-aware**: instructions and few-shot examples in the **target reply language**; forbid flipping to English mid-reply unless user message is English or user selected EN.
 4. **RAG retrieval** (§7.5): prefer chunks where `knowledge_documents.language` matches `locale`; if no `zh-HK` hit for a T0 fact, fall back to **closest Traditional** chunk + short line offering human / EN FAQ — log `missing_locale_hit` for KB backfill.
 5. **T0 content pipeline:** author and approve **zh-HK first**, then EN (then others); ingestion (§7.4) tags locale per chunk.
 6. **Golden / regression set** (§7.7): **at least ~70%** of cases in **zh-HK** (written 繁體中文，香港用字習慣); remainder EN and **zh-Hans** as needed — mirrors real search and WhatsApp mix.
 7. **Colloquial Cantonese (口語書寫):** users may type spoken Cantonese particles/loanwords; model should respond in **professional salon register** in **Traditional Chinese** unless marketing explicitly approves a “街坊” tone for a campaign — document in brand guidelines.
 
-**HK gaps this plan does not fully own (cross-link elsewhere)**
+### 4.2 Accessibility (WCAG) & voice input (Cantonese / Mandarin)
+
+**Why:** HK users are **mobile-first**; many prefer **speaking** (Cantonese 廣東話, or **Mandarin** 普通話/國語—tourists, mainland visitors, or personal preference). A concierge that is **keyboard- and screen-reader-friendly** and offers **optional mic input** reduces friction and matches the brand’s “tech-forward” positioning without forcing voice on everyone.
+
+#### 4.2.1 Chat UI — accessibility baseline (target **WCAG 2.1 Level AA**)
+
+Align with [Aura-Project - Product Requirements Document](./Aura-Project%20-%20Product%20Requirements%20Document.md) accessibility expectations where applicable.
+
+| Area | Requirement (concierge-specific) |
+|------|-----------------------------------|
+| **Keyboard** | Full thread composer, send, close/minimize (if widget), and “human handoff” reachable **without** mouse; visible focus rings; **Esc** closes overlays; no focus trap loops. |
+| **Screen readers** | Message list in a **live region** (`aria-live="polite"` for streaming token batches; **assertive** only for errors); each message **role** + timestamp; assistant vs user labelled in **`zh-HK` + EN** `aria-label` where mixed locales exist. |
+| **Semantics** | Landmark: `main` for page; chat as `region` with `aria-labelledby`; form fields with associated `<label>` / `aria-describedby` for char limits and **AI disclaimer**. |
+| **Visual** | **Contrast** for coral/turquoise on white and on chat bubbles (check both light states); **respect `prefers-reduced-motion`** for typing/streaming animations. |
+| **Input modes** | **Text input always available** — voice is an **add-on**, not a gate. |
+| **Testing** | Automated: **axe-core** or `@axe-core/playwright` on `/concierge`; manual: VoiceOver (iOS) + TalkBack (Android) smoke on composer + live region behaviour. |
+
+**Phase placement:** ship **§4.2.1 checklist** together with **§6 Phase 1** (text MVP); do not defer WCAG to “after launch” if the chatbot is public.
+
+#### 4.2.2 Voice input — Cantonese & Mandarin (STT → text → same `/api/concierge/chat`)
+
+**Goal:** User taps **🎤**; audio is transcribed to **Unicode text**; transcript is sent through the **same** chat pipeline as typed Chinese so **RAG, locale, and safety** stay unified.
+
+**Browser reality**
+
+- **Web Speech API** (`SpeechRecognition`): zero marginal cost and easy demo, but **language pack quality varies wildly** by OS/browser; **Cantonese** support is historically uneven (often better on Chrome/Android than Safari). Treat as **progressive enhancement** only, not the sole production path.
+- **Production recommendation:** **managed speech-to-text (STT)** with explicit **Cantonese + Mandarin** models/locales, called from a **Route Handler** `POST /api/concierge/transcribe` (multipart audio) or short-lived presigned upload → worker → text. Examples of families to evaluate (pick one vendor after POC): **Azure AI Speech**, **Google Cloud Speech-to-Text**, **AWS Transcribe**, **OpenAI** / other APIs that expose **yue** / **cmn** locales. **No** raw audio stored longer than needed for transcription unless **opt-in** retention is legally approved.
+
+**Locale binding (critical)**
+
+| User intent (UI) | Typical STT / BCP-47 hint | Post-STT `locale` passed to chat |
+|------------------|---------------------------|-------------------------------------|
+| HK Cantonese speech | `yue-Hant-HK` or vendor **`zh-HK`** Cantonese mode | **`zh-HK`** (reply in professional 繁體) |
+| Mandarin (Simplified) speech | `cmn-Hans` | **`zh-Hans`** |
+| Mandarin (Traditional, TW/HK learner) | `cmn-Hant` | **`zh-Hant`** or **`zh-HK`** per product rule |
+| English speech | `en-HK` or `en` | **`en`** |
+
+After STT, run the same **PII redaction** policy as typed text (§8.1) before forwarding to the external LLM if required.
+
+**Privacy & consent (link §10)**
+
+- Mic button shows **short disclosure** (what is sent, retention seconds, purpose).
+- **PDPO:** purpose limitation for voice; avoid logging raw audio; delete blob after transcript or error.
+
+**Phasing**
+
+| Sub-phase | Deliverable |
+|-----------|-------------|
+| **Voice-0 (dev)** | Web Speech API behind feature flag for internal QA only. |
+| **Voice-1 (MVP production)** | One chosen **vendor STT** + `/api/concierge/transcribe` + **zh-HK / cmn-Hans / cmn-Hant** happy paths; max audio length (e.g. 60s); rate limit. |
+| **Voice-2** | Fallback matrix: if Web Speech unavailable → show “請改用文字或更新瀏覽器”; analytics on **STT confidence** low → suggest rephrase. |
+
+**Server environment (Voice-1, all server-only):** `STT_PROVIDER`, `STT_API_KEY`, optional `STT_REGION` / endpoint URL, `CONCIERGE_TRANSCRIBE_MAX_SECONDS`, `CONCIERGE_TRANSCRIBE_MAX_BYTES` — tune to prevent abuse and oversized uploads.
+
+**Map to §6:** **Voice-1** lands in **Phase 2** (after text concierge + booking glue are stable) unless product explicitly prioritises mic-first; **§4.2.1** ships with **Phase 1**.
+
+### 4.3 Cross-domain gaps (this plan does not fully own — cross-link elsewhere)
 
 - **Payments** (FPS, AlipayHK, WeChat Pay HK) — SRS / PRD; not duplicated here.
 - **Trade Descriptions Ordinance / cosmetic vs medical advertising** — legal review for any AI-generated or auto-ingested claims; T0-only for pricing and promises.
@@ -135,12 +192,14 @@ flowchart LR
 - **System prompt** grounded in **approved salon copy** (services, contraindications, “not medical advice”), **default output language `zh-HK`** per §4.1.
 - Languages: **`zh-HK` default**; **EN** and other Chinese variants via explicit user selection (align with existing `LanguageProvider` + pass `locale` to API).
 - **Phase 1b (optional):** floating CTA or mini-chat shell calling the **same** `/api/concierge/chat` — avoids duplicate logic.
+- **Accessibility (§4.2.1):** ship **WCAG 2.1 AA** baseline for the chat UI — keyboard path, `aria-live` streaming behaviour, labels/disclaimer, contrast, reduced-motion — with **axe / Playwright** checks in CI.
 - Guardrails: rate limit, max tokens, logging, **human handoff** (phone, WhatsApp, in-salon).
 - **No** client-side calls to Hermes URL.
 
 ### Phase 2 — Booking & retention glue
 
 - Deep links: Cal.com / Calendly / WhatsApp Business **from** concierge replies.
+- **Voice input (§4.2.2):** `POST /api/concierge/transcribe` (or equivalent) with **vendor STT** — **Cantonese (HK)** + **Mandarin** (`cmn-Hans` / `cmn-Hant`) locales; transcript → same `locale` + `/api/concierge/chat`; **Voice-0** Web Speech optional behind flag for QA.
 - Email/SMS reminders per SRS (Resend/Twilio) — can be **outside** Hermes initially.
 - Optional: Hermes **cron** for internal summaries / staff digests (not customer medical content).
 
@@ -160,7 +219,7 @@ flowchart LR
 - **Ship:** Clerk user + **Aura Circle / Aura Tokens** in app DB (per Product Owner doc).
 - **Explore later:** NFT tiers, USDT checkout — **only** with legal/accounting sign-off and support processes.
 
-**Alignment with detailed implementation:** Phases **KB-0 → KB-3** and **LLM-0 → LLM-2** in §7–§8 map onto Phase 0–2 above; Hermes (§3–§4) layers in from **Phase 3–4** when messaging or agent-host is required.
+**Alignment with detailed implementation:** **§4.2.1** ships with **Phase 1**; **§4.2.2 Voice-1** with **Phase 2** unless reprioritised. Phases **KB-0 → KB-3** and **LLM-0 → LLM-2** in §7–§8 map onto Phase 0–2 above; Hermes (§3–§4) layers in from **Phase 3–4** when messaging or agent-host is required.
 
 ---
 
@@ -249,7 +308,7 @@ Skills should stay **short and versioned**; long factual content lives in **T0�
 
 Run a **monthly** (then weekly) cycle:
 
-1. **Review queue:** sample 50–100 real (redacted) conversations; tag failure mode (`bad_retrieval`, `hallucination`, `tone`, `unsafe`).
+1. **Review queue:** sample 50–100 real (redacted) conversations; tag failure mode (`bad_retrieval`, `hallucination`, `tone`, `unsafe`, `stt_error` once voice ships).
 2. **Golden set:** maintain **100–300** fixed questions with **~70% in `zh-HK`** (香港書面繁體), **~20% EN**, **~10% `zh-Hans` or other** as needed; expected behaviour tags (`must_cite_T0`, `must_refuse`, `must_handoff`, `must_reply_zh-HK`).
 3. **Regression:** any prompt or index change must pass golden set in CI (or manual pre-release).
 4. **Corpus metrics:** % queries with **no** T0 hit; top **orphan** questions → add T0 FAQ.
@@ -349,6 +408,8 @@ Ideas from market / strategy research, **classified**:
 | Feature | Value | Launch tier | Notes |
 |---------|--------|-------------|--------|
 | **Website AI chatbot (beauty concierge)** | High | Phase 1 (+ optional 1b widget) | **Default `zh-HK`** replies; §4.1; same stack as treatment Q&A. |
+| **Chat accessibility (WCAG 2.1 AA)** | High | Phase 1 | §4.2.1 — keyboard, live regions, contrast, reduced-motion, automated a11y tests. |
+| **Voice input (Cantonese + Mandarin STT)** | High | Phase 2 (Voice-1) | §4.2.2 — vendor STT + `/api/concierge/transcribe`; Web Speech = optional QA / progressive enhancement. |
 | AI skin / treatment Q&A | High | Phase 1 | Ground in salon-approved facts; no diagnosis. |
 | AR try-on (Banuba / Perfect Corp) | Medium | Phase 2+ | Licensing, brand fit, performance on mobile. |
 | Smart booking agent | High | Phase 2 | Start with **links + structured intake**; full auto-booking is hard. |
@@ -369,6 +430,8 @@ Ideas from market / strategy research, **classified**:
 - [ ] Marketing: avoid **medical claims**; label AI output as **informational**.
 - [ ] Hermes host: **TLS**, firewall, non-root service user, automated updates.
 - [ ] If Ollama (§8): bound to **localhost** only; never exposed without auth; **model tags pinned** in deploy (avoid surprise `pull` upgrades).
+- [ ] **Voice (§4.2.2):** mic consent copy; **no** long-term storage of raw audio without explicit legal basis; delete upload after STT or on error; **rate limit** transcribe endpoint; **child / bystander** risk called out in UX copy (“請在私人環境使用”).
+- [ ] **STT vendor DPAs** signed where audio leaves HK; document subprocessors in privacy policy.
 
 ---
 
@@ -400,6 +463,12 @@ Ideas from market / strategy research, **classified**:
 13. **LLM-1:** Install Ollama on VPS; `127.0.0.1` bind; systemd unit; **no** public port; benchmark script (§8.3).
 14. **LLM-2:** Implement hybrid router flags; default `GENERATION_USE_LOCAL=false`; document ops runbook (disk, `ollama ps`, model pull pinning).
 
+**Accessibility & voice (§4.2)**
+
+15. **A11y:** Implement §4.2.1 checklist on `/concierge` + widget; add **axe-playwright** (or equivalent) to CI; fix contrast/focus issues on coral/turquoise chat chrome.
+16. **Voice-1:** Choose STT vendor after short POC (Cantonese HK + Mandarin); implement `POST /api/concierge/transcribe` + locale mapping table (§4.2.2); E2E test with **mocked** STT in CI, manual test with real audio in staging.
+17. **Voice-2:** Web Speech fallback / “unsupported browser” copy in **`zh-HK` first**; telemetry for `stt_low_confidence` → suggest re-record or type.
+
 ---
 
 ## 12. When to reconsider a new repository
@@ -422,6 +491,9 @@ Otherwise: **tag + branch** from `main` (e.g. `revamp/concierge`) and merge incr
 - Messaging gateway: https://hermes-agent.nousresearch.com/docs/user-guide/messaging  
 - Ollama (local inference runtime): https://ollama.com  
 - pgvector (if using Postgres embeddings): https://github.com/pgvector/pgvector  
+- WCAG 2.1 (W3C): https://www.w3.org/TR/WCAG21/  
+- MDN — Web Speech API (`SpeechRecognition`): https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API  
+- WAI-ARIA — `aria-live` regions: https://www.w3.org/WAI/ARIA/apg/practices/live-region/  
 
 Internal: **Memory MCP** in this repo remains a **developer memory tool**, not the customer-facing concierge; do not conflate the two in architecture diagrams for stakeholders.
 
@@ -437,5 +509,6 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | Phase completed | Move items in [Project Management Plan](./Project%20Management%20Plan.md) “Completed Tasks” with date. |
 | Legal stance on NFT/crypto | Update §6 Phase 5 and §9 feature table. |
 | HK default locale / chatbot policy | Update §4.1, §6 Phase 1, §7.7 golden mix, and §11 items 11–12. |
+| Accessibility or voice/STT vendor change | Update §4.2, §6 Phases 1–2, §9 rows, §10 voice bullets, §11 items 15–17. |
 
-**Last updated:** 2026-04-19
+**Last updated:** 2026-04-20
