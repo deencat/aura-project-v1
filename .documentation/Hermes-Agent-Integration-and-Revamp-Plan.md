@@ -11,6 +11,7 @@
 Consolidate **brainstorming, architecture choices, and a careful delivery sequence** for:
 
 - Positioning Aura as a **tech-forward HK beauty** destination (retention + booking, not hype alone).
+- **Conversational AI (“chatbot”)** on the **website** (AI Concierge UI + `/api/concierge/chat`) and, later, the **same policy** on **WhatsApp / Telegram** via Hermes gateway (§6 Phase 4) — one product voice, multiple surfaces.
 - Optional use of **[Nous Hermes Agent](https://github.com/NousResearch/hermes-agent)** as an **AI gateway** (OpenAI-compatible API, messaging gateway, skills/memory), aligned with official docs: [Hermes documentation](https://hermes-agent.nousresearch.com/docs/) including [API server](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server) and [MCP](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp).
 
 This plan **does not** assume every idea in external “Beauty × Crypto × AI” pitch decks is launch-safe (legal, clinical marketing, or engineering). It separates **MVP**, **phase 2**, and **explicitly deferred** items.
@@ -29,6 +30,7 @@ This plan **does not** assume every idea in external “Beauty × Crypto × AI�
 | NFT / USDT at launch? | **Defer.** Product Owner doc already treats on-chain loyalty as **exploratory**. Launch **Clerk + DB “Aura Tokens”** (closed loop) first; revisit NFT/crypto with legal/product review. |
 | Beauty “databank” + trends? | **§7:** Postgres + vectors + **trust tiers** + ingestion + rollups; **not** “local LLM = infinite knowledge.” |
 | Local CPU LLM on Hostinger? | **§8:** **Optional** after KB-2; default **external** generation; local for **routing / redaction** only if needed; **no RL training** on VPS. |
+| HK default language & chatbot? | **§4.1:** **Traditional Chinese (Hong Kong) `zh-HK`** is the **default** for site UI, knowledge **T0**, system prompts, and **chatbot replies**; EN / 繁中（其他地區）/ 简中 as explicit switches. **Yes — chatbot** = AI Concierge (§6 Phase 1 + optional Phase 1b widget). |
 
 ---
 
@@ -75,6 +77,34 @@ flowchart LR
 2. Aura server (Route Handler or server action) forwards to Hermes **or** to OpenAI/OpenRouter/etc.
 3. Secrets (`HERMES_API_KEY`, model keys) **only** on server env (Vercel / VPS), never `NEXT_PUBLIC_*` for privileged keys.
 
+### 4.1 Hong Kong primary audience: language defaults & chatbot surfaces
+
+**Primary market:** Hong Kong residents and visitors who expect **Traditional Chinese for Hong Kong (`zh-HK`)** as the **default written language** across the marketing site **and** the **beauty AI chatbot** (AI Concierge). English is common in HK; **Simplified Chinese** may be needed for cross-border visitors — both are **opt-in** via the existing site language pattern (e.g. `LanguageProvider` + persisted preference), not silent defaults.
+
+**Chatbot — explicitly in scope**
+
+| Surface | Plan reference | Notes |
+|---------|----------------|--------|
+| **Website AI chatbot** | **§6 Phase 1** — route `src/app/concierge/page.tsx` + `src/app/api/concierge/chat/route.ts` | Full-page concierge MVP; mobile-first. |
+| **Floating entry (optional)** | **Phase 1b** (same API) | e.g. bottom-right “問我” launcher linking to `/concierge` or embedded thread — product choice; **same** `locale` and safety rules. |
+| **WhatsApp / Telegram “chatbot”** | **§6 Phase 4** + optional Hermes gateway | Same **salon facts, locale policy, and handoff** as web; staff sees overlapping threads in CRM later (out of scope here). |
+
+**Language & locale rules (engineering)**
+
+1. **Default locale:** `zh-HK` when no cookie/header/profile preference is set (align with HK-first positioning in PRD / Ideas doc).
+2. **Every** `POST /api/concierge/chat` body (or session) carries `locale`: `zh-HK` \| `en` \| `zh-Hant` (non-HK) \| `zh-Hans` as agreed enum — **never infer only from model**; optional `script_hint` if UI adds Colloquial Cantonese input mode later.
+3. **System prompt** is **locale-aware**: instructions and few-shot examples in the **target reply language**; forbid flipping to English mid-reply unless user message is English or user selected EN.
+4. **RAG retrieval** (§7.5): prefer chunks where `knowledge_documents.language` matches `locale`; if no `zh-HK` hit for a T0 fact, fall back to **closest Traditional** chunk + short line offering human / EN FAQ — log `missing_locale_hit` for KB backfill.
+5. **T0 content pipeline:** author and approve **zh-HK first**, then EN (then others); ingestion (§7.4) tags locale per chunk.
+6. **Golden / regression set** (§7.7): **at least ~70%** of cases in **zh-HK** (written 繁體中文，香港用字習慣); remainder EN and **zh-Hans** as needed — mirrors real search and WhatsApp mix.
+7. **Colloquial Cantonese (口語書寫):** users may type spoken Cantonese particles/loanwords; model should respond in **professional salon register** in **Traditional Chinese** unless marketing explicitly approves a “街坊” tone for a campaign — document in brand guidelines.
+
+**HK gaps this plan does not fully own (cross-link elsewhere)**
+
+- **Payments** (FPS, AlipayHK, WeChat Pay HK) — SRS / PRD; not duplicated here.
+- **Trade Descriptions Ordinance / cosmetic vs medical advertising** — legal review for any AI-generated or auto-ingested claims; T0-only for pricing and promises.
+- **PDPO** — §10; cross-border model providers need DPIA-style checklist (template in compliance process).
+
 ---
 
 ## 5. Hermes vs “LLM inside Next only”
@@ -99,11 +129,12 @@ flowchart LR
 - Reduce overlapping routes; strengthen **mobile CTA** on treatment templates.
 - Replace homepage **mocks** with admin/CMS-backed or DB-backed content when available.
 
-### Phase 1 — AI Concierge MVP (Aura-owned API)
+### Phase 1 — AI Concierge MVP (Aura-owned API) — **includes website chatbot**
 
-- New routes: e.g. `src/app/concierge/page.tsx` + `src/app/api/concierge/chat/route.ts`.
-- **System prompt** grounded in **approved salon copy** (services, contraindications, “not medical advice”).
-- Languages: **EN / 繁中** (align with existing `LanguageProvider`).
+- New routes: e.g. `src/app/concierge/page.tsx` + `src/app/api/concierge/chat/route.ts` — this **is** the v1 **beauty AI chatbot** (text, streaming optional).
+- **System prompt** grounded in **approved salon copy** (services, contraindications, “not medical advice”), **default output language `zh-HK`** per §4.1.
+- Languages: **`zh-HK` default**; **EN** and other Chinese variants via explicit user selection (align with existing `LanguageProvider` + pass `locale` to API).
+- **Phase 1b (optional):** floating CTA or mini-chat shell calling the **same** `/api/concierge/chat` — avoids duplicate logic.
 - Guardrails: rate limit, max tokens, logging, **human handoff** (phone, WhatsApp, in-salon).
 - **No** client-side calls to Hermes URL.
 
@@ -219,7 +250,7 @@ Skills should stay **short and versioned**; long factual content lives in **T0�
 Run a **monthly** (then weekly) cycle:
 
 1. **Review queue:** sample 50–100 real (redacted) conversations; tag failure mode (`bad_retrieval`, `hallucination`, `tone`, `unsafe`).
-2. **Golden set:** maintain **100–300** fixed questions (EN + 繁中) with expected behaviour (`must_cite_T0`, `must_refuse`, `must_handoff`).
+2. **Golden set:** maintain **100–300** fixed questions with **~70% in `zh-HK`** (香港書面繁體), **~20% EN**, **~10% `zh-Hans` or other** as needed; expected behaviour tags (`must_cite_T0`, `must_refuse`, `must_handoff`, `must_reply_zh-HK`).
 3. **Regression:** any prompt or index change must pass golden set in CI (or manual pre-release).
 4. **Corpus metrics:** % queries with **no** T0 hit; top **orphan** questions → add T0 FAQ.
 5. **Optional later:** export labelled pairs for **vendor fine-tuning** on GPU cloud — **explicit** project, not default.
@@ -233,7 +264,7 @@ Run a **monthly** (then weekly) cycle:
 | **KB-2** | `/api/concierge/chat` uses **retrieve → rerank → generate** with citations | Latency p95 under target (e.g. < 8s) |
 | **KB-3** | Nightly rollups + trend topic pages fed from rollups | “Trending” answers cite rollups, not 50 raw URLs |
 
-**Environment variables (server only):** `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_MODEL`, `RERANKER_API_KEY` (if used), `INGEST_CRON_SECRET`.
+**Environment variables (server only):** `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_MODEL`, `RERANKER_API_KEY` (if used), `INGEST_CRON_SECRET`, optional `DEFAULT_CHAT_LOCALE=zh-HK` for server-side fallback when client omits locale (should be rare if UI is correct).
 
 ---
 
@@ -317,6 +348,7 @@ Ideas from market / strategy research, **classified**:
 
 | Feature | Value | Launch tier | Notes |
 |---------|--------|-------------|--------|
+| **Website AI chatbot (beauty concierge)** | High | Phase 1 (+ optional 1b widget) | **Default `zh-HK`** replies; §4.1; same stack as treatment Q&A. |
 | AI skin / treatment Q&A | High | Phase 1 | Ground in salon-approved facts; no diagnosis. |
 | AR try-on (Banuba / Perfect Corp) | Medium | Phase 2+ | Licensing, brand fit, performance on mobile. |
 | Smart booking agent | High | Phase 2 | Start with **links + structured intake**; full auto-booking is hard. |
@@ -333,7 +365,7 @@ Ideas from market / strategy research, **classified**:
 - [ ] No privileged LLM keys in browser bundles.
 - [ ] Rate limiting + abuse monitoring on `/api/concierge/*`.
 - [ ] **PII minimization** in logs; retention policy for chat transcripts.
-- [ ] **HK PDPO / PIPL** awareness for cross-border processing if using overseas APIs.
+- [ ] **HK PDPO / PIPL** awareness for cross-border processing if using overseas APIs; chat transcripts: **retention limit**, purpose limitation, **locale** (`zh-HK` / `en`) stored as non-sensitive preference alongside policy version.
 - [ ] Marketing: avoid **medical claims**; label AI output as **informational**.
 - [ ] Hermes host: **TLS**, firewall, non-root service user, automated updates.
 - [ ] If Ollama (§8): bound to **localhost** only; never exposed without auth; **model tags pinned** in deploy (avoid surprise `pull` upgrades).
@@ -360,12 +392,13 @@ Ideas from market / strategy research, **classified**:
 
 **Golden set & quality (§7.7)**
 
-11. **Eval:** Repo folder or DB seed with **100–300** golden Q&A (EN + 繁中); script scores pass/fail on each deploy.
+11. **Eval:** Repo folder or DB seed with **100–300** golden Q&A (**~70% `zh-HK`**, ~20% EN, ~10% other); script scores pass/fail on each deploy; assert **no unwanted English** in zh-HK cases.
+12. **i18n:** All concierge **UI strings** (placeholders, errors, “typing…”, handoff CTA) shipped in **`zh-HK` first** in resource files; EN second; default site + concierge route **`zh-HK`** per §4.1.
 
 **Optional local CPU LLM (§8)**
 
-12. **LLM-1:** Install Ollama on VPS; `127.0.0.1` bind; systemd unit; **no** public port; benchmark script (§8.3).
-13. **LLM-2:** Implement hybrid router flags; default `GENERATION_USE_LOCAL=false`; document ops runbook (disk, `ollama ps`, model pull pinning).
+13. **LLM-1:** Install Ollama on VPS; `127.0.0.1` bind; systemd unit; **no** public port; benchmark script (§8.3).
+14. **LLM-2:** Implement hybrid router flags; default `GENERATION_USE_LOCAL=false`; document ops runbook (disk, `ollama ps`, model pull pinning).
 
 ---
 
@@ -403,5 +436,6 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | Local LLM model swap (Ollama tag, RAM tier) | Update §8.3 table and §8.5 LLM phases; re-run benchmark procedure. |
 | Phase completed | Move items in [Project Management Plan](./Project%20Management%20Plan.md) “Completed Tasks” with date. |
 | Legal stance on NFT/crypto | Update §6 Phase 5 and §9 feature table. |
+| HK default locale / chatbot policy | Update §4.1, §6 Phase 1, §7.7 golden mix, and §11 items 11–12. |
 
 **Last updated:** 2026-04-19
