@@ -3,6 +3,13 @@
 ## Project Overview
 This project is a frontend prototype with a memory management component (MCP) that provides persistent storage of project information. The project is currently in prototyping mode, focusing on developing the frontend interface without connecting to backend logic.
 
+## Beauty × Tech & Hermes Agent (post-`pre-revamp`)
+
+- **Git milestone:** The `pre-revamp` tag marks the repository state before the concierge / AI-gateway / IA cleanup initiative (see GitHub Releases for `aura-project-v1`).
+- **Authoritative technical plan:** [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](./Hermes-Agent-Integration-and-Revamp-Plan.md) — architecture (public site → Next API → optional Hermes on private host), phased roadmap, security checklist, and deferred NFT/crypto scope.
+- **Delivery default:** Evolve this Next.js codebase **in place**; avoid a greenfield repo unless the plan’s “new repo” exit criteria are met (see plan §10).
+- **Naming clarity:** Developer **Memory MCP** in this repo is **not** the customer-facing AI concierge; stakeholder diagrams should keep them separate.
+
 ## Development Guidelines
 
 ### General Guidelines
@@ -83,6 +90,7 @@ This project is a frontend prototype with a memory management component (MCP) th
 ## Task Management
 
 ### Completed Tasks
+- Documented Hermes Agent integration strategy, phased “Beauty × Tech” revamp, and security posture in `Hermes-Agent-Integration-and-Revamp-Plan.md` (2026-04-18); cross-linked from this plan and restored root `README.md` project summary
 - Initial project setup
 - Memory MCP server implementation
 - Documentation structure creation

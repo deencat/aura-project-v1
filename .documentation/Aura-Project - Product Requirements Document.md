@@ -60,6 +60,7 @@ The Aura platform will deliver the following core capabilities:
     *   Engaging user dashboard: Tier progress, Token balance/history, personalized perk recommendations, gamification elements (badges, milestones), member events/challenges.
 *   **E. Unique Service Integrations:**
     *   *(As per v0.2)* Deep AI Analysis integration, Virtual Consultations (booking, payment, secure platform), Express Bar (easy booking, potential passes).
+    *   **AI concierge & Hermes (engineering detail):** Public chat and booking handoff are delivered through **Next.js APIs**; optional [Hermes Agent](https://github.com/NousResearch/hermes-agent) may serve as a **private** OpenAI-compatible and messaging gateway (see [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](./Hermes-Agent-Integration-and-Revamp-Plan.md)). NFT/crypto loyalty remains out of core launch scope per Product Owner Ideas.
 *   **F. Administration & Management:**
     *   *(As per v0.2)* CMS for content, members, tiers, perks, tokens. User roles. Basic reporting.
 

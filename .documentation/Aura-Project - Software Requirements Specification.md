@@ -21,6 +21,12 @@
     *   Configure a reverse proxy (e.g., Nginx) to handle incoming HTTPS traffic, route requests to the Node.js app, manage SSL certificates (Let's Encrypt), and potentially serve static assets.
     *   Ensure necessary environment variables (database URL, Clerk keys, Stripe keys, etc.) are securely configured.
     *   Set up logging and monitoring.
+*   **AI concierge & optional Hermes Agent gateway:**
+    *   **Customer-facing chat** is implemented via Next.js Route Handlers (e.g. `/api/concierge/...`) so the browser **never** holds privileged model or Hermes keys.
+    *   **Phase A (recommended MVP):** Route Handler calls a managed LLM API (OpenAI, OpenRouter, etc.) with RAG or curated salon facts; aligns with fast launch and minimal ops.
+    *   **Phase B (optional):** Self-hosted [Hermes Agent](https://github.com/NousResearch/hermes-agent) on a private VPS (TLS, firewall, auth) exposing its [OpenAI-compatible API server](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server); Aura forwards server-to-server only. Use when messaging gateway (WhatsApp/Telegram), cron, or Hermes skills/memory are required—see [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](./Hermes-Agent-Integration-and-Revamp-Plan.md).
+    *   **Hermes messaging gateway** (if adopted) is documented at [Messaging](https://hermes-agent.nousresearch.com/docs/user-guide/messaging); booking confirmations may still use Resend/Twilio per SRS until unified.
+    *   **Compliance:** Rate limits, logging without sensitive transcript retention by default, and non-medical positioning of AI outputs—see integration plan §8.
 
 ## Architecture pattern
 

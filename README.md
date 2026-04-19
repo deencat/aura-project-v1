@@ -1,49 +1,32 @@
-The memory server runs on port 3100 and provides:
-- Persistent storage of project information in memory.json
-- Entity and relationship management
-- Memory API for accessing stored data
+# Aura Project (aura-project-v1)
 
-### Memory System Commands
+Hong Kong–oriented **tech-forward beauty** marketing site built with **Next.js** (App Router), **Clerk**, **Tailwind**, and **shadcn/ui**. Includes treatment pages, blog, admin CMS-style screens, and Playwright tests.
 
-#### Service Management
+## Quick start
+
 ```bash
-# Start the memory server
-npm run memory-stub
-
-# Initialize project memory with default entities
-npm run memory-init
-
-# Check memory service health
-./scripts/memory/check-memory-status.sh
-
-# Start/restart the memory service
-./scripts/memory/start-memory-service.sh
+npm install
+npm run dev
 ```
 
-#### Memory Operations
-```bash
-# Show latest memory entity details
-npm run memory-get-latest
+Open [http://localhost:3000](http://localhost:3000).
 
-# Add a new conversation entry to memory
-npm run memory-add-conversation
+Copy `.env.local.example` to `.env.local` and set Clerk (and any other) keys. Do not commit `.env` or `.env.local`.
 
-# Delete the most recent memory entity
-npm run memory-remove
+## Documentation
 
-# Run example script demonstrating memory usage
-npm run memory-example
-```
+- **Strategic / Hermes Agent revamp:** [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md)
+- **Project management & task history:** [.documentation/Project Management Plan.md](.documentation/Project%20Management%20Plan.md)
+- **Product:** [.documentation/Aura-Project - Product Requirements Document.md](.documentation/Aura-Project%20-%20Product%20Requirements%20Document.md)
 
-### Memory Architecture
+## Memory MCP (developer tooling)
 
-The memory system consists of:
-1. **Local Memory Storage** - Uses a JSON file to store entities and relations
-2. **Memory Server** - Simple HTTP server that provides the memory API
-3. **Client Library** - JavaScript client for interacting with the memory system
+The memory server runs on port **3100** and stores project context in `memory.json`. See scripts in `package.json` (`memory-stub`, `memory-init`, etc.) and the **Memory Architecture** section in the Project Management Plan.
 
-Core components:
-- `memory-stub.js`: Local memory server implementation
-- `memory-client.js`: Client library for accessing memory
-- `memory-system.js`: Direct file-based memory system
-- `memory.json`: Storage file for all memory data
+## Git milestone
+
+Baseline before the Beauty × Tech / concierge revamp is tagged **`pre-revamp`** on GitHub.
+
+## License / private
+
+Repository visibility and license follow your GitHub org settings.

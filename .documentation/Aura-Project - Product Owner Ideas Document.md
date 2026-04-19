@@ -96,6 +96,12 @@
         *   **Concept:** Within the member's area, provide exclusive content – advanced skincare tips, interviews with therapists, wellness guides tailored to HK lifestyle, early access to blog posts/videos. Potentially a moderated Q&A forum.
         *   **Why it Works:** Builds community, provides ongoing value, reinforces expertise, keeps members engaged between visits.
 
+**6A. Hermes Agent (optional gateway) & delivery order**
+
+*   **Intent:** Treat [Nous Hermes Agent](https://github.com/NousResearch/hermes-agent) as an **optional AI and messaging gateway** (OpenAI-compatible API server, WhatsApp/Telegram gateway, skills/memory/MCP per [official docs](https://hermes-agent.nousresearch.com/docs/))—**not** as a replacement for the Next.js customer site.
+*   **Authoritative engineering plan:** [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](./Hermes-Agent-Integration-and-Revamp-Plan.md) — phased roadmap, security rules (no browser-to-agent secrets; Hermes on private host/VPS behind Aura API), and Hermes-vs-Next-only LLM decision guide.
+*   **Alignment with Ideas 7–8:** **Aura Circle** and closed-loop **Aura Tokens** remain the **default loyalty** story at launch. Hermes supports **concierge Q&A, booking handoff, and optional messaging**; NFT/crypto paths stay **exploratory** as already scoped in Idea 8 until legal and product sign-off.
+
 **7. Non-Functional Requirements:**
 
 *   **Performance:** Excellent loading speed (Core Web Vitals).

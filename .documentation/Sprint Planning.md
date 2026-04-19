@@ -1,5 +1,9 @@
 # Sprint Planning
 
+## Upcoming themes (post-`pre-revamp`)
+
+Backlog and sequencing for **AI concierge**, optional **Hermes Agent** gateway, IA cleanup, and deferred Web3 scope are maintained in **[Hermes-Agent-Integration-and-Revamp-Plan.md](./Hermes-Agent-Integration-and-Revamp-Plan.md)** (§6 phases, §9 starter tickets). Pull concrete sprint items from that plan when grooming; historical sprints below remain for archive reference.
+
 ## Sprint 1: Project Setup and Core Components (2 weeks)
 
 ### Sprint Goals
