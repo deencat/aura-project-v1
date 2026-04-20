@@ -122,3 +122,78 @@ export async function listKnowledgeDocuments(args: {
   })
 }
 
+function extractQueryTerms(query: string) {
+  const normalized = query
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+  if (!normalized) return []
+
+  // Chinese: no spaces; still works by using 2-3 character windows from the original query.
+  const hasSpaces = normalized.includes(" ")
+  const terms = hasSpaces
+    ? normalized.split(" ")
+    : Array.from(new Set([normalized.slice(0, 2), normalized.slice(0, 3), normalized.slice(1, 3)].filter(Boolean)))
+
+  return terms.filter((t) => t.length >= 2).slice(0, 8)
+}
+
+export async function retrieveKnowledgeChunks(args: {
+  query: string
+  locale: string
+  tier?: KnowledgeTier
+  status?: KnowledgeStatus
+  limit?: number
+}) {
+  const limit = Math.max(1, Math.min(args.limit ?? 8, 16))
+  const tier = args.tier ?? "T0"
+  const status = args.status ?? "active"
+
+  const locale = args.locale
+  const languages =
+    locale === "zh-HK"
+      ? ["zh-HK", "zh-Hant"]
+      : locale === "zh-Hans"
+        ? ["zh-Hans", "zh-Hant"]
+        : locale === "en"
+          ? ["en"]
+          : [locale, "zh-HK", "zh-Hant"]
+
+  const terms = extractQueryTerms(args.query)
+  if (terms.length === 0) return []
+
+  const whereOr = terms.map((t) => ({ text: { contains: t, mode: "insensitive" as const } }))
+
+  // Heuristic retrieval (KB-2): keyword contains + tier/status/lang filters.
+  // Ranking improvements (hybrid + rerank) will come later once embeddings are added.
+  const rows = await prisma.knowledgeChunk.findMany({
+    where: {
+      OR: whereOr,
+      document: {
+        tier,
+        status,
+        language: { in: languages },
+      },
+    },
+    take: limit,
+    orderBy: [{ updatedAt: "desc" }],
+    include: {
+      document: {
+        select: {
+          id: true,
+          tier: true,
+          status: true,
+          language: true,
+          title: true,
+          sourceUrl: true,
+          topics: true,
+          updatedAt: true,
+        },
+      },
+    },
+  })
+
+  return rows
+}
+

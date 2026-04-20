@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { retrieveKnowledgeChunks } from "@/services/knowledge.service"
 
 type Locale = "zh-HK" | "en" | "zh-Hans" | "zh-Hant"
 type OpenRouterMessage = { role: "system" | "user" | "assistant"; content: string }
@@ -103,6 +104,7 @@ function getSystemPrompt(locale: Locale) {
       "你是 Aura（香港美容中心）的美容 AI 礼宾。默认用简体中文回答，除非用户使用英文或明确要求繁体。",
       "目标：用最少问题理解用户需求，给出 2–3 个可能的疗程方向/注意事项，并引导到“疗程页/联系页”预约。",
       "安全边界：不做医疗诊断；不做处方/用药建议；不承诺治疗效果；涉及怀孕、皮肤病、严重过敏、出血/感染风险、正在用药等，必须建议先与治疗师/医生确认并提供人工转介。",
+      "若提供了【Aura 知识库】内容：优先依据其信息；不要编造未出现的价格、机器型号、承诺。",
       "风格：温柔、专业、简洁；先问澄清问题，再给建议。必要时用项目符号。",
     ].join("\n")
   }
@@ -112,6 +114,7 @@ function getSystemPrompt(locale: Locale) {
       "You are Aura’s Beauty AI concierge (Hong Kong). Reply in English unless the user writes Chinese.",
       "Goal: understand needs with minimal questions, suggest 2–3 plausible treatment directions and aftercare notes, and guide to booking links (treatments/contact).",
       "Safety: no medical diagnosis; no prescriptions/medication advice; no guaranteed outcomes. If pregnancy, skin disease, severe allergy, infection/bleeding risk, or medication is mentioned, advise human clinician/therapist confirmation and offer handoff.",
+      "If you are given 【Aura Knowledge Base】 context: prioritize it; do not invent prices, device models, or guarantees not present.",
       "Style: warm, professional, concise. Ask clarifying questions before recommending.",
     ].join("\n")
   }
@@ -121,6 +124,7 @@ function getSystemPrompt(locale: Locale) {
     "你係 Aura（香港美容中心）嘅美容 AI 禮賓。預設用香港常用繁體中文（zh-HK）回答，除非用戶用英文或明確要求簡體/英文。",
     "目標：用最少問題了解需要，提供 2–3 個可能療程方向/注意事項，並引導去「療程頁/聯絡頁」完成預約。",
     "安全界線：唔做醫療診斷；唔提供處方/用藥建議；唔保證療效。提到懷孕、皮膚病、嚴重敏感、出血/感染風險、正在服藥等，必須建議先同治療師/醫生確認，並提供人工轉介。",
+    "如有提供【Aura 知識庫】內容：優先以該資料為準；唔好作出未出現嘅價錢、機種型號或承諾。",
     "語氣：溫柔、專業、簡潔；先問澄清問題，再俾建議；必要時用項目符號。",
   ].join("\n")
 }
@@ -153,16 +157,46 @@ function getStubResponse(locale: Locale, message: string) {
   }
 }
 
+function formatKbContext(args: { locale: Locale; chunks: any[] }) {
+  const maxChars = 5500
+  let used = 0
+  const lines: string[] = []
+  for (const c of args.chunks) {
+    const title = c.document?.title || "Untitled"
+    const lang = c.document?.language || "unknown"
+    const tier = c.document?.tier || "T0"
+    const url = c.document?.sourceUrl || ""
+    const header = `- [${tier}] (${lang}) ${title}${url ? ` — ${url}` : ""}`
+    const body = String(c.text ?? "").trim()
+    const block = `${header}\n${body}\n`
+    if (used + block.length > maxChars) break
+    used += block.length
+    lines.push(block)
+  }
+  if (lines.length === 0) return ""
+
+  const lead =
+    args.locale === "en"
+      ? "【Aura Knowledge Base (canonical salon facts)】\nUse this context as the highest-priority source.\n"
+      : args.locale === "zh-Hans"
+        ? "【Aura 知识库（官方/权威内容）】\n请优先依据以下内容作答。\n"
+        : "【Aura 知識庫（官方/權威內容）】\n請優先根據以下內容作答。\n"
+
+  return `${lead}\n${lines.join("\n")}`
+}
+
 async function callOpenRouter(args: {
   apiKey: string
   model: string
   locale: Locale
   userMessage: string
+  kbContext?: string
 }) {
-  const { apiKey, model, locale, userMessage } = args
+  const { apiKey, model, locale, userMessage, kbContext } = args
 
   const messages: OpenRouterMessage[] = [
     { role: "system", content: getSystemPrompt(locale) },
+    ...(kbContext ? [{ role: "system" as const, content: kbContext }] : []),
     { role: "user", content: `${getLocaleNote(locale)}\n\n${userMessage}` },
   ]
 
@@ -239,11 +273,30 @@ export async function POST(request: Request) {
   }
 
   try {
+    let kbContext = ""
+    let kbHits = 0
+    try {
+      const chunks = await retrieveKnowledgeChunks({
+        query: message,
+        locale,
+        tier: "T0",
+        status: "active",
+        limit: 8,
+      })
+      kbHits = chunks.length
+      kbContext = formatKbContext({ locale, chunks })
+    } catch {
+      // If DB is unavailable, proceed without KB context.
+      kbContext = ""
+      kbHits = 0
+    }
+
     const reply = await callOpenRouter({
       apiKey: openRouterKey,
       model: openRouterModel,
       locale,
       userMessage: message,
+      kbContext,
     })
 
     const copy = getCopy(locale)
@@ -258,6 +311,7 @@ export async function POST(request: Request) {
         links,
         mode: "openrouter",
         model: openRouterModel,
+        kbHits,
       },
       { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
     )
