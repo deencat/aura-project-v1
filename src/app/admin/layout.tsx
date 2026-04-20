@@ -13,7 +13,8 @@ import {
   Settings, 
   Globe,
   Ticket,
-  Image
+  Image,
+  Database
 } from 'lucide-react'
 import { initializeServiceStorage } from '@/utils/serviceStorage'
 
@@ -57,6 +58,7 @@ export default function AdminLayout({
     { href: '/admin', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
     { href: '/admin/services', icon: <Tag size={18} />, label: 'Services' },
     { href: '/admin/blog', icon: <BookOpen size={18} />, label: 'Blog' },
+    { href: '/admin/knowledge', icon: <Database size={18} />, label: 'Knowledge Bank' },
     { href: '/admin/team', icon: <Users size={18} />, label: 'Team' },
     { href: '/admin/testimonials', icon: <MessageSquare size={18} />, label: 'Testimonials' },
     { href: '/admin/pages', icon: <FileText size={18} />, label: 'Pages' },
