@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 
 type Locale = "zh-HK" | "en" | "zh-Hans" | "zh-Hant"
+type OpenRouterMessage = { role: "system" | "user" | "assistant"; content: string }
 
 function getClientIp(request: Request) {
   const forwardedFor = request.headers.get("x-forwarded-for")
@@ -29,7 +30,7 @@ function rateLimit(ip: string) {
 
 function normalizeLocale(locale: unknown): Locale {
   if (locale === "zh-HK" || locale === "en" || locale === "zh-Hans" || locale === "zh-Hant") return locale
-  return "zh-HK"
+  return (process.env.DEFAULT_CHAT_LOCALE as Locale) || "zh-HK"
 }
 
 function getCopy(locale: Locale) {
@@ -95,6 +96,106 @@ function getCopy(locale: Locale) {
   }
 }
 
+function getSystemPrompt(locale: Locale) {
+  // Keep it short and operational. Long “brand manifestos” reduce quality and increase hallucination risk.
+  if (locale === "zh-Hans") {
+    return [
+      "你是 Aura（香港美容中心）的美容 AI 礼宾。默认用简体中文回答，除非用户使用英文或明确要求繁体。",
+      "目标：用最少问题理解用户需求，给出 2–3 个可能的疗程方向/注意事项，并引导到“疗程页/联系页”预约。",
+      "安全边界：不做医疗诊断；不做处方/用药建议；不承诺治疗效果；涉及怀孕、皮肤病、严重过敏、出血/感染风险、正在用药等，必须建议先与治疗师/医生确认并提供人工转介。",
+      "风格：温柔、专业、简洁；先问澄清问题，再给建议。必要时用项目符号。",
+    ].join("\n")
+  }
+
+  if (locale === "en") {
+    return [
+      "You are Aura’s Beauty AI concierge (Hong Kong). Reply in English unless the user writes Chinese.",
+      "Goal: understand needs with minimal questions, suggest 2–3 plausible treatment directions and aftercare notes, and guide to booking links (treatments/contact).",
+      "Safety: no medical diagnosis; no prescriptions/medication advice; no guaranteed outcomes. If pregnancy, skin disease, severe allergy, infection/bleeding risk, or medication is mentioned, advise human clinician/therapist confirmation and offer handoff.",
+      "Style: warm, professional, concise. Ask clarifying questions before recommending.",
+    ].join("\n")
+  }
+
+  // zh-HK / zh-Hant default
+  return [
+    "你係 Aura（香港美容中心）嘅美容 AI 禮賓。預設用香港常用繁體中文（zh-HK）回答，除非用戶用英文或明確要求簡體/英文。",
+    "目標：用最少問題了解需要，提供 2–3 個可能療程方向/注意事項，並引導去「療程頁/聯絡頁」完成預約。",
+    "安全界線：唔做醫療診斷；唔提供處方/用藥建議；唔保證療效。提到懷孕、皮膚病、嚴重敏感、出血/感染風險、正在服藥等，必須建議先同治療師/醫生確認，並提供人工轉介。",
+    "語氣：溫柔、專業、簡潔；先問澄清問題，再俾建議；必要時用項目符號。",
+  ].join("\n")
+}
+
+function getLocaleNote(locale: Locale) {
+  if (locale === "zh-Hans") return "请用简体中文回答。"
+  if (locale === "en") return "Please reply in English."
+  return "請用香港常用繁體中文回答。"
+}
+
+function getStubResponse(locale: Locale, message: string) {
+  const copy = getCopy(locale)
+  const links = {
+    treatments: "/treatments",
+    contact: "/contact",
+  }
+
+  const responseText =
+    message.length === 0
+      ? `${copy.greeting}\n\n${copy.disclaimer}`
+      : `${copy.askFollowUps}\n\n- 你係想改善邊個位置？（面／眼周／頸／身體）\n- 你最介意：效果、停工期、敏感反應，定係價錢？\n- 最近 2 週有無做過去角質／換膚／醫美？\n\n${copy.booking}\n\n${copy.disclaimer}`
+
+  return {
+    ok: true,
+    locale,
+    reply: responseText,
+    quickReplies: copy.quickReplies,
+    links,
+    mode: "stub" as const,
+  }
+}
+
+async function callOpenRouter(args: {
+  apiKey: string
+  model: string
+  locale: Locale
+  userMessage: string
+}) {
+  const { apiKey, model, locale, userMessage } = args
+
+  const messages: OpenRouterMessage[] = [
+    { role: "system", content: getSystemPrompt(locale) },
+    { role: "user", content: `${getLocaleNote(locale)}\n\n${userMessage}` },
+  ]
+
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      // Optional but recommended by OpenRouter for attribution/analytics
+      "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
+      "X-Title": process.env.OPENROUTER_APP_NAME || "Aura",
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      temperature: 0.6,
+      max_tokens: 500,
+    }),
+  })
+
+  const data: any = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    const msg = data?.error?.message || data?.message || `OpenRouter error (${res.status})`
+    throw new Error(msg)
+  }
+
+  const content = data?.choices?.[0]?.message?.content
+  if (typeof content !== "string" || content.trim().length === 0) {
+    throw new Error("Empty response from model.")
+  }
+  return content.trim()
+}
+
 export async function POST(request: Request) {
   const ip = getClientIp(request)
   const rl = rateLimit(ip)
@@ -119,32 +220,60 @@ export async function POST(request: Request) {
 
   const locale = normalizeLocale(body?.locale)
   const message = typeof body?.message === "string" ? body.message.trim() : ""
-  const copy = getCopy(locale)
+  const openRouterKey = process.env.OPENROUTER_API_KEY
+  const openRouterModel = process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini"
 
-  // Stub logic: we only provide safe, guided, short responses and link to next steps.
-  const links = {
-    treatments: "/treatments",
-    contact: "/contact",
+  // For the initial greeting boot call (`message === ""`), keep the stub greeting.
+  // This makes the first paint fast and predictable even if the model is slow.
+  if (!message) {
+    return NextResponse.json(getStubResponse(locale, ""), {
+      headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) },
+    })
   }
 
-  const responseText =
-    message.length === 0
-      ? `${copy.greeting}\n\n${copy.disclaimer}`
-      : `${copy.askFollowUps}\n\n- 你係想改善邊個位置？（面／眼周／頸／身體）\n- 你最介意：效果、停工期、敏感反應，定係價錢？\n- 最近 2 週有無做過去角質／換膚／醫美？\n\n${copy.booking}\n\n${copy.disclaimer}`
+  // If no key is configured, keep using the stub (safe local mode).
+  if (!openRouterKey) {
+    return NextResponse.json(getStubResponse(locale, message), {
+      headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) },
+    })
+  }
 
-  return NextResponse.json(
-    {
-      ok: true,
+  try {
+    const reply = await callOpenRouter({
+      apiKey: openRouterKey,
+      model: openRouterModel,
       locale,
-      reply: responseText,
-      quickReplies: copy.quickReplies,
-      links,
-    },
-    {
-      headers: {
-        "X-RateLimit-Remaining": String(rl.remaining ?? 0),
+      userMessage: message,
+    })
+
+    const copy = getCopy(locale)
+    const links = { treatments: "/treatments", contact: "/contact" }
+
+    return NextResponse.json(
+      {
+        ok: true,
+        locale,
+        reply,
+        quickReplies: copy.quickReplies,
+        links,
+        mode: "openrouter",
+        model: openRouterModel,
       },
-    }
-  )
+      { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
+    )
+  } catch (e: any) {
+    // Fail safe: if OpenRouter errors, degrade to stub with a gentle hint.
+    const stub = getStubResponse(locale, message)
+    const hint =
+      locale === "en"
+        ? "\n\n(Temporary: AI service is busy. Here’s a guided flow while we retry.)"
+        : locale === "zh-Hans"
+          ? "\n\n（临时：AI 服务繁忙。先用这个引导流程，我们稍后再试。）"
+          : "\n\n（暫時：AI 服務繁忙。先用呢個引導流程，我哋稍後再試。）"
+    return NextResponse.json(
+      { ...stub, reply: `${stub.reply}${hint}` },
+      { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
+    )
+  }
 }
 

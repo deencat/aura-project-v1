@@ -6,8 +6,10 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   '/api/webhook/clerk',
   '/api/services(.*)',  // Add services API routes as public
+  '/api/concierge(.*)', // Public concierge APIs (chat/transcribe/synthesize)
   '/about',
   '/contact',
+  '/concierge',
   '/service',
   '/body-care',
   '/body-care/(.*)',
