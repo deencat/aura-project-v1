@@ -22,7 +22,10 @@
     "memory-ensure": "node scripts/memory/ensure-memory-running.js",
     "memory-verify": "node scripts/memory/verify-memory-system.js",
     "memory-add": "node scripts/memory/add-conversation.js",
-    "download-fonts": "node scripts/download-fonts.js"
+    "download-fonts": "node scripts/download-fonts.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.19.2",
@@ -30,6 +33,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^5.0.1",
+    "@prisma/client": "^6.19.3",
     "@radix-ui/react-accordion": "^1.2.7",
     "@radix-ui/react-alert-dialog": "^1.1.10",
     "@radix-ui/react-aspect-ratio": "^1.1.4",
@@ -58,6 +62,7 @@
     "lucide-react": "^0.395.0",
     "next": "^14.2.28",
     "postcss": "^8.4.38",
+    "prisma": "^6.19.3",
     "react": "^18",
     "react-day-picker": "^9.6.7",
     "react-dom": "^18",

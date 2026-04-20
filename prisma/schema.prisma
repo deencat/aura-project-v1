@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum KnowledgeTier {
+  T0
+  T1
+  T2
+  T3
+}
+
+enum KnowledgeStatus {
+  staging
+  active
+  archived
+}
+
+model KnowledgeDocument {
+  id          String          @id @default(cuid())
+  tier        KnowledgeTier
+  status      KnowledgeStatus @default(staging)
+  language    String          // e.g. "zh-HK", "zh-Hant", "zh-Hans", "en"
+  sourceUrl   String?
+  title       String?
+  publishedAt DateTime?
+  fetchedAt   DateTime        @default(now())
+  hash        String?
+  trustScore  Float?
+  topics      String[]        @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chunks KnowledgeChunk[]
+
+  @@index([tier, status])
+  @@index([language])
+  @@index([publishedAt])
+}
+
+model KnowledgeChunk {
+  id         String           @id @default(cuid())
+  documentId String
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  chunkIndex Int
+  text       String
+  tokenCount Int?
+
+  embeddingModel   String?
+  embeddingVersion String?
+
+  // If/when we use pgvector, add a `vector` field in a follow-up migration.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([documentId, chunkIndex])
+  @@index([documentId])
+}
+
+model KnowledgeRollup {
+  id          String   @id @default(cuid())
+  topic       String
+  language    String   // keep rollups locale-specific
+  periodStart DateTime
+  periodEnd   DateTime
+  summaryText String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([topic, language])
+  @@index([periodStart, periodEnd])
+}
+
+model IngestionRun {
+  id        String   @id @default(cuid())
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  status    String   // "running" | "success" | "failed"
+  stats     Json?
+  errorLog  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startedAt])
+  @@index([status])
+}
+
