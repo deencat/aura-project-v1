@@ -12,6 +12,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 const menuData = [
   { title: 'Home', titleKey: 'home', href: '/' },
   { title: 'About Us', titleKey: 'about', href: '/about' },
+  { title: 'AI Concierge', titleKey: 'ai_concierge', href: '/concierge' },
   {
     title: 'Premium Beauty',
     titleKey: 'premium_beauty',
