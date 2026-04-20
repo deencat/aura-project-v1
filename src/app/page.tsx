@@ -179,24 +179,24 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] bg-gray-50">
+      <section className="relative min-h-[80vh]">
         <div className="container mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 py-16">
           <div className="relative z-10 mx-auto max-w-4xl text-center">
-            <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
+            <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-foreground md:text-6xl lg:text-7xl">
               <span className="block">Aura Beauty</span>
               <span className="mt-2 block text-primary">Transform Your Skin</span>
             </h1>
-            <p className="mt-6 text-xl leading-relaxed text-gray-600">
+            <p className="mt-6 text-xl leading-relaxed text-foreground/70">
               Advanced beauty treatments using cutting-edge technology to enhance your natural beauty.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
               <Link href="/treatments">
-                <Button className="rounded-full bg-primary px-8 py-6 text-base font-medium uppercase tracking-wide text-white transition hover:bg-primary/90">
+                <Button className="px-8 py-6 text-base font-medium uppercase tracking-wide">
                   Explore Treatments
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="rounded-full border-primary px-8 py-6 text-base font-medium uppercase tracking-wide text-primary transition hover:bg-primary/10">
+                <Button variant="outline" className="px-8 py-6 text-base font-medium uppercase tracking-wide">
                   Book a Consultation
                 </Button>
               </Link>
@@ -206,13 +206,13 @@ export default function Home() {
       </section>
 
       {/* Our Story Section */}
-      <section className="bg-white py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-3xl font-bold md:text-4xl">
               Our <span className="text-primary">Story</span>
             </h2>
-            <div className="mt-6 text-lg leading-relaxed text-gray-600">
+            <div className="mt-6 text-lg leading-relaxed text-foreground/70">
               <p className="mb-4">
                 Aura Beauty is dedicated to providing diverse, effective, and safe beauty treatments. We bring together professional equipment and techniques from around the world to deliver the most caring, suitable, and optimal service experience for every client.
               </p>
@@ -222,7 +222,7 @@ export default function Home() {
             </div>
             <div className="mt-10">
               <Link href="/about">
-                <Button variant="ghost" className="rounded-full text-primary hover:bg-primary/10 hover:text-primary">
+                <Button variant="ghost" className="text-primary hover:bg-white/50 hover:text-foreground">
                   Learn More About Us
                 </Button>
               </Link>
@@ -232,14 +232,14 @@ export default function Home() {
       </section>
 
       {/* Featured Treatments */}
-      <section className="bg-gray-50 py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
             Signature <span className="text-primary">Treatments</span>
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Treatment 1 */}
-            <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+            <div className="group overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-[4/3] w-full overflow-hidden">
                 <PlaceholderImage 
                   type="treatment" 
@@ -250,9 +250,9 @@ export default function Home() {
               </div>
               <div className="p-6">
                 <h3 className="mb-2 text-xl font-bold">Royal Black Scan</h3>
-                <p className="mb-4 text-gray-600">Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.</p>
+                <p className="mb-5 text-foreground/70">Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.</p>
                 <Link href="/treatments/royal-black-scan">
-                  <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                  <Button className="w-full px-6 py-2 text-sm font-medium">
                     Learn More
                   </Button>
                 </Link>
@@ -260,7 +260,7 @@ export default function Home() {
             </div>
             
             {/* Treatment 2 */}
-            <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+            <div className="group overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-[4/3] w-full overflow-hidden">
                 <PlaceholderImage 
                   type="treatment" 
@@ -271,9 +271,9 @@ export default function Home() {
               </div>
               <div className="p-6">
                 <h3 className="mb-2 text-xl font-bold">Peeled Egg Skin</h3>
-                <p className="mb-4 text-gray-600">Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.</p>
+                <p className="mb-5 text-foreground/70">Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.</p>
                 <Link href="/treatments/peeled-egg-skin">
-                  <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                  <Button className="w-full px-6 py-2 text-sm font-medium">
                     Learn More
                   </Button>
                 </Link>
@@ -281,7 +281,7 @@ export default function Home() {
               </div>
               
             {/* Treatment 3 */}
-            <div className="group overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-md">
+            <div className="group overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-[4/3] w-full overflow-hidden">
                 <PlaceholderImage 
                   type="treatment" 
@@ -292,9 +292,9 @@ export default function Home() {
               </div>
               <div className="p-6">
                 <h3 className="mb-2 text-xl font-bold">Collagen Regeneration</h3>
-                <p className="mb-4 text-gray-600">Boost your skin's natural collagen production for improved elasticity and youthful appearance.</p>
+                <p className="mb-5 text-foreground/70">Boost your skin's natural collagen production for improved elasticity and youthful appearance.</p>
                 <Link href="/treatments/collagen-regeneration">
-                  <Button className="w-full rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                  <Button className="w-full px-6 py-2 text-sm font-medium">
                     Learn More
                   </Button>
                 </Link>
@@ -303,7 +303,7 @@ export default function Home() {
           </div>
           <div className="mt-12 text-center">
             <Link href="/treatments">
-              <Button className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-white hover:bg-primary/90">
+              <Button className="px-8 py-3 text-sm font-medium">
                 View All Treatments
               </Button>
             </Link>
@@ -312,14 +312,14 @@ export default function Home() {
       </section>
 
       {/* Treatment Categories */}
-      <section className="bg-white py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
             Our <span className="text-primary">Services</span>
             </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Category 1 */}
-            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+            <div className="overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-square w-full overflow-hidden">
                 <PlaceholderImage 
                   type="beauty" 
@@ -331,7 +331,7 @@ export default function Home() {
               <div className="p-6 text-center">
                 <h3 className="mb-2 text-xl font-bold">Premium Beauty Treatments</h3>
                 <Link href="/treatments">
-                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
                     Explore
                   </Button>
                 </Link>
@@ -339,7 +339,7 @@ export default function Home() {
             </div>
             
             {/* Category 2 */}
-            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+            <div className="overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-square w-full overflow-hidden">
                 <PlaceholderImage 
                   type="beauty" 
@@ -351,7 +351,7 @@ export default function Home() {
               <div className="p-6 text-center">
                 <h3 className="mb-2 text-xl font-bold">Body Care Treatments</h3>
                 <Link href="/body-care">
-                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
                     Explore
                   </Button>
                 </Link>
@@ -359,7 +359,7 @@ export default function Home() {
             </div>
 
             {/* Category 3 */}
-            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+            <div className="overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-square w-full overflow-hidden">
                 <PlaceholderImage 
                   type="beauty" 
@@ -371,7 +371,7 @@ export default function Home() {
               <div className="p-6 text-center">
                 <h3 className="mb-2 text-xl font-bold">AI Facial Filters</h3>
                 <Link href="/facial-filters">
-                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
                     Explore
                   </Button>
                 </Link>
@@ -379,7 +379,7 @@ export default function Home() {
             </div>
 
             {/* Category 4 */}
-            <div className="overflow-hidden rounded-lg bg-gray-50 transition-all hover:shadow-md">
+            <div className="overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-square w-full overflow-hidden">
                 <PlaceholderImage 
                   type="beauty" 
@@ -391,7 +391,7 @@ export default function Home() {
               <div className="p-6 text-center">
                 <h3 className="mb-2 text-xl font-bold">Cell Beauty Technology</h3>
                 <Link href="/cell-beauty">
-                  <Button variant="ghost" className="mt-2 text-primary hover:bg-primary/10 hover:text-primary">
+                  <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
                     Explore
                   </Button>
                 </Link>
@@ -402,17 +402,17 @@ export default function Home() {
       </section>
 
       {/* Special Offers */}
-      <section className="bg-secondary/10 py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl">
             <h2 className="mb-10 text-center font-serif text-3xl font-bold md:text-4xl">
               Limited <span className="text-primary">Offers</span>
             </h2>
-            <div className="overflow-hidden rounded-lg bg-white p-8 shadow-md">
+            <div className="overflow-hidden rounded-2xl border border-white/55 bg-aura-card p-8 shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)] backdrop-blur-md">
               <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
                 <div className="w-full md:w-2/3">
                   <h3 className="mb-4 text-2xl font-bold">New Client Special</h3>
-                  <p className="mb-4 text-lg text-gray-600">
+                  <p className="mb-5 text-lg text-foreground/70">
                     Experience our premium treatments with 20% off your first visit. Discover the difference professional care can make.
                   </p>
                   <ul className="mb-6 space-y-2">
@@ -430,13 +430,13 @@ export default function Home() {
                     </li>
                   </ul>
                   <Link href="/contact">
-                    <Button className="rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                    <Button className="px-6 py-2 text-sm font-medium">
                       Book Now
                     </Button>
                   </Link>
                 </div>
                 <div className="w-full md:w-1/3">
-                  <div className="overflow-hidden rounded-lg">
+                  <div className="overflow-hidden rounded-2xl">
                     <PlaceholderImage 
                       type="offer" 
                       number={1} 
@@ -455,11 +455,11 @@ export default function Home() {
       <FeaturedContent 
         blogPosts={mockBlogPosts}
         testimonials={mockTestimonials}
-        className="bg-white"
+        className="bg-transparent"
       />
 
       {/* Contact CTA */}
-      <section className="bg-primary py-20 text-white">
+      <section className="py-20 text-white">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-6 font-serif text-3xl font-bold md:text-4xl">Ready to Transform Your Beauty?</h2>
@@ -467,7 +467,7 @@ export default function Home() {
               Book a consultation with our beauty experts and discover the perfect treatments for your unique needs.
             </p>
             <Link href="/contact">
-              <Button variant="outline" className="rounded-full border-white px-8 py-3 text-sm font-medium text-white hover:bg-white hover:text-primary">
+              <Button variant="outline" className="border-white/70 bg-white/10 px-8 py-3 text-sm font-medium text-white hover:bg-white/30">
                 Contact Us Today
               </Button>
             </Link>

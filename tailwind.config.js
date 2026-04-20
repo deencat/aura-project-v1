@@ -26,13 +26,22 @@ module.exports = {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			primary: {
-  				DEFAULT: '#F87558',
+  				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {
-  				DEFAULT: '#5CD7C9',
+  				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
+        aura: {
+          pearl: '#FFF9FC',
+          blush: '#FFE4EE',
+          blush2: '#FFD1E2',
+          rose: '#E85A8B',
+          roseDeep: '#C63E6E',
+          plumInk: '#2A0C18',
+          lilacMist: '#F3E9FF',
+        },
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
@@ -54,6 +63,10 @@ module.exports = {
   				foreground: 'hsl(var(--card-foreground))'
   			}
   		},
+      backgroundImage: {
+        'aura-page': 'radial-gradient(1200px circle at 20% 12%, rgba(232, 90, 139, 0.16) 0%, rgba(232, 90, 139, 0) 55%), radial-gradient(900px circle at 82% 18%, rgba(255, 209, 226, 0.65) 0%, rgba(255, 209, 226, 0) 58%), linear-gradient(180deg, #FFF9FC 0%, #FFE4EE 32%, #FFD1E2 100%)',
+        'aura-card': 'linear-gradient(180deg, rgba(255,249,252,0.78) 0%, rgba(255,228,238,0.56) 100%)',
+      },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

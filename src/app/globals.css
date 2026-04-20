@@ -4,35 +4,35 @@
  
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 340 100% 98%;
+    --foreground: 330 30% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card: 340 100% 99%;
+    --card-foreground: 330 30% 12%;
  
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover: 340 100% 99%;
+    --popover-foreground: 330 30% 12%;
  
-    --primary: 15 92% 65%;
+    --primary: 340 72% 58%;
     --primary-foreground: 0 0% 98%;
  
-    --secondary: 173 64% 58%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 330 35% 20%;
+    --secondary-foreground: 0 0% 98%;
  
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 340 30% 96%;
+    --muted-foreground: 330 15% 35%;
  
-    --accent: 166 63% 58%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 340 55% 92%;
+    --accent-foreground: 330 30% 12%;
  
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 340 35% 88%;
+    --input: 340 35% 88%;
+    --ring: 340 70% 58%;
  
-    --radius: 0.5rem;
+    --radius: 1.25rem;
   }
  
   .dark {
@@ -71,8 +71,27 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-aura-page text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -20vh -20vw;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(36px 36px at 12% 20%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 65%),
+      radial-gradient(52px 52px at 68% 12%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(44px 44px at 82% 42%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(72px 72px at 18% 74%, rgba(255, 209, 226, 0.45) 0%, rgba(255, 209, 226, 0) 72%),
+      radial-gradient(60px 60px at 78% 78%, rgba(232, 90, 139, 0.14) 0%, rgba(232, 90, 139, 0) 72%);
+    filter: blur(0.2px);
+    opacity: 0.9;
+  }
+  body > * {
+    position: relative;
+    z-index: 1;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif tracking-tight;
