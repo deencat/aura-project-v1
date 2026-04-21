@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { retrieveKnowledgeChunks } from "@/services/knowledge.service"
+import { getRollupContext, retrieveKnowledgeChunks } from "@/services/knowledge.service"
 
 type Locale = "zh-HK" | "en" | "zh-Hans" | "zh-Hant"
 type OpenRouterMessage = { role: "system" | "user" | "assistant"; content: string }
@@ -185,6 +185,41 @@ function formatKbContext(args: { locale: Locale; chunks: any[] }) {
   return `${lead}\n${lines.join("\n")}`
 }
 
+function looksLikeTrendQuery(locale: Locale, message: string) {
+  const m = message.toLowerCase()
+  if (locale === "en") {
+    return /(trend|trends|what's hot|new product|latest|this week|popular)/i.test(m)
+  }
+  // zh-HK / zh-Hant / zh-Hans
+  return /(趨勢|流行|熱門|最新|新產品|新品|今期|本週|近排|風向|話題)/.test(message)
+}
+
+function formatRollupContext(args: { locale: Locale; rollups: any[] }) {
+  const maxChars = 4500
+  let used = 0
+  const blocks: string[] = []
+  for (const r of args.rollups) {
+    const header = `- [${r.topic}] ${new Date(r.periodStart).toLocaleDateString()} → ${new Date(
+      r.periodEnd
+    ).toLocaleDateString()} (${r.language})`
+    const body = String(r.summaryText ?? "").trim()
+    const block = `${header}\n${body}\n`
+    if (used + block.length > maxChars) break
+    used += block.length
+    blocks.push(block)
+  }
+  if (blocks.length === 0) return ""
+
+  const lead =
+    args.locale === "en"
+      ? "【Aura Trends Rollups】\nUse these summaries for trend-related questions. Prefer them over raw web content.\n"
+      : args.locale === "zh-Hans"
+        ? "【Aura 趋势汇总】\n以下为近期趋势汇总，用于回答“最近流行/趋势/新品”类问题。\n"
+        : "【Aura 趨勢匯總】\n以下為近期趨勢匯總，用於回答「最近流行/趨勢/新品」類問題。\n"
+
+  return `${lead}\n${blocks.join("\n")}`
+}
+
 async function callOpenRouter(args: {
   apiKey: string
   model: string
@@ -275,7 +310,19 @@ export async function POST(request: Request) {
   try {
     let kbContext = ""
     let kbHits = 0
+    let rollupHits = 0
+    let rollupContext = ""
     try {
+      if (looksLikeTrendQuery(locale, message)) {
+        const rollups = await getRollupContext({
+          query: message,
+          locale,
+          limit: 3,
+        })
+        rollupHits = rollups.length
+        rollupContext = formatRollupContext({ locale, rollups })
+      }
+
       const chunks = await retrieveKnowledgeChunks({
         query: message,
         locale,
@@ -289,6 +336,8 @@ export async function POST(request: Request) {
       // If DB is unavailable, proceed without KB context.
       kbContext = ""
       kbHits = 0
+      rollupContext = ""
+      rollupHits = 0
     }
 
     const reply = await callOpenRouter({
@@ -296,7 +345,7 @@ export async function POST(request: Request) {
       model: openRouterModel,
       locale,
       userMessage: message,
-      kbContext,
+      kbContext: [rollupContext, kbContext].filter(Boolean).join("\n\n") || undefined,
     })
 
     const copy = getCopy(locale)
@@ -312,6 +361,7 @@ export async function POST(request: Request) {
         mode: "openrouter",
         model: openRouterModel,
         kbHits,
+        rollupHits,
       },
       { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
     )

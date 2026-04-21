@@ -197,3 +197,66 @@ export async function retrieveKnowledgeChunks(args: {
   return rows
 }
 
+export async function listKnowledgeRollups(args: {
+  topic?: string
+  language?: string
+  limit?: number
+}) {
+  const limit = Math.max(1, Math.min(args.limit ?? 20, 100))
+  return await prisma.knowledgeRollup.findMany({
+    where: {
+      topic: args.topic,
+      language: args.language,
+    },
+    orderBy: [{ periodEnd: "desc" }],
+    take: limit,
+  })
+}
+
+export async function createKnowledgeRollup(args: {
+  topic: string
+  language: string
+  periodStart: Date
+  periodEnd: Date
+  summaryText: string
+}) {
+  return await prisma.knowledgeRollup.create({
+    data: {
+      topic: args.topic,
+      language: args.language,
+      periodStart: args.periodStart,
+      periodEnd: args.periodEnd,
+      summaryText: args.summaryText,
+    },
+  })
+}
+
+export async function getRollupContext(args: {
+  query: string
+  locale: string
+  topic?: string
+  limit?: number
+}) {
+  const limit = Math.max(1, Math.min(args.limit ?? 3, 5))
+  const locale = args.locale
+  const languages =
+    locale === "zh-HK"
+      ? ["zh-HK", "zh-Hant"]
+      : locale === "zh-Hans"
+        ? ["zh-Hans", "zh-Hant"]
+        : locale === "en"
+          ? ["en"]
+          : [locale, "zh-HK", "zh-Hant"]
+
+  const rollups = await prisma.knowledgeRollup.findMany({
+    where: {
+      language: { in: languages },
+      ...(args.topic ? { topic: args.topic } : {}),
+    },
+    orderBy: [{ periodEnd: "desc" }],
+    take: limit,
+  })
+
+  return rollups
+}
+
