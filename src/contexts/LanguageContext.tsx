@@ -11,7 +11,7 @@ interface LanguageContextType {
 
 // Create context with default values
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'en',
+  language: 'zh-Hant',
   setLanguage: () => {},
   t: (key, fallback) => fallback,
 })
@@ -301,7 +301,7 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  const [language, setLanguageState] = useState<Language>('en')
+  const [language, setLanguageState] = useState<Language>('zh-Hant')
   
   // Initialize language from localStorage on mount
   useEffect(() => {

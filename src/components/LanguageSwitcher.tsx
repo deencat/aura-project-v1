@@ -17,7 +17,7 @@ interface LanguageSwitcherProps {
 }
 
 export const LanguageSwitcher = ({ className = '' }: LanguageSwitcherProps) => {
-  const [language, setLanguage] = useState<Language>('en')
+  const [language, setLanguage] = useState<Language>('zh-Hant')
 
   // Load language preference from localStorage on component mount
   useEffect(() => {
@@ -50,14 +50,14 @@ export const LanguageSwitcher = ({ className = '' }: LanguageSwitcherProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-          <span className={language === 'en' ? 'font-bold' : ''}>English</span>
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleLanguageChange('zh-Hant')}>
           <span className={language === 'zh-Hant' ? 'font-bold' : ''}>繁體中文</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleLanguageChange('zh-Hans')}>
           <span className={language === 'zh-Hans' ? 'font-bold' : ''}>简体中文</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
+          <span className={language === 'en' ? 'font-bold' : ''}>English</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

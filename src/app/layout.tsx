@@ -33,7 +33,7 @@ export default function RootLayout({
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
     >
-      <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <html lang="zh-HK" className={`${inter.variable} ${playfair.variable}`}>
         <body className="min-h-screen font-sans antialiased">
           <LanguageProvider>
           <ServiceInitializer />
