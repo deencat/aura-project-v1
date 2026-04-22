@@ -139,6 +139,17 @@
   z-index: 9999 !important;
 }
 
+/* Clerk portals sometimes render under custom sticky headers.
+   Target the portal containers as well (more reliable than specific modal classnames). */
+[data-clerk-portal],
+[data-clerk-dialog],
+.cl-portal,
+.cl-portalContainer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+}
+
 /* Custom scrollbar styles */
 .scrollbar-thin::-webkit-scrollbar {
   height: 4px;

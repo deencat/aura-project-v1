@@ -92,7 +92,7 @@ export default function Header() {
   }
 
   return (
-    <header className="w-full bg-white shadow-sm sticky top-0 z-50" data-testid="main-header">
+    <header className="w-full bg-white shadow-sm sticky top-0 z-30" data-testid="main-header">
       {/* Top Bar with contact info and social media */}
       <div className="bg-primary text-white py-2 text-sm">
         <div className="container mx-auto flex justify-between items-center px-4">
