@@ -130,6 +130,15 @@
   }
 } 
 
+/* Clerk modal layering: keep above sticky header/nav */
+.cl-modalBackdrop,
+.cl-modalContent,
+.cl-cardBox,
+.cl-rootBox,
+.cl-modal {
+  z-index: 9999 !important;
+}
+
 /* Custom scrollbar styles */
 .scrollbar-thin::-webkit-scrollbar {
   height: 4px;
