@@ -53,7 +53,7 @@ export default function KnowledgeAdminPage() {
   async function load() {
     setIsLoading(true)
     try {
-      const res = await fetch("/api/knowledge/documents?limit=50")
+      const res = await fetch("/api/knowledge/documents?limit=50", { credentials: "include" })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.message ?? "Failed to load documents.")
       setDocs(data?.documents ?? [])
@@ -78,6 +78,7 @@ export default function KnowledgeAdminPage() {
     try {
       const res = await fetch("/api/knowledge/documents", {
         method: "POST",
+        credentials: "include",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           tier,

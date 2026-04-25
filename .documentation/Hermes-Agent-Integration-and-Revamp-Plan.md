@@ -1,10 +1,35 @@
 # Hermes Agent Integration & “Beauty × Tech” Revamp Plan
 
-**Status:** Planning (baseline code tagged `pre-revamp` on `main`)  
+**Status:** In progress (MVP concierge + Knowledge Bank foundations implemented)  
 **Primary code:** `aura-project-v1` (Next.js App Router, Clerk, treatment pages, admin, blog)  
 **Related vision docs:** [Aura-Project - Product Owner Ideas Document](./Aura-Project%20-%20Product%20Owner%20Ideas%20Document.md), [PRD](./Aura-Project%20-%20Product%20Requirements%20Document.md), [SRS](./Aura-Project%20-%20Software%20Requirements%20Specification.md)
 
 ---
+
+## Implementation status (living checklist)
+
+**Last updated:** 2026-04-25
+
+### Shipped / implemented in repo
+
+- [x] **Soft dreamy promo poster** UI theme tokens + key shadcn variants (`Button`, `Card`, `Badge`)
+- [x] **`zh-HK` default** site language (layout + language provider/switcher)
+- [x] **AI Concierge page** `src/app/concierge/page.tsx` (text chat UI)
+- [x] **Concierge API** `src/app/api/concierge/chat/route.ts` with OpenRouter integration + fallback
+- [x] **Basic RAG grounding** from Knowledge Bank (T0 active docs) + `kbHits` in response
+- [x] **Trends path**: rollups retrieval + trend-query routing (rollups prioritized for trend questions)
+- [x] **Knowledge Bank (KB-0)**: Prisma schema + Postgres tables + admin upload UI + list APIs
+- [x] **Trends admin UI** + rollup generation API (OpenRouter summarization)
+- [x] **Auth hardening** for knowledge APIs (Clerk session works; avoids prior 401 pitfalls)
+
+### In progress / next
+
+- [ ] **KB-1 ingestion worker + staging→approve** workflow (T3 gated; no automatic promotion)
+- [ ] **KB-2 real retrieval quality** (embeddings + hybrid retrieval + rerank + citations format)
+- [ ] **KB-3 scheduled rollups** (nightly job + trend topic pages fed from rollups)
+- [ ] **Voice input (Voice-0/1)** and **TTS (TTS-0/1)** for concierge
+- [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
+- [ ] **Loyalty** (closed-loop points) + deferred crypto/NFT exploration
 
 ## 1. Purpose of this document
 
@@ -227,7 +252,7 @@ After STT, run the same **PII redaction** policy as typed text (§8.1) before fo
 
 ### Phase 1 — AI Concierge MVP (Aura-owned API) — **includes website chatbot**
 
-- New routes: e.g. `src/app/concierge/page.tsx` + `src/app/api/concierge/chat/route.ts` — this **is** the v1 **beauty AI chatbot** (text, streaming optional).
+- ✅ **Done:** `src/app/concierge/page.tsx` + `src/app/api/concierge/chat/route.ts` shipped — v1 **beauty AI chatbot** (text).
 - **System prompt** grounded in **approved salon copy** (services, contraindications, “not medical advice”), **default output language `zh-HK`** per §4.1.
 - Languages: **`zh-HK` default**; **EN** and other Chinese variants via explicit user selection (align with existing `LanguageProvider` + pass `locale` to API).
 - **Phase 1b (optional):** floating CTA or mini-chat shell calling the **same** `/api/concierge/chat` — avoids duplicate logic.
@@ -238,24 +263,27 @@ After STT, run the same **PII redaction** policy as typed text (§8.1) before fo
 ### Phase 2 — Booking & retention glue
 
 - Deep links: Cal.com / Calendly / WhatsApp Business **from** concierge replies.
-- **Voice input (§4.2.2):** `POST /api/concierge/transcribe` (or equivalent) with **vendor STT** — **Cantonese (HK)** + **Mandarin** (`cmn-Hans` / `cmn-Hant`) locales; transcript → same `locale` + `/api/concierge/chat`; **Voice-0** Web Speech optional behind flag for QA.
-- **TTS read-aloud (§4.2.3):** optional **朗讀** for assistant messages — **separate opt-in** from mic; **TTS-0** (`speechSynthesis`) and/or **TTS-1** cloud route + rate limits; **no autoplay**; ship **TTS-0** in Phase 2 if parallel; **TTS-1** late Phase 2 or Phase 3.
+- ⏳ **Not started:** **Voice input (§4.2.2)** `POST /api/concierge/transcribe` (vendor STT) + optional **Voice-0** Web Speech.
+- ⏳ **Not started:** **TTS read-aloud (§4.2.3)** (TTS-0 `speechSynthesis` and/or TTS-1 cloud).
 - Email/SMS reminders per SRS (Resend/Twilio) — can be **outside** Hermes initially.
 - Optional: Hermes **cron** for internal summaries / staff digests (not customer medical content).
 
 ### Phase 3 — Hermes as private gateway (optional)
 
+- ⏳ **Not started**
 - Deploy Hermes on **VPS** (or approved host), TLS + IP allowlist or mTLS from Aura API egress.
 - Configure [API server](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server) auth; rotate keys.
 - Aura `POST /api/concierge/chat` proxies to `https://hermes.internal.../v1/chat/completions` with **salon system prompt** and tool policy.
 
 ### Phase 4 — Messaging channels
 
+- ⏳ **Not started**
 - `hermes gateway` for **WhatsApp/Telegram** per [messaging docs](https://hermes-agent.nousresearch.com/docs/user-guide/messaging).
 - Website and messaging share **same business rules** (pricing snippets, booking links) via a small **policy JSON** or DB to avoid drift.
 
 ### Phase 5 — Loyalty & “crypto trend”
 
+- ⏳ **Not started**
 - **Ship:** Clerk user + **Aura Circle / Aura Tokens** in app DB (per Product Owner doc).
 - **Explore later:** NFT tiers, USDT checkout — **only** with legal/accounting sign-off and support processes.
 
@@ -358,10 +386,10 @@ Run a **monthly** (then weekly) cycle:
 
 | Phase | Deliverable | Done when |
 |-------|-------------|-----------|
-| **KB-0** | Prisma schema + empty tables + admin flag to upload **T0** PDFs/Markdown | Editors can publish canonical chunks |
-| **KB-1** | Ingestion worker + staging index + promote workflow | T3 never reaches prod without approve |
-| **KB-2** | `/api/concierge/chat` uses **retrieve → rerank → generate** with citations | Latency p95 under target (e.g. < 8s) |
-| **KB-3** | Nightly rollups + trend topic pages fed from rollups | “Trending” answers cite rollups, not 50 raw URLs |
+| **KB-0** ✅ | Prisma schema + tables + admin UI + list/create APIs | Editors can publish canonical chunks |
+| **KB-1** ⏳ | Ingestion worker + staging index + promote workflow | T3 never reaches prod without approve |
+| **KB-2** 🟡 | Concierge uses basic retrieval for **T0 active** docs (keyword heuristic) | Upgrade to embeddings + rerank + citations formatting |
+| **KB-3** 🟡 | Rollups model + admin UI + generate endpoint exist | Add scheduled rollups + trend pages fed from rollups |
 
 **Environment variables (server only):** `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_MODEL`, `RERANKER_API_KEY` (if used), `INGEST_CRON_SECRET`, optional `DEFAULT_CHAT_LOCALE=zh-HK` for server-side fallback when client omits locale (should be rare if UI is correct).
 
@@ -563,3 +591,23 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | TTS vendor or consent policy change | Update §4.2.3, §6 Phase 2–3, §9 TTS row, §10 TTS bullets, §11 items 18–20. |
 
 **Last updated:** 2026-04-20
+
+---
+
+## Next 7 days (mini-sprint)
+
+- **Day 1 — Seed “trends” sources**
+  - Add 3–8 **T2/T3** docs (Status `active`, Language `zh-HK`) via `/admin/knowledge`
+  - Generate 1–2 rollups in `/admin/trends` and verify concierge trend answers prefer rollups
+- **Day 2 — KB hygiene**
+  - Add a small **editor checklist** (what counts as T2 vs T3, required fields, safe phrasing)
+  - Ensure rollup generator accepts docs without `publishedAt` (fallback to `createdAt`)
+- **Day 3–4 — KB-2 quality step**
+  - Add embeddings (pgvector or provider) + store embed model/version per chunk
+  - Implement hybrid retrieval + simple rerank; limit to 5–8 chunks passed to LLM
+- **Day 5 — Concierge UX & safety polish**
+  - Add “human handoff” CTA variants (WhatsApp/Call) to the concierge UI
+  - Add minimal eval set (20–40 zh-HK prompts) and track regressions before prompt changes
+- **Day 6–7 — Voice/TTS spike (optional)**
+  - Voice-0: Web Speech behind flag (internal QA)
+  - TTS-0: per-message “朗讀” using `speechSynthesis` (no autoplay, stop button)

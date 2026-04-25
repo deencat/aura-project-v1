@@ -74,7 +74,7 @@ async function callOpenRouter(apiKey: string, model: string, prompt: string, inp
 }
 
 export async function POST(request: Request) {
-  const { userId } = auth()
+  const { userId } = await auth()
   if (!userId) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 })
 
   const apiKey = process.env.OPENROUTER_API_KEY
@@ -105,9 +105,12 @@ export async function POST(request: Request) {
       tier: { in: ["T2", "T3"] },
       status: "active",
       language,
-      publishedAt: { gte: periodStart },
+      OR: [
+        { publishedAt: { gte: periodStart } },
+        { publishedAt: null, createdAt: { gte: periodStart } },
+      ],
     },
-    orderBy: [{ publishedAt: "desc" }],
+    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
     take: 12,
     include: {
       chunks: { select: { text: true }, take: 3 },

@@ -34,7 +34,9 @@ export default function TrendsAdminPage() {
   async function load() {
     setIsLoading(true)
     try {
-      const res = await fetch(`/api/knowledge/rollups?limit=20&language=${encodeURIComponent(language)}`)
+      const res = await fetch(`/api/knowledge/rollups?limit=20&language=${encodeURIComponent(language)}`, {
+        credentials: "include",
+      })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.message ?? "Failed to load rollups.")
       setRollups(data?.rollups ?? [])
@@ -56,6 +58,7 @@ export default function TrendsAdminPage() {
     try {
       const res = await fetch("/api/knowledge/rollups/generate", {
         method: "POST",
+        credentials: "include",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ topic, language, days }),
       })

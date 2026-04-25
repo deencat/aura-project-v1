@@ -89,7 +89,11 @@
     filter: blur(0.2px);
     opacity: 0.9;
   }
-  body > * {
+  /* Keep the app content above the decorative background, without affecting
+     third-party portals (e.g. Clerk modals) injected into <body>. */
+  body > header,
+  body > main,
+  body > footer {
     position: relative;
     z-index: 1;
   }

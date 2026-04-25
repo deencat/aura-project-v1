@@ -7,7 +7,6 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhook/clerk',
   '/api/services(.*)',  // Add services API routes as public
   '/api/concierge(.*)', // Public concierge APIs (chat/transcribe/synthesize)
-  '/api/knowledge(.*)', // Knowledge APIs do their own JSON 401 via Clerk auth()
   '/about',
   '/contact',
   '/concierge',
