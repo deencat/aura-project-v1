@@ -312,6 +312,23 @@ export async function POST(request: Request) {
     let kbHits = 0
     let rollupHits = 0
     let rollupContext = ""
+    let kbSources: Array<{
+      chunkId: string
+      documentId: string
+      tier: string
+      language: string
+      title: string | null
+      sourceUrl: string | null
+      updatedAt: string
+    }> = []
+    let rollupSources: Array<{
+      id: string
+      topic: string
+      language: string
+      periodStart: string
+      periodEnd: string
+      updatedAt: string
+    }> = []
     try {
       if (looksLikeTrendQuery(locale, message)) {
         const rollups = await getRollupContext({
@@ -321,6 +338,14 @@ export async function POST(request: Request) {
         })
         rollupHits = rollups.length
         rollupContext = formatRollupContext({ locale, rollups })
+        rollupSources = rollups.map((r: any) => ({
+          id: String(r.id),
+          topic: String(r.topic),
+          language: String(r.language),
+          periodStart: new Date(r.periodStart).toISOString(),
+          periodEnd: new Date(r.periodEnd).toISOString(),
+          updatedAt: new Date(r.updatedAt).toISOString(),
+        }))
       }
 
       const chunks = await retrieveKnowledgeChunks({
@@ -332,12 +357,23 @@ export async function POST(request: Request) {
       })
       kbHits = chunks.length
       kbContext = formatKbContext({ locale, chunks })
+      kbSources = chunks.map((c: any) => ({
+        chunkId: String(c.id),
+        documentId: String(c.document?.id ?? ""),
+        tier: String(c.document?.tier ?? ""),
+        language: String(c.document?.language ?? ""),
+        title: (c.document?.title ?? null) as string | null,
+        sourceUrl: (c.document?.sourceUrl ?? null) as string | null,
+        updatedAt: new Date(c.document?.updatedAt ?? Date.now()).toISOString(),
+      }))
     } catch {
       // If DB is unavailable, proceed without KB context.
       kbContext = ""
       kbHits = 0
       rollupContext = ""
       rollupHits = 0
+      kbSources = []
+      rollupSources = []
     }
 
     const reply = await callOpenRouter({
@@ -362,6 +398,8 @@ export async function POST(request: Request) {
         model: openRouterModel,
         kbHits,
         rollupHits,
+        sources: kbSources,
+        rollupSources,
       },
       { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
     )

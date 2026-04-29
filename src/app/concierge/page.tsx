@@ -10,7 +10,32 @@ import { useLanguage } from "@/contexts/LanguageContext"
 type Locale = "zh-HK" | "en" | "zh-Hans"
 
 type ChatRole = "user" | "assistant"
-type ChatMessage = { id: string; role: ChatRole; content: string }
+type SourceItem = {
+  chunkId: string
+  documentId: string
+  tier: string
+  language: string
+  title: string | null
+  sourceUrl: string | null
+  updatedAt: string
+}
+
+type RollupSourceItem = {
+  id: string
+  topic: string
+  language: string
+  periodStart: string
+  periodEnd: string
+  updatedAt: string
+}
+
+type ChatMessage = {
+  id: string
+  role: ChatRole
+  content: string
+  sources?: SourceItem[]
+  rollupSources?: RollupSourceItem[]
+}
 
 function languageToLocale(lang: string): Locale {
   if (lang === "zh-Hans") return "zh-Hans"
@@ -145,7 +170,16 @@ export default function ConciergePage() {
       setQuickReplies(data?.quickReplies ?? null)
       setLinks(data?.links ?? null)
       setMessages((prev) =>
-        prev.map((m) => (m.id === pendingId ? { ...m, content: String(data?.reply ?? "") } : m))
+        prev.map((m) =>
+          m.id === pendingId
+            ? {
+                ...m,
+                content: String(data?.reply ?? ""),
+                sources: Array.isArray(data?.sources) ? data.sources : undefined,
+                rollupSources: Array.isArray(data?.rollupSources) ? data.rollupSources : undefined,
+              }
+            : m
+        )
       )
     } catch (e: any) {
       setMessages((prev) => prev.filter((m) => m.id !== pendingId))
@@ -228,15 +262,71 @@ export default function ConciergePage() {
                     key={m.id}
                     className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
                   >
-                    <div
-                      className={[
-                        "max-w-[92%] whitespace-pre-wrap rounded-2xl px-5 py-4 text-sm leading-relaxed md:max-w-[78%]",
-                        m.role === "user"
-                          ? "bg-[linear-gradient(180deg,rgba(232,90,139,0.22)_0%,rgba(198,62,110,0.18)_100%)] text-foreground shadow-sm shadow-pink-500/10"
-                          : "border border-white/55 bg-white/55 text-foreground shadow-sm shadow-pink-500/10 backdrop-blur-md",
-                      ].join(" ")}
-                    >
-                      {m.content}
+                    <div className="max-w-[92%] md:max-w-[78%]">
+                      <div
+                        className={[
+                          "whitespace-pre-wrap rounded-2xl px-5 py-4 text-sm leading-relaxed",
+                          m.role === "user"
+                            ? "bg-[linear-gradient(180deg,rgba(232,90,139,0.22)_0%,rgba(198,62,110,0.18)_100%)] text-foreground shadow-sm shadow-pink-500/10"
+                            : "border border-white/55 bg-white/55 text-foreground shadow-sm shadow-pink-500/10 backdrop-blur-md",
+                        ].join(" ")}
+                      >
+                        {m.content}
+                      </div>
+
+                      {m.role === "assistant" && (m.rollupSources?.length || m.sources?.length) ? (
+                        <details className="mt-2 rounded-2xl border border-white/45 bg-white/35 px-4 py-3 text-xs text-foreground/80 shadow-sm shadow-pink-500/10 backdrop-blur-md">
+                          <summary className="cursor-pointer select-none font-semibold">
+                            Sources ({(m.rollupSources?.length ?? 0) + (m.sources?.length ?? 0)})
+                          </summary>
+                          <div className="mt-2 space-y-2">
+                            {m.rollupSources?.length ? (
+                              <div>
+                                <div className="font-semibold">Trends rollups</div>
+                                <ul className="mt-1 list-disc space-y-1 pl-5">
+                                  {m.rollupSources.map((r) => (
+                                    <li key={r.id}>
+                                      <span className="font-semibold">{r.topic}</span>{" "}
+                                      <span className="text-foreground/70">
+                                        ({r.language}) {new Date(r.periodStart).toLocaleDateString()} →{" "}
+                                        {new Date(r.periodEnd).toLocaleDateString()}
+                                      </span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : null}
+
+                            {m.sources?.length ? (
+                              <div>
+                                <div className="font-semibold">Knowledge Bank</div>
+                                <ul className="mt-1 list-disc space-y-1 pl-5">
+                                  {m.sources.map((s) => (
+                                    <li key={s.chunkId}>
+                                      <span className="font-semibold">
+                                        [{s.tier}] ({s.language}) {s.title ?? "(untitled)"}
+                                      </span>
+                                      {s.sourceUrl ? (
+                                        <>
+                                          {" "}
+                                          <a
+                                            href={s.sourceUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="underline decoration-pink-400/60 underline-offset-2"
+                                          >
+                                            source
+                                          </a>
+                                        </>
+                                      ) : null}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : null}
+                          </div>
+                        </details>
+                      ) : null}
                     </div>
                   </div>
                 ))}

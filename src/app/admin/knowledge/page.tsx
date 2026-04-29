@@ -24,6 +24,8 @@ type DocRow = {
   chunkCount: number
 }
 
+type EditDoc = DocRow & { content: string }
+
 export default function KnowledgeAdminPage() {
   const [tier, setTier] = useState<Tier>("T0")
   const [status, setStatus] = useState<Status>("active")
@@ -41,6 +43,9 @@ export default function KnowledgeAdminPage() {
   const [docs, setDocs] = useState<DocRow[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isBackfilling, setIsBackfilling] = useState(false)
+  const [isSeeding, setIsSeeding] = useState(false)
+  const [editing, setEditing] = useState<EditDoc | null>(null)
+  const [isSavingEdit, setIsSavingEdit] = useState(false)
 
   const topicsList = useMemo(
     () =>
@@ -132,6 +137,128 @@ export default function KnowledgeAdminPage() {
     }
   }
 
+  async function seedHongKongPack() {
+    setError(null)
+    setSuccess(null)
+    setIsSeeding(true)
+    try {
+      const res = await fetch("/api/knowledge/seed/hk-starter", {
+        method: "POST",
+        credentials: "include",
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) {
+        throw new Error(data?.message ?? data?.error ?? "Failed to seed knowledge pack.")
+      }
+      setSuccess(`Seeded. created=${data?.created?.length ?? 0} skipped=${data?.skipped?.length ?? 0}`)
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to seed knowledge pack.")
+    } finally {
+      setIsSeeding(false)
+    }
+  }
+
+  async function seedHongKongMarketPack() {
+    setError(null)
+    setSuccess(null)
+    setIsSeeding(true)
+    try {
+      const res = await fetch("/api/knowledge/seed/hk-market", {
+        method: "POST",
+        credentials: "include",
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) {
+        throw new Error(data?.message ?? data?.error ?? "Failed to seed market pack.")
+      }
+      setSuccess(`Seeded market pack. created=${data?.created?.length ?? 0} skipped=${data?.skipped?.length ?? 0}`)
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to seed market pack.")
+    } finally {
+      setIsSeeding(false)
+    }
+  }
+
+  async function startEdit(id: string) {
+    setError(null)
+    setSuccess(null)
+    try {
+      const res = await fetch(`/api/knowledge/documents/${encodeURIComponent(id)}`, { credentials: "include" })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? "Failed to load document.")
+      const d = data?.document
+      setEditing({
+        id: String(d.id),
+        tier: d.tier as Tier,
+        status: d.status as Status,
+        language: String(d.language),
+        title: d.title ?? null,
+        sourceUrl: d.sourceUrl ?? null,
+        topics: Array.isArray(d.topics) ? d.topics : [],
+        publishedAt: d.publishedAt ? String(d.publishedAt) : null,
+        updatedAt: String(d.updatedAt),
+        chunkCount: Number(d.chunkCount ?? 0),
+        content: String(d.content ?? ""),
+      })
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to load document.")
+    }
+  }
+
+  async function saveEdit() {
+    if (!editing) return
+    setError(null)
+    setSuccess(null)
+    setIsSavingEdit(true)
+    try {
+      const res = await fetch(`/api/knowledge/documents/${encodeURIComponent(editing.id)}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          tier: editing.tier,
+          status: editing.status,
+          language: editing.language,
+          title: editing.title,
+          sourceUrl: editing.sourceUrl,
+          topics: editing.topics,
+          content: editing.content,
+          chunkCharLimit,
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? data?.error ?? "Failed to update.")
+      setSuccess(`Updated. Chunks: ${data?.chunkCount ?? "?"}`)
+      setEditing(null)
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to update.")
+    } finally {
+      setIsSavingEdit(false)
+    }
+  }
+
+  async function deleteDoc(id: string) {
+    const ok = window.confirm("Delete this document? This will also delete its chunks.")
+    if (!ok) return
+    setError(null)
+    setSuccess(null)
+    try {
+      const res = await fetch(`/api/knowledge/documents/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? "Failed to delete.")
+      setSuccess("Deleted.")
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to delete.")
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -142,6 +269,12 @@ export default function KnowledgeAdminPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={seedHongKongPack} disabled={isLoading || isSeeding}>
+            {isSeeding ? "Seeding…" : "Seed HK starter pack"}
+          </Button>
+          <Button variant="outline" onClick={seedHongKongMarketPack} disabled={isLoading || isSeeding}>
+            {isSeeding ? "Seeding…" : "Seed HK market pack"}
+          </Button>
           <Button variant="outline" onClick={backfillEmbeddings} disabled={isLoading || isBackfilling}>
             {isBackfilling ? "Backfilling…" : "Backfill embeddings"}
           </Button>
@@ -261,6 +394,111 @@ export default function KnowledgeAdminPage() {
         </CardContent>
       </Card>
 
+      {editing && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Edit document</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Tier</label>
+              <Select value={editing.tier} onValueChange={(v) => setEditing((p) => (p ? { ...p, tier: v as Tier } : p))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="T0">T0 — Canonical</SelectItem>
+                  <SelectItem value="T1">T1 — Owned editorial</SelectItem>
+                  <SelectItem value="T2">T2 — Curated third-party</SelectItem>
+                  <SelectItem value="T3">T3 — Raw staging</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Status</label>
+              <Select
+                value={editing.status}
+                onValueChange={(v) => setEditing((p) => (p ? { ...p, status: v as Status } : p))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">active</SelectItem>
+                  <SelectItem value="staging">staging</SelectItem>
+                  <SelectItem value="archived">archived</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Language</label>
+              <Select value={editing.language} onValueChange={(v) => setEditing((p) => (p ? { ...p, language: v } : p))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="zh-HK">zh-HK</SelectItem>
+                  <SelectItem value="zh-Hant">zh-Hant</SelectItem>
+                  <SelectItem value="zh-Hans">zh-Hans</SelectItem>
+                  <SelectItem value="en">en</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Title</label>
+              <Input value={editing.title ?? ""} onChange={(e) => setEditing((p) => (p ? { ...p, title: e.target.value } : p))} />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium">Source URL</label>
+              <Input
+                value={editing.sourceUrl ?? ""}
+                onChange={(e) => setEditing((p) => (p ? { ...p, sourceUrl: e.target.value } : p))}
+                placeholder="https://..."
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium">Topics (comma separated)</label>
+              <Input
+                value={editing.topics.join(", ")}
+                onChange={(e) =>
+                  setEditing((p) =>
+                    p
+                      ? {
+                          ...p,
+                          topics: e.target.value
+                            .split(",")
+                            .map((t) => t.trim())
+                            .filter(Boolean),
+                        }
+                      : p
+                  )
+                }
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium">Content</label>
+              <Textarea value={editing.content} onChange={(e) => setEditing((p) => (p ? { ...p, content: e.target.value } : p))} className="min-h-[220px]" />
+              <p className="text-xs text-foreground/60">Saving will re-chunk and re-embed this document.</p>
+            </div>
+
+            <div className="flex gap-2 md:col-span-2">
+              <Button onClick={saveEdit} disabled={isSavingEdit}>
+                {isSavingEdit ? "Saving…" : "Save changes"}
+              </Button>
+              <Button variant="outline" onClick={() => setEditing(null)} disabled={isSavingEdit}>
+                Cancel
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Recent documents</CardTitle>
@@ -299,6 +537,14 @@ export default function KnowledgeAdminPage() {
                   </div>
                   <div className="text-xs text-foreground/60">
                     Updated {new Date(d.updatedAt).toLocaleString()}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => startEdit(d.id)} disabled={isLoading}>
+                      Edit
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => deleteDoc(d.id)} disabled={isLoading}>
+                      Delete
+                    </Button>
                   </div>
                 </div>
               ))}
