@@ -52,6 +52,8 @@ model KnowledgeChunk {
   text       String
   tokenCount Int?
 
+  // Stored as JSON float[] for portability; pgvector can be added later.
+  embedding          Json?
   embeddingModel   String?
   embeddingVersion String?
 

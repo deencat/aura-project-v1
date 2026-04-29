@@ -8,7 +8,7 @@
 
 ## Implementation status (living checklist)
 
-**Last updated:** 2026-04-25
+**Last updated:** 2026-04-29
 
 ### Shipped / implemented in repo
 
@@ -17,6 +17,8 @@
 - [x] **AI Concierge page** `src/app/concierge/page.tsx` (text chat UI)
 - [x] **Concierge API** `src/app/api/concierge/chat/route.ts` with OpenRouter integration + fallback
 - [x] **Basic RAG grounding** from Knowledge Bank (T0 active docs) + `kbHits` in response
+- [x] **KB-2 embeddings (baseline)**: store chunk embeddings + hybrid keyword→vector rerank retrieval
+- [x] **KB-2 ops**: admin “Backfill embeddings” tool for older chunks
 - [x] **Trends path**: rollups retrieval + trend-query routing (rollups prioritized for trend questions)
 - [x] **Knowledge Bank (KB-0)**: Prisma schema + Postgres tables + admin upload UI + list APIs
 - [x] **Trends admin UI** + rollup generation API (OpenRouter summarization)
@@ -25,7 +27,7 @@
 ### In progress / next
 
 - [ ] **KB-1 ingestion worker + staging→approve** workflow (T3 gated; no automatic promotion)
-- [ ] **KB-2 real retrieval quality** (embeddings + hybrid retrieval + rerank + citations format)
+- [ ] **KB-2 quality hardening** (eval set + citations formatting + perf budget)
 - [ ] **KB-3 scheduled rollups** (nightly job + trend topic pages fed from rollups)
 - [ ] **Voice input (Voice-0/1)** and **TTS (TTS-0/1)** for concierge
 - [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
@@ -388,7 +390,7 @@ Run a **monthly** (then weekly) cycle:
 |-------|-------------|-----------|
 | **KB-0** ✅ | Prisma schema + tables + admin UI + list/create APIs | Editors can publish canonical chunks |
 | **KB-1** ⏳ | Ingestion worker + staging index + promote workflow | T3 never reaches prod without approve |
-| **KB-2** 🟡 | Concierge uses basic retrieval for **T0 active** docs (keyword heuristic) | Upgrade to embeddings + rerank + citations formatting |
+| **KB-2** 🟡 | Concierge uses hybrid retrieval (keyword candidates + embedding rerank) for **T0 active** docs | Add backfill embeddings + citations formatting + perf/evals |
 | **KB-3** 🟡 | Rollups model + admin UI + generate endpoint exist | Add scheduled rollups + trend pages fed from rollups |
 
 **Environment variables (server only):** `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_MODEL`, `RERANKER_API_KEY` (if used), `INGEST_CRON_SECRET`, optional `DEFAULT_CHAT_LOCALE=zh-HK` for server-side fallback when client omits locale (should be rare if UI is correct).
@@ -590,7 +592,7 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | Accessibility or voice/STT vendor change | Update §4.2, §6 Phases 1–2, §9 rows, §10 voice bullets, §11 items 15–17. |
 | TTS vendor or consent policy change | Update §4.2.3, §6 Phase 2–3, §9 TTS row, §10 TTS bullets, §11 items 18–20. |
 
-**Last updated:** 2026-04-20
+**Last updated:** 2026-04-29
 
 ---
 

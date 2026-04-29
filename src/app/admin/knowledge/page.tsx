@@ -40,6 +40,7 @@ export default function KnowledgeAdminPage() {
 
   const [docs, setDocs] = useState<DocRow[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isBackfilling, setIsBackfilling] = useState(false)
 
   const topicsList = useMemo(
     () =>
@@ -107,6 +108,30 @@ export default function KnowledgeAdminPage() {
     }
   }
 
+  async function backfillEmbeddings() {
+    setError(null)
+    setSuccess(null)
+    setIsBackfilling(true)
+    try {
+      const res = await fetch("/api/knowledge/embeddings/backfill", {
+        method: "POST",
+        credentials: "include",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ limit: 120, batchSize: 16 }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) {
+        throw new Error(data?.message ?? data?.error ?? "Failed to backfill embeddings.")
+      }
+      setSuccess(`Embeddings backfilled. embedded=${data.embedded} scanned=${data.scanned} batches=${data.batches}`)
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to backfill embeddings.")
+    } finally {
+      setIsBackfilling(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -116,9 +141,14 @@ export default function KnowledgeAdminPage() {
             Upload canonical salon facts (T0) and curated content. This powers RAG grounding later.
           </p>
         </div>
-        <Button variant="outline" onClick={load} disabled={isLoading}>
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={backfillEmbeddings} disabled={isLoading || isBackfilling}>
+            {isBackfilling ? "Backfilling…" : "Backfill embeddings"}
+          </Button>
+          <Button variant="outline" onClick={load} disabled={isLoading}>
+            Refresh
+          </Button>
+        </div>
       </div>
 
       <Card>

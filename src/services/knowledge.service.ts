@@ -3,6 +3,117 @@ import { prisma } from "@/lib/prisma"
 export type KnowledgeTier = "T0" | "T1" | "T2" | "T3"
 export type KnowledgeStatus = "staging" | "active" | "archived"
 
+function getEmbeddingApiKey() {
+  return process.env.EMBEDDING_API_KEY || process.env.OPENROUTER_API_KEY || ""
+}
+
+function getEmbeddingModel() {
+  // Default to a non-OpenAI embedding model for HK compatibility.
+  return process.env.EMBEDDING_MODEL || "qwen/qwen3-embedding-4b"
+}
+
+function isNumberArray(v: unknown): v is number[] {
+  return Array.isArray(v) && v.length > 0 && v.every((x) => typeof x === "number" && Number.isFinite(x))
+}
+
+function cosineSimilarity(a: number[], b: number[]) {
+  const n = Math.min(a.length, b.length)
+  let dot = 0
+  let na = 0
+  let nb = 0
+  for (let i = 0; i < n; i++) {
+    const av = a[i]!
+    const bv = b[i]!
+    dot += av * bv
+    na += av * av
+    nb += bv * bv
+  }
+  const denom = Math.sqrt(na) * Math.sqrt(nb)
+  return denom === 0 ? 0 : dot / denom
+}
+
+async function embedTexts(args: { inputs: string[]; inputType?: "search_query" | "search_document" }) {
+  const apiKey = getEmbeddingApiKey()
+  if (!apiKey) return null
+
+  const res = await fetch("https://openrouter.ai/api/v1/embeddings", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
+      "X-Title": process.env.OPENROUTER_APP_NAME || "Aura",
+    },
+    body: JSON.stringify({
+      model: getEmbeddingModel(),
+      input: args.inputs,
+      encoding_format: "float",
+      input_type: args.inputType,
+    }),
+  })
+
+  const data: any = await res.json().catch(() => ({}))
+  if (!res.ok) return null
+
+  const rows = data?.data
+  if (!Array.isArray(rows) || rows.length === 0) return null
+  const embeddings = rows.map((r: any) => r?.embedding).filter(isNumberArray)
+  if (embeddings.length !== args.inputs.length) return null
+  return embeddings
+}
+
+export async function backfillKnowledgeChunkEmbeddings(args: { limit?: number; batchSize?: number }) {
+  const limit = Math.max(1, Math.min(args.limit ?? 120, 500))
+  const batchSize = Math.max(1, Math.min(args.batchSize ?? 16, 64))
+
+  const apiKey = getEmbeddingApiKey()
+  if (!apiKey) {
+    return { ok: false as const, error: "missing_embedding_key", embedded: 0, scanned: 0 }
+  }
+
+  let embedded = 0
+  let scanned = 0
+  let batches = 0
+
+  while (embedded < limit) {
+    const remaining = limit - embedded
+    const take = Math.min(batchSize, remaining)
+
+    const rows = await prisma.knowledgeChunk.findMany({
+      where: { embedding: null },
+      orderBy: [{ updatedAt: "desc" }],
+      take,
+      select: { id: true, text: true },
+    })
+
+    if (rows.length === 0) break
+    scanned += rows.length
+    batches += 1
+
+    const embeddings = await embedTexts({ inputs: rows.map((r) => r.text), inputType: "search_document" })
+    if (!embeddings) {
+      return { ok: false as const, error: "embedding_failed", embedded, scanned, batches }
+    }
+
+    await prisma.$transaction(
+      rows.map((r, idx) =>
+        prisma.knowledgeChunk.update({
+          where: { id: r.id },
+          data: {
+            embedding: embeddings[idx] ?? null,
+            embeddingModel: getEmbeddingModel(),
+            embeddingVersion: "openrouter:v1",
+          },
+        })
+      )
+    )
+
+    embedded += rows.length
+  }
+
+  return { ok: true as const, embedded, scanned, batches, model: getEmbeddingModel() }
+}
+
 export type CreateKnowledgeDocumentInput = {
   tier: KnowledgeTier
   status?: KnowledgeStatus
@@ -84,14 +195,17 @@ export async function createKnowledgeDocument(input: CreateKnowledgeDocumentInpu
       },
     })
 
+    const embeddings = await embedTexts({ inputs: chunks, inputType: "search_document" })
+
     await tx.knowledgeChunk.createMany({
       data: chunks.map((text, idx) => ({
         documentId: doc.id,
         chunkIndex: idx,
         text,
         tokenCount: null,
-        embeddingModel: null,
-        embeddingVersion: null,
+        embedding: embeddings?.[idx] ?? null,
+        embeddingModel: embeddings ? getEmbeddingModel() : null,
+        embeddingVersion: embeddings ? "openrouter:v1" : null,
       })),
     })
 
@@ -165,9 +279,8 @@ export async function retrieveKnowledgeChunks(args: {
 
   const whereOr = terms.map((t) => ({ text: { contains: t, mode: "insensitive" as const } }))
 
-  // Heuristic retrieval (KB-2): keyword contains + tier/status/lang filters.
-  // Ranking improvements (hybrid + rerank) will come later once embeddings are added.
-  const rows = await prisma.knowledgeChunk.findMany({
+  // KB-2 (upgraded): keyword candidate set, then rerank with embeddings when available.
+  const candidateRows = await prisma.knowledgeChunk.findMany({
     where: {
       OR: whereOr,
       document: {
@@ -176,7 +289,7 @@ export async function retrieveKnowledgeChunks(args: {
         language: { in: languages },
       },
     },
-    take: limit,
+    take: 60,
     orderBy: [{ updatedAt: "desc" }],
     include: {
       document: {
@@ -194,7 +307,21 @@ export async function retrieveKnowledgeChunks(args: {
     },
   })
 
-  return rows
+  const queryEmbedding = (await embedTexts({ inputs: [args.query], inputType: "search_query" }))?.[0] ?? null
+
+  if (!queryEmbedding) {
+    return candidateRows.slice(0, limit)
+  }
+
+  const scored = candidateRows.map((row) => {
+    const emb = row.embedding
+    const vec = isNumberArray(emb) ? emb : null
+    const sim = vec ? cosineSimilarity(queryEmbedding, vec) : 0
+    return { row, sim }
+  })
+
+  scored.sort((a, b) => b.sim - a.sim)
+  return scored.slice(0, limit).map((s) => s.row)
 }
 
 export async function listKnowledgeRollups(args: {
