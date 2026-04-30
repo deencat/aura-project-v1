@@ -8,14 +8,20 @@
 
 ## Implementation status (living checklist)
 
-**Last updated:** 2026-04-29
+**Last updated:** 2026-04-30
 
 ### Shipped / implemented in repo
 
 - [x] **Soft dreamy promo poster** UI theme tokens + key shadcn variants (`Button`, `Card`, `Badge`)
 - [x] **`zh-HK` default** site language (layout + language provider/switcher)
 - [x] **AI Concierge page** `src/app/concierge/page.tsx` (text chat UI)
+- [x] **Floating chat widget (Phase 1b)**: bottom-right launcher + popup modal (reuses same chat component + API)
 - [x] **Concierge API** `src/app/api/concierge/chat/route.ts` with OpenRouter integration + fallback
+- [x] **Per-user persistent chat history** (Clerk `userId`): DB threads/messages + `/api/concierge/history*` + auto-restore after re-login
+- [x] **Concierge safety/ops baseline**:
+  - Rate limiting (DB-backed) across `/api/concierge/*`
+  - Abuse monitoring events (hashed IP only; no message bodies)
+  - Retention cleanup endpoint `POST /api/concierge/retention/run?token=...` with **180-day** retention
 - [x] **Basic RAG grounding** from Knowledge Bank (T0 active docs) + `kbHits` in response
 - [x] **KB-2 embeddings (baseline)**: store chunk embeddings + hybrid keyword→vector rerank retrieval
 - [x] **KB-2 ops**: admin “Backfill embeddings” tool for older chunks
@@ -23,12 +29,14 @@
 - [x] **Knowledge Bank (KB-0)**: Prisma schema + Postgres tables + admin upload UI + list APIs
 - [x] **Trends admin UI** + rollup generation API (OpenRouter summarization)
 - [x] **Auth hardening** for knowledge APIs (Clerk session works; avoids prior 401 pitfalls)
+- [x] **Clerk middleware matcher hardening**: align with Clerk-recommended `matcher` to reduce auth() / 404 edge-case errors
 
 ### In progress / next
 
 - [ ] **KB-1 ingestion worker + staging→approve** workflow (T3 gated; no automatic promotion)
 - [ ] **KB-2 quality hardening** (eval set + citations formatting + perf budget)
 - [ ] **KB-3 scheduled rollups** (nightly job + trend topic pages fed from rollups)
+- [ ] **Concierge ops**: schedule retention cleanup (cron) + add admin/manual run UI
 - [ ] **Voice input (Voice-0/1)** and **TTS (TTS-0/1)** for concierge
 - [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
 - [ ] **Loyalty** (closed-loop points) + deferred crypto/NFT exploration
@@ -598,18 +606,21 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 
 ## Next 7 days (mini-sprint)
 
-- **Day 1 — Seed “trends” sources**
+- **Day 1 — Concierge persistence validation**
+  - Sign in → chat → refresh → still there; sign out/in → history restored (widget + `/concierge`)
+  - Confirm “清除對話” starts a new thread for signed-in users
+- **Day 2 — Concierge safety baseline**
+  - ✅ Rate limiting + abuse monitoring shipped
+  - ✅ Retention policy set to **180 days** + cleanup endpoint shipped
+  - ⏳ Wire scheduled cleanup (cron) or admin/manual run
+- **Day 3 — KB-2 quality step**
+  - Create a minimal **eval set** (20–40 `zh-HK` prompts) and track regressions before prompt changes
+  - Tighten citations formatting (clearer titles + tier labels; avoid long noisy lists)
+- **Day 4 — Seed “trends” sources**
   - Add 3–8 **T2/T3** docs (Status `active`, Language `zh-HK`) via `/admin/knowledge`
   - Generate 1–2 rollups in `/admin/trends` and verify concierge trend answers prefer rollups
-- **Day 2 — KB hygiene**
-  - Add a small **editor checklist** (what counts as T2 vs T3, required fields, safe phrasing)
-  - Ensure rollup generator accepts docs without `publishedAt` (fallback to `createdAt`)
-- **Day 3–4 — KB-2 quality step**
-  - Add embeddings (pgvector or provider) + store embed model/version per chunk
-  - Implement hybrid retrieval + simple rerank; limit to 5–8 chunks passed to LLM
-- **Day 5 — Concierge UX & safety polish**
-  - Add “human handoff” CTA variants (WhatsApp/Call) to the concierge UI
-  - Add minimal eval set (20–40 zh-HK prompts) and track regressions before prompt changes
+- **Day 5 — KB-1 start**
+  - Define ingestion sources + schema (RSS / URLs / uploads), and implement the first worker stub (staging-only)
 - **Day 6–7 — Voice/TTS spike (optional)**
   - Voice-0: Web Speech behind flag (internal QA)
   - TTS-0: per-message “朗讀” using `speechSynthesis` (no autoplay, stop button)

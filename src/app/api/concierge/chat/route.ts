@@ -1,33 +1,10 @@
 import { NextResponse } from "next/server"
 import { getRollupContext, retrieveKnowledgeChunks } from "@/services/knowledge.service"
+import { auth } from "@clerk/nextjs/server"
+import { enforceConciergeRateLimit, logConciergeRequestEvent } from "@/services/concierge-guard.service"
 
 type Locale = "zh-HK" | "en" | "zh-Hans" | "zh-Hant"
 type OpenRouterMessage = { role: "system" | "user" | "assistant"; content: string }
-
-function getClientIp(request: Request) {
-  const forwardedFor = request.headers.get("x-forwarded-for")
-  if (forwardedFor) return forwardedFor.split(",")[0]?.trim() ?? "unknown"
-  return request.headers.get("x-real-ip") ?? "unknown"
-}
-
-const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX = 20
-const rateLimitState = new Map<string, { count: number; resetAt: number }>()
-
-function rateLimit(ip: string) {
-  const now = Date.now()
-  const existing = rateLimitState.get(ip)
-  if (!existing || now >= existing.resetAt) {
-    rateLimitState.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
-    return { ok: true, remaining: RATE_LIMIT_MAX - 1 }
-  }
-  if (existing.count >= RATE_LIMIT_MAX) {
-    return { ok: false, remaining: 0, retryAfterSeconds: Math.ceil((existing.resetAt - now) / 1000) }
-  }
-  existing.count += 1
-  rateLimitState.set(ip, existing)
-  return { ok: true, remaining: RATE_LIMIT_MAX - existing.count }
-}
 
 function normalizeLocale(locale: unknown): Locale {
   if (locale === "zh-HK" || locale === "en" || locale === "zh-Hans" || locale === "zh-Hant") return locale
@@ -266,20 +243,6 @@ async function callOpenRouter(args: {
 }
 
 export async function POST(request: Request) {
-  const ip = getClientIp(request)
-  const rl = rateLimit(ip)
-  if (!rl.ok) {
-    return NextResponse.json(
-      { error: "rate_limited", message: "Too many requests. Please try again shortly." },
-      {
-        status: 429,
-        headers: {
-          "Retry-After": String(rl.retryAfterSeconds ?? 60),
-        },
-      }
-    )
-  }
-
   let body: any
   try {
     body = await request.json()
@@ -292,18 +255,60 @@ export async function POST(request: Request) {
   const openRouterKey = process.env.OPENROUTER_API_KEY
   const openRouterModel = process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini"
 
+  const { userId } = await auth()
+  const { decision, ipHash } = await enforceConciergeRateLimit({
+    request,
+    route: "/api/concierge/chat",
+    method: "POST",
+    userId,
+    locale,
+  })
+  if (!decision.ok) {
+    await logConciergeRequestEvent({
+      route: "/api/concierge/chat",
+      method: "POST",
+      locale,
+      ipHash,
+      userId,
+      statusCode: 429,
+      rateLimited: true,
+    })
+    return NextResponse.json(
+      { error: "rate_limited", message: "Too many requests. Please try again shortly." },
+      { status: 429, headers: { "Retry-After": String(decision.retryAfterSeconds) } }
+    )
+  }
+
   // For the initial greeting boot call (`message === ""`), keep the stub greeting.
   // This makes the first paint fast and predictable even if the model is slow.
   if (!message) {
+    await logConciergeRequestEvent({
+      route: "/api/concierge/chat",
+      method: "POST",
+      locale,
+      ipHash,
+      userId,
+      statusCode: 200,
+      rateLimited: false,
+    })
     return NextResponse.json(getStubResponse(locale, ""), {
-      headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) },
+      headers: { "X-RateLimit-Remaining": String(decision.remaining) },
     })
   }
 
   // If no key is configured, keep using the stub (safe local mode).
   if (!openRouterKey) {
+    await logConciergeRequestEvent({
+      route: "/api/concierge/chat",
+      method: "POST",
+      locale,
+      ipHash,
+      userId,
+      statusCode: 200,
+      rateLimited: false,
+    })
     return NextResponse.json(getStubResponse(locale, message), {
-      headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) },
+      headers: { "X-RateLimit-Remaining": String(decision.remaining) },
     })
   }
 
@@ -401,9 +406,18 @@ export async function POST(request: Request) {
         sources: kbSources,
         rollupSources,
       },
-      { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
+      { headers: { "X-RateLimit-Remaining": String(decision.remaining) } }
     )
   } catch (e: any) {
+    await logConciergeRequestEvent({
+      route: "/api/concierge/chat",
+      method: "POST",
+      locale,
+      ipHash,
+      userId,
+      statusCode: 500,
+      rateLimited: false,
+    })
     // Fail safe: if OpenRouter errors, degrade to stub with a gentle hint.
     const stub = getStubResponse(locale, message)
     const hint =
@@ -414,7 +428,7 @@ export async function POST(request: Request) {
           : "\n\n（暫時：AI 服務繁忙。先用呢個引導流程，我哋稍後再試。）"
     return NextResponse.json(
       { ...stub, reply: `${stub.reply}${hint}` },
-      { headers: { "X-RateLimit-Remaining": String(rl.remaining ?? 0) } }
+      { headers: { "X-RateLimit-Remaining": String(decision.remaining) } }
     )
   }
 }

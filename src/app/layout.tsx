@@ -14,6 +14,7 @@ import Footer from '@/components/Footer'
 import ServiceInitializer from '@/components/ServiceInitializer'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import FloatingConciergeWidget from '@/components/concierge/FloatingConciergeWidget'
 
 export const metadata: Metadata = {
   title: 'Aura - Tech-Forward Beauty',
@@ -51,6 +52,7 @@ export default function RootLayout({
           <main>
             {children}
           </main>
+          <FloatingConciergeWidget />
           <Footer />
           </LanguageProvider>
         </body>

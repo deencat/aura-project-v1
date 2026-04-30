@@ -96,3 +96,68 @@ model IngestionRun {
   @@index([status])
 }
 
+model ConciergeThread {
+  id       String @id @default(cuid())
+  userId   String
+  locale   String // "zh-HK" | "zh-Hans" | "en" (aligned with concierge UI)
+  title    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ConciergeMessage[]
+
+  @@index([userId, locale, updatedAt(sort: Desc)])
+  @@index([userId, updatedAt(sort: Desc)])
+}
+
+model ConciergeMessage {
+  id        String @id @default(cuid())
+  threadId  String
+  thread    ConciergeThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  role    String // "user" | "assistant"
+  content String
+
+  // Optional: persist KB citations for later review
+  sources      Json?
+  rollupSources Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([threadId, createdAt])
+}
+
+model RateLimitCounter {
+  id       String @id @default(cuid())
+  key      String
+  windowId Int
+  count    Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, windowId])
+  @@index([windowId])
+  @@index([updatedAt])
+}
+
+model ConciergeRequestEvent {
+  id        String @id @default(cuid())
+  route     String
+  method    String
+  locale    String?
+
+  ipHash    String
+  userId    String?
+
+  statusCode Int
+  rateLimited Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([route, createdAt])
+  @@index([userId, createdAt])
+}
+
