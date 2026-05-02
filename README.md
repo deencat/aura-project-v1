@@ -137,7 +137,7 @@ Trend rollups summarize recent **active** T2/T3 documents (same logic as `/admin
 - **Voice-0:** Web Speech API where the browser supports it (e.g. desktop Chrome).
 - **Voice-1 (iPhone / Safari):** the mic **records** audio; on stop, audio is sent to `POST /api/concierge/transcribe` (OpenAI Whisper). Set **`OPENAI_API_KEY`**. Safari needs a **secure context** (HTTPS). Two ways to get that while developing:
   - **LAN HTTPS:** `npm run gen:dev-tls-certs -- YOUR_LAN_IP` then e.g. `npm run dev:https:local` (port **3000**) or **`npm run dev:https:local:3003`** if you normally use **`npm run dev:lan:3003`**. On the phone the URL must use the **same port**: `https://YOUR_LAN_IP:3003/concierge`. This is **not** tunneling—same Wi‑Fi and firewall rules apply.
-  - **Tunnel (easiest on iPhone):** Terminal 1: `npm run dev` or `npm run dev:lan:3003`. Terminal 2: `npm run tunnel:cloudflare` or **`npm run tunnel:cloudflare:3003`** to match that port. Open the printed **`https://*.trycloudflare.com/concierge`** on the phone.
+  - **Tunnel (recommended for iPhone):** `https://192.168.x.x:3003` + self-signed certs is often **blocked by Safari**. Use: Terminal 1 **`npm run dev:lan:3003`**, Terminal 2 **`npm run iphone:tunnel`** (needs [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/)). Open **`https://…trycloudflare.com/concierge`** from the tunnel output—not the LAN IP.
 
 ## Documentation
 

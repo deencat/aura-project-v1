@@ -13,6 +13,7 @@
     "check:lan:https": "bash scripts/check-lan-https.sh",
     "tunnel:cloudflare": "cloudflared tunnel --url http://localhost:3000",
     "tunnel:cloudflare:3003": "cloudflared tunnel --url http://localhost:3003",
+    "iphone:tunnel": "bash scripts/iphone-tunnel.sh 3003",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
