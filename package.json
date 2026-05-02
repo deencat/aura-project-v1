@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev:https": "next dev -H 0.0.0.0 -p 3000 --experimental-https",
     "dev:https:local": "next dev -H 0.0.0.0 -p 3000 --experimental-https-key ./certificates/dev-key.pem --experimental-https-cert ./certificates/dev-cert.pem",
+    "dev:https:local:3443": "next dev -H 0.0.0.0 -p 3443 --experimental-https-key ./certificates/dev-key.pem --experimental-https-cert ./certificates/dev-cert.pem",
     "gen:dev-tls-certs": "bash scripts/gen-dev-tls-certs.sh",
     "build": "next build",
     "start": "next start",
