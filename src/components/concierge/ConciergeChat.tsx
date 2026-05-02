@@ -48,6 +48,11 @@ function uid() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
+function takeTop<T>(items: T[] | undefined, limit: number) {
+  if (!items || items.length <= limit) return { top: items ?? [], more: 0 }
+  return { top: items.slice(0, limit), more: items.length - limit }
+}
+
 export function ConciergeChat(props: { variant?: "page" | "widget" }) {
   const { language, t } = useLanguage()
   const locale = useMemo(() => languageToLocale(language), [language])
@@ -359,7 +364,7 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
                           <div>
                             <div className="font-semibold">Trends rollups</div>
                             <ul className="mt-1 list-disc space-y-1 pl-5">
-                              {m.rollupSources.map((r) => (
+                              {takeTop(m.rollupSources, 3).top.map((r) => (
                                 <li key={r.id}>
                                   <span className="font-semibold">{r.topic}</span>{" "}
                                   <span className="text-foreground/70">
@@ -369,6 +374,9 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
                                 </li>
                               ))}
                             </ul>
+                            {takeTop(m.rollupSources, 3).more ? (
+                              <div className="mt-1 text-foreground/70">+ {takeTop(m.rollupSources, 3).more} more</div>
+                            ) : null}
                           </div>
                         ) : null}
 
@@ -376,7 +384,7 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
                           <div>
                             <div className="font-semibold">Knowledge Bank</div>
                             <ul className="mt-1 list-disc space-y-1 pl-5">
-                              {m.sources.map((s) => (
+                              {takeTop(m.sources, 5).top.map((s) => (
                                 <li key={s.chunkId}>
                                   <span className="font-semibold">
                                     [{s.tier}] ({s.language}) {s.title ?? "(untitled)"}
@@ -397,6 +405,9 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
                                 </li>
                               ))}
                             </ul>
+                            {takeTop(m.sources, 5).more ? (
+                              <div className="mt-1 text-foreground/70">+ {takeTop(m.sources, 5).more} more</div>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>

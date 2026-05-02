@@ -8,7 +8,18 @@
 
 ## Implementation status (living checklist)
 
-**Last updated:** 2026-04-30
+**Last updated:** 2026-05-02
+
+### Progress tracking (snapshot)
+
+| Track | Current focus | Notes |
+|-------|----------------|-------|
+| **Website / Next.js** | Ship KB + concierge reliability; then **content QA** (broken images route-by-route) | Hermes / WhatsApp / MCP bridge on VPS = **deferred** until site is production-ready |
+| **Ops on Hostinger** | Use **`curl` + cron secrets** for ingest, rollup, retention (same routes as README); `vercel.json` cron is optional if you deploy on Vercel | Set `KB_INGEST_CRON_SECRET`, optional `KB_ROLLUP_*`, `CONCIERGE_RETENTION_SECRET`, `CRON_SECRET` only if your host sends Bearer |
+
+**Recently landed in repo (high level):** KB-1 RSS + HTML ingest → T3 staging; promote endpoints + audit fields; admin knowledge actions; rollup generation extracted to `knowledge-rollup-generation.service.ts`; scheduled rollup + retention routes + `internal-cron-auth`; README ops; optional `vercel.json` schedules.
+
+**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects, (2) admin **retention run** UI, (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke. **Defer:** voice/TTS, Hermes gateway, loyalty until core site + content pass.
 
 ### Shipped / implemented in repo
 
@@ -21,7 +32,8 @@
 - [x] **Concierge safety/ops baseline**:
   - Rate limiting (DB-backed) across `/api/concierge/*`
   - Abuse monitoring events (hashed IP only; no message bodies)
-  - Retention cleanup endpoint `POST /api/concierge/retention/run?token=...` with **180-day** retention
+  - Retention cleanup `GET`/`POST /api/concierge/retention/run` (`?token=` / `x-internal-token` / `Authorization: Bearer` when `CRON_SECRET` set) with **180-day** default retention (`CONCIERGE_RETENTION_DAYS`)
+  - **Vercel Cron** (`vercel.json`): daily rollup job + weekly retention (see `.env.local.example`: `CRON_SECRET`, rollup envs)
 - [x] **Basic RAG grounding** from Knowledge Bank (T0 active docs) + `kbHits` in response
 - [x] **KB-2 embeddings (baseline)**: store chunk embeddings + hybrid keyword→vector rerank retrieval
 - [x] **KB-2 ops**: admin “Backfill embeddings” tool for older chunks
@@ -30,13 +42,24 @@
 - [x] **Trends admin UI** + rollup generation API (OpenRouter summarization)
 - [x] **Auth hardening** for knowledge APIs (Clerk session works; avoids prior 401 pitfalls)
 - [x] **Clerk middleware matcher hardening**: align with Clerk-recommended `matcher` to reduce auth() / 404 edge-case errors
+- [x] **KB-1 ingestion + staging→promote** (T3 never auto-publishes; governance via dedicated APIs):
+  - **RSS/Atom → T3 `staging`**: `POST /api/knowledge/ingest/run?token=...` (cron secret) + `POST /api/knowledge/ingest/admin/run` (Clerk); optional `KB_INGEST_FEEDS_JSON`, caps/timeouts in `.env.local.example`
+  - **HTML list pages → T3 `staging`**: `POST /api/knowledge/ingest/html/run?token=...` + `POST /api/knowledge/ingest/html/admin/run`; optional `KB_INGEST_HTML_SOURCES_JSON`, `KB_INGEST_HTML_MAX_*`
+  - **Runs log**: `GET /api/knowledge/ingest/runs` (admin) for ingestion audit
+  - **Promotion**: `POST .../promote/activate` (staging→active), `POST .../promote/approve-t3-to-t2` (T3 staging→T2 active); `KnowledgeDocument.approvedAt` / `approvedByUserId`; generic document PATCH does **not** bypass tiers for T3
+  - **Admin UI**: `/admin/knowledge` triggers ingest + promote actions (aligned with routes above)
+- [x] **KB-3 scheduled rollups**: shared generator `src/services/knowledge-rollup-generation.service.ts`; cron route `GET|POST /api/knowledge/rollups/cron/run` (auth: `CRON_SECRET` Bearer and/or `KB_ROLLUP_CRON_SECRET` / `KB_INGEST_CRON_SECRET`); optional `KB_ROLLUP_TOPICS_JSON`; `vercel.json` schedule `0 3 * * *` (UTC)
 
 ### In progress / next
 
-- [ ] **KB-1 ingestion worker + staging→approve** workflow (T3 gated; no automatic promotion)
-- [ ] **KB-2 quality hardening** (eval set + citations formatting + perf budget)
-- [ ] **KB-3 scheduled rollups** (nightly job + trend topic pages fed from rollups)
-- [ ] **Concierge ops**: schedule retention cleanup (cron) + add admin/manual run UI
+- [ ] **KB-3 public trend pages** (optional): marketing/SEO routes fed primarily from rollups (concierge already prefers rollups for trend-style queries)
+- [ ] **KB-1 polish** (optional): dedicated **staging inbox** / stronger filters in admin (workflow is already enforceable via API + current list)
+- [x] **KB-2 quality hardening (baseline)**:
+  - Golden set runner `npm run eval:concierge` (starter set)
+  - Locale drift guard (zh-HK): one retry with stricter instruction if reply drifts to English
+  - Citations UI trims long lists (top sources + “+N more”)
+  - Server-side model timeout + graceful fallback (`CONCIERGE_MODEL_TIMEOUT_MS`, `fallbackReason: "timeout"`)
+- [ ] **Concierge ops**: admin/manual **retention run** UI (cron is wired via `vercel.json`)
 - [ ] **Voice input (Voice-0/1)** and **TTS (TTS-0/1)** for concierge
 - [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
 - [ ] **Loyalty** (closed-loop points) + deferred crypto/NFT exploration
@@ -80,6 +103,8 @@ Hermes is a **Python-based agent runtime** with:
 - **Memory, skills, MCP, scheduling** for longer-lived operator workflows.
 
 **Implication:** Hermes is **not** a drop-in React component. Integration is **infrastructure + one thin API layer** in Aura, not a replacement for Next.js.
+
+For a concise **upstream vs Aura vs planned Hermes phases** comparison, see **§7.6.1**.
 
 ---
 
@@ -363,6 +388,30 @@ flowchart TB
 - **Language detect**; store `zh-HK`, `zh-CN`, `en` separately where possible.
 - **Time decay:** for trend queries, prefer `published_at` within **90 days** unless user asks historical.
 
+**KB-1 (implemented in repo now): RSS/Atom → T3 staging (no auto-publish)**
+
+- Endpoint (secret-protected, Clerk bypass): `POST /api/knowledge/ingest/run?token=...`
+- Admin trigger (Clerk-protected): `POST /api/knowledge/ingest/admin/run`
+- Ingest logic: fetch feed → parse RSS/Atom → strip HTML → dedupe by `sourceUrl`/`hash` → save as **Tier `T3` + Status `staging`** using the same chunk+embed pipeline as admin uploads.
+- Starter HK feeds (繁體中文 / 香港):
+  - 政府新聞處 GIA 新聞公報（繁中）：`http://www.info.gov.hk/gia/rss/general_zh.xml`
+  - （可選）香港01：官方未提供 RSS；如要用，可自建 RSSHub：`https://rsshub.app/hk01/channel/443`
+
+**KB-1 (implemented in repo now): HTML list pages (no RSS) → T3 staging**
+
+- Endpoint (secret-protected, Clerk bypass): `POST /api/knowledge/ingest/html/run?token=...`
+- Admin trigger (Clerk-protected): `POST /api/knowledge/ingest/html/admin/run`
+- Ingest logic: fetch list page → extract article URLs → fetch article HTML → extract main text → **T3 + staging** via `createKnowledgeDocument()`; dedupe by canonicalized URL (strips `utm_*` etc).
+
+**KB-1 governance (promotion rules)**
+
+- **T3 content never auto-publishes**: ingestion always writes `tier=T3` + `status=staging`
+- To use staged content, editors must promote via Clerk-protected endpoints (also surfaced as buttons in `/admin/knowledge`):
+  - Activate (staging → active): `POST /api/knowledge/documents/:id/promote/activate`  
+    Rule: only `status=staging` can be activated; sets `approvedAt`/`approvedByUserId` if missing.
+  - Approve (T3 staging → T2 active): `POST /api/knowledge/documents/:id/promote/approve-t3-to-t2`  
+    Rule: only `tier=T3` + `status=staging` can be approved; sets `approvedAt`/`approvedByUserId`.
+
 ### 7.5 Retrieval strategy (how we beat “RAG has limits”)
 
 Use **all** of the following together (none replaces the others):
@@ -382,6 +431,22 @@ Use **all** of the following together (none replaces the others):
 
 Skills should stay **short and versioned**; long factual content lives in **T0–T2**.
 
+### 7.6.1 Hermes feature parity matrix (upstream product vs this plan)
+
+**Upstream** refers to [Nous Hermes Agent](https://hermes-agent.nousresearch.com/docs/) (API server, messaging, MCP, skills/memory/scheduling as documented there). **Aura** is this Next.js app: concierge, Clerk, Postgres Knowledge Bank, and `/api/*` as the only public integration surface (§4).
+
+| Capability | Official Hermes Agent (typical surface) | Aura **today** (Phase 1 shipped) | Aura **with Hermes** (Phase 3–4, optional) |
+|------------|------------------------------------------|-----------------------------------|---------------------------------------------|
+| **OpenAI-compatible chat API** | [API server](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server): completions on a dedicated host | `POST /api/concierge/chat` → OpenRouter (+ RAG); no Hermes process | Same browser/API contract; server **may forward** completions to Hermes instead of (or in addition to) OpenRouter |
+| **Messaging (WhatsApp, Telegram, …)** | [Messaging gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging) as first-class channel | Website + widget only; no BSP bridge in repo | **Planned:** one gateway so messaging and web share **policy** (prompts, handoffs, forbidden claims) |
+| **MCP / tool use** | [MCP](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp) for agent tools | Tools and retrieval are **app-defined** (DB, RAG, admin APIs) | Optional: run **some** tools via Hermes MCP; **or** keep tools in Next and use Hermes only for messaging/API — both are valid splits |
+| **Skills, long-lived memory, scheduling** | Platform features for operator/agent loops | **Skills** ≈ prompts + route logic + KB tiers; **memory** ≈ threads/messages + RAG corpus; **cron** = not Hermes (Vercel/cron + §7.7) | Use Hermes where it **reduces bespoke glue** (e.g. channel + skill loop); **not** required for text concierge MVP |
+| **Knowledge bank / citations / T0–T3** | Not a replacement for your corpus; wire as needed | **Source of truth** in Postgres + hybrid retrieval + promotion workflow (§7) | **Unchanged:** Hermes does not replace KB; RAG and tiers stay in Aura |
+| **Auth, rate limits, PII posture** | You secure Hermes like any private API (TLS, keys, allowlist) | Clerk sessions, DB rate limits, retention endpoint (checklist §0) | Hermes sits **private**; Aura remains policy gate for web; messaging inherits same rules via shared config/DB |
+| **Hosting** | Python agent runtime (often VPS / long-running process) | Vercel + Postgres (typical) | Add VPS (or approved host) for Hermes **only when** Phase 3–4 scope is committed |
+
+**How to read this:** Aura intentionally **does not** aim for 1:1 use of every Hermes feature on day one. Phase 3–4 mean: **optional** private completion proxy and/or **messaging parity**, while **KB, trust tiers, and web API shape** stay in Next.js.
+
 ### 7.7 Continuous improvement (no local RL required)
 
 Run a **monthly** (then weekly) cycle:
@@ -397,11 +462,11 @@ Run a **monthly** (then weekly) cycle:
 | Phase | Deliverable | Done when |
 |-------|-------------|-----------|
 | **KB-0** ✅ | Prisma schema + tables + admin UI + list/create APIs | Editors can publish canonical chunks |
-| **KB-1** ⏳ | Ingestion worker + staging index + promote workflow | T3 never reaches prod without approve |
-| **KB-2** 🟡 | Concierge uses hybrid retrieval (keyword candidates + embedding rerank) for **T0 active** docs | Add backfill embeddings + citations formatting + perf/evals |
-| **KB-3** 🟡 | Rollups model + admin UI + generate endpoint exist | Add scheduled rollups + trend pages fed from rollups |
+| **KB-1** ✅ | RSS + HTML ingestion → **T3 `staging`**; **promote** endpoints + audit fields; no auto-publish | T3 never reaches prod without explicit promote; editors can run ingest + approve from `/admin/knowledge` |
+| **KB-2** ✅ | Hybrid retrieval (keyword → embedding rerank) for **T0 active** + admin backfill + citation UX | Shipped; keep **§7.7** golden set + latency/rerank tuning as continuous work |
+| **KB-3** 🟡 | Rollups + admin UI + **cron** (`/api/knowledge/rollups/cron/run` + `vercel.json`) | Optional: **trend topic pages** on the marketing site fed from rollups |
 
-**Environment variables (server only):** `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_MODEL`, `RERANKER_API_KEY` (if used), `INGEST_CRON_SECRET`, optional `DEFAULT_CHAT_LOCALE=zh-HK` for server-side fallback when client omits locale (should be rare if UI is correct).
+**Environment variables (server only):** `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_MODEL`, `RERANKER_API_KEY` (if used), `KB_INGEST_CRON_SECRET`, optional `KB_INGEST_FEEDS_JSON`, `KB_INGEST_MAX_ITEMS_PER_FEED`, `KB_INGEST_FETCH_TIMEOUT_MS`, optional `KB_INGEST_HTML_SOURCES_JSON`, `KB_INGEST_HTML_MAX_LINKS_PER_SOURCE`, `KB_INGEST_HTML_MAX_ARTICLES_PER_SOURCE`, optional `CRON_SECRET` (Vercel Cron), optional `KB_ROLLUP_CRON_SECRET`, optional `KB_ROLLUP_TOPICS_JSON`, `CONCIERGE_RETENTION_SECRET`, `CONCIERGE_RETENTION_DAYS`, optional `DEFAULT_CHAT_LOCALE=zh-HK` for server-side fallback when client omits locale (should be rare if UI is correct). See `.env.local.example`.
 
 ---
 
@@ -528,14 +593,16 @@ Ideas from market / strategy research, **classified**:
 
 **Knowledge bank (§7)**
 
-7. **KB-0:** Prisma models for `knowledge_documents`, `knowledge_chunks`, `knowledge_rollups`, `ingestion_runs`; admin upload for **T0** files.
-8. **KB-1:** Worker/cron: fetch → normalize → chunk → embed → **staging**; promote API (role-guarded); keyword index for hybrid search.
-9. **KB-2:** Wire retrieval + re-rank + `chat` completion with **citations** + tier filters; load tests on p95 latency.
-10. **KB-3:** Nightly rollup job + “trends” query path; archive job for aged T3.
+7. ✅ **KB-0:** Prisma models for `knowledge_documents`, `knowledge_chunks`, `knowledge_rollups`, `ingestion_runs`; admin upload for **T0** files — **shipped** (see §0 checklist).
+8. ✅ **KB-1:** RSS + HTML ingest → **T3 `staging`**; `IngestionRun` logging; Clerk + cron routes; **promote** APIs + audit fields; `/admin/knowledge` actions — **shipped**. Optional follow-up: dedicated staging inbox / filters; expand curated source packs.
+9. ✅ **KB-2:** Hybrid retrieval + re-rank + `chat` with **citations** + tier filters — **shipped**. Ongoing: §7.7 golden set, p95 latency / load tests as needed.
+10. 🟡 **KB-3:** ✅ Scheduled rollup cron (`/api/knowledge/rollups/cron/run`, `vercel.json`); concierge trends path exists. **Next:** optional public trend pages; archive job for aged T3.
 
 **Golden set & quality (§7.7)**
 
 11. **Eval:** Repo folder or DB seed with **100–300** golden Q&A (**~70% `zh-HK`**, ~20% EN, ~10% other); script scores pass/fail on each deploy; assert **no unwanted English** in zh-HK cases.
+    - Local runner (starter): `npm run eval:concierge`
+    - Optional env: `CONCIERGE_BASE_URL=http://localhost:3000`, `CONCIERGE_EVAL_TIMEOUT_MS=30000`, `CONCIERGE_EVAL_MAX_CASES=10`
 12. **i18n:** All concierge **UI strings** (placeholders, errors, “typing…”, handoff CTA) shipped in **`zh-HK` first** in resource files; EN second; default site + concierge route **`zh-HK`** per §4.1.
 
 **Optional local CPU LLM (§8)**
@@ -600,7 +667,7 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | Accessibility or voice/STT vendor change | Update §4.2, §6 Phases 1–2, §9 rows, §10 voice bullets, §11 items 15–17. |
 | TTS vendor or consent policy change | Update §4.2.3, §6 Phase 2–3, §9 TTS row, §10 TTS bullets, §11 items 18–20. |
 
-**Last updated:** 2026-04-29
+**Last updated:** 2026-05-02
 
 ---
 
@@ -612,15 +679,17 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 - **Day 2 — Concierge safety baseline**
   - ✅ Rate limiting + abuse monitoring shipped
   - ✅ Retention policy set to **180 days** + cleanup endpoint shipped
-  - ⏳ Wire scheduled cleanup (cron) or admin/manual run
+  - ✅ **Vercel Cron** hits `GET /api/concierge/retention/run` weekly (set `CRON_SECRET` to match project env); ⏳ optional admin/manual run UI
 - **Day 3 — KB-2 quality step**
   - Create a minimal **eval set** (20–40 `zh-HK` prompts) and track regressions before prompt changes
   - Tighten citations formatting (clearer titles + tier labels; avoid long noisy lists)
 - **Day 4 — Seed “trends” sources**
   - Add 3–8 **T2/T3** docs (Status `active`, Language `zh-HK`) via `/admin/knowledge`
   - Generate 1–2 rollups in `/admin/trends` and verify concierge trend answers prefer rollups
-- **Day 5 — KB-1 start**
-  - Define ingestion sources + schema (RSS / URLs / uploads), and implement the first worker stub (staging-only)
+- **Day 5 — KB-1 ops + KB-3**
+  - ✅ **KB-1 shipped:** RSS + HTML ingest (T3 `staging` only), promote endpoints, approval audit fields, `/admin/knowledge` — see §0 checklist
+  - Curate `KB_INGEST_FEEDS_JSON` / `KB_INGEST_HTML_SOURCES_JSON` for production; optional **staging inbox** UX in admin
+  - ✅ **KB-3 cron shipped:** set `CRON_SECRET` on Vercel + optional `KB_ROLLUP_TOPICS_JSON`; verify `/api/knowledge/rollups/cron/run` in logs after first schedule
 - **Day 6–7 — Voice/TTS spike (optional)**
   - Voice-0: Web Speech behind flag (internal QA)
   - TTS-0: per-message “朗讀” using `speechSynthesis` (no autoplay, stop button)

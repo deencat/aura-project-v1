@@ -22,6 +22,8 @@ type DocRow = {
   publishedAt: string | null
   updatedAt: string
   chunkCount: number
+  approvedAt?: string | null
+  approvedByUserId?: string | null
 }
 
 type EditDoc = DocRow & { content: string }
@@ -44,6 +46,11 @@ export default function KnowledgeAdminPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isBackfilling, setIsBackfilling] = useState(false)
   const [isSeeding, setIsSeeding] = useState(false)
+  const [isIngesting, setIsIngesting] = useState(false)
+  const [runs, setRuns] = useState<
+    Array<{ id: string; status: string; startedAt: string; endedAt: string | null; stats: any; errorLog: any }>
+  >([])
+  const [isLoadingRuns, setIsLoadingRuns] = useState(false)
   const [editing, setEditing] = useState<EditDoc | null>(null)
   const [isSavingEdit, setIsSavingEdit] = useState(false)
 
@@ -70,8 +77,114 @@ export default function KnowledgeAdminPage() {
     }
   }
 
+  async function loadRuns() {
+    setIsLoadingRuns(true)
+    try {
+      const res = await fetch("/api/knowledge/ingest/runs", { credentials: "include" })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? "Failed to load ingestion runs.")
+      setRuns(Array.isArray(data?.runs) ? data.runs : [])
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to load ingestion runs.")
+    } finally {
+      setIsLoadingRuns(false)
+    }
+  }
+
+  async function runIngestionNow() {
+    setError(null)
+    setSuccess(null)
+    setIsIngesting(true)
+    try {
+      const res = await fetch("/api/knowledge/ingest/admin/run", { method: "POST", credentials: "include" })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? "Failed to run ingestion.")
+      setSuccess(`Ingestion done. runId=${data?.runId ?? "?"} created=${data?.totals?.created ?? "?"} errors=${data?.totals?.errors ?? 0}`)
+      await load()
+      await loadRuns()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to run ingestion.")
+    } finally {
+      setIsIngesting(false)
+    }
+  }
+
+  async function runHtmlIngestionNow() {
+    setError(null)
+    setSuccess(null)
+    setIsIngesting(true)
+    try {
+      const res = await fetch("/api/knowledge/ingest/html/admin/run", { method: "POST", credentials: "include" })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? "Failed to run HTML ingestion.")
+      setSuccess(
+        `HTML ingestion done. runId=${data?.runId ?? "?"} created=${data?.totals?.created ?? "?"} errors=${data?.totals?.errors ?? 0}`
+      )
+      await load()
+      await loadRuns()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to run HTML ingestion.")
+    } finally {
+      setIsIngesting(false)
+    }
+  }
+
+  async function quickUpdateDoc(id: string, patch: Partial<EditDoc>) {
+    setError(null)
+    setSuccess(null)
+    try {
+      const res = await fetch(`/api/knowledge/documents/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(patch),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? data?.error ?? "Failed to update.")
+      setSuccess("Updated.")
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to update.")
+    }
+  }
+
+  async function promoteActivate(id: string) {
+    setError(null)
+    setSuccess(null)
+    try {
+      const res = await fetch(`/api/knowledge/documents/${encodeURIComponent(id)}/promote/activate`, {
+        method: "POST",
+        credentials: "include",
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? data?.error ?? "Failed to activate.")
+      setSuccess("Activated.")
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to activate.")
+    }
+  }
+
+  async function promoteApproveT3ToT2(id: string) {
+    setError(null)
+    setSuccess(null)
+    try {
+      const res = await fetch(`/api/knowledge/documents/${encodeURIComponent(id)}/promote/approve-t3-to-t2`, {
+        method: "POST",
+        credentials: "include",
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok !== true) throw new Error(data?.message ?? data?.error ?? "Failed to approve.")
+      setSuccess("Approved → T2.")
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to approve.")
+    }
+  }
+
   useEffect(() => {
     load()
+    loadRuns()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -269,6 +382,12 @@ export default function KnowledgeAdminPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={runIngestionNow} disabled={isLoading || isSeeding || isIngesting}>
+            {isIngesting ? "Ingesting…" : "Run RSS ingestion"}
+          </Button>
+          <Button variant="outline" onClick={runHtmlIngestionNow} disabled={isLoading || isSeeding || isIngesting}>
+            {isIngesting ? "Ingesting…" : "Run HTML ingestion"}
+          </Button>
           <Button variant="outline" onClick={seedHongKongPack} disabled={isLoading || isSeeding}>
             {isSeeding ? "Seeding…" : "Seed HK starter pack"}
           </Button>
@@ -283,6 +402,42 @@ export default function KnowledgeAdminPage() {
           </Button>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Ingestion runs (latest)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoadingRuns ? (
+            <div className="text-sm text-foreground/70">Loading…</div>
+          ) : runs.length === 0 ? (
+            <div className="text-sm text-foreground/70">No runs yet.</div>
+          ) : (
+            <div className="space-y-2">
+              {runs.slice(0, 10).map((r) => (
+                <div
+                  key={r.id}
+                  className="flex flex-col gap-2 rounded-2xl border border-white/55 bg-white/55 p-3 text-sm shadow-sm shadow-pink-500/10 backdrop-blur-md md:flex-row md:items-center md:justify-between"
+                >
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="outline">{r.status}</Badge>
+                      <span className="text-xs text-foreground/60">runId {r.id}</span>
+                    </div>
+                    <div className="mt-1 text-xs text-foreground/60">
+                      {new Date(r.startedAt).toLocaleString()} → {r.endedAt ? new Date(r.endedAt).toLocaleString() : "…"}
+                    </div>
+                  </div>
+                  <div className="text-xs text-foreground/70">
+                    created {r?.stats?.totals?.created ?? "?"} · skipped {r?.stats?.totals?.skipped ?? "?"} · errors{" "}
+                    {r?.stats?.totals?.errors ?? "?"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -525,6 +680,12 @@ export default function KnowledgeAdminPage() {
                     <div className="mt-2 truncate text-sm font-semibold">
                       {d.title ?? "(untitled)"}
                     </div>
+                    {(d.approvedAt || d.approvedByUserId) && (
+                      <div className="mt-1 text-xs text-foreground/60">
+                        Approved {d.approvedAt ? new Date(d.approvedAt).toLocaleString() : "—"}{" "}
+                        {d.approvedByUserId ? `by ${d.approvedByUserId}` : ""}
+                      </div>
+                    )}
                     {d.topics?.length > 0 && (
                       <div className="mt-1 flex flex-wrap gap-2">
                         {d.topics.slice(0, 6).map((t) => (
@@ -539,6 +700,28 @@ export default function KnowledgeAdminPage() {
                     Updated {new Date(d.updatedAt).toLocaleString()}
                   </div>
                   <div className="flex gap-2">
+                    {d.status === "staging" && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => promoteActivate(d.id)}
+                          disabled={isLoading}
+                        >
+                          Activate
+                        </Button>
+                        {d.tier === "T3" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => promoteApproveT3ToT2(d.id)}
+                            disabled={isLoading}
+                          >
+                            Approve → T2
+                          </Button>
+                        )}
+                      </>
+                    )}
                     <Button variant="outline" size="sm" onClick={() => startEdit(d.id)} disabled={isLoading}>
                       Edit
                     </Button>

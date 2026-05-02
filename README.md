@@ -13,6 +13,122 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Copy `.env.local.example` to `.env.local` and set Clerk (and any other) keys. Do not commit `.env` or `.env.local`.
 
+## Deploy to VPS later (Hostinger / Ubuntu) — checklist
+
+This project works fine on a generic Linux VPS. The minimum production pieces are:
+- Node.js (LTS)
+- Postgres (managed or self-hosted)
+- Environment variables (Clerk + DB + OpenRouter, plus concierge ops vars)
+- Running Prisma migrations during deploy
+
+### 1) Set environment variables
+
+Use `.env.local.example` as the source of truth. On VPS, configure env vars via your process manager (systemd / pm2 / Docker), not by committing `.env`.
+
+Concierge ops (recommended):
+- `CONCIERGE_RATE_LIMIT_WINDOW_SECONDS`
+- `CONCIERGE_RATE_LIMIT_MAX`
+- `CONCIERGE_RATE_LIMIT_USER_MAX`
+- `CONCIERGE_LOG_HASH_SALT` (**required** for stable hashed IP logging)
+- `CONCIERGE_RETENTION_DAYS` (recommended: `180`)
+- `CONCIERGE_RETENTION_SECRET` (**required** to run retention cleanup)
+
+### 2) Install dependencies and build
+
+```bash
+npm ci
+npm run build
+```
+
+### 3) Database migrations (required on deploy)
+
+Run migrations against your VPS/managed Postgres:
+
+```bash
+npx prisma migrate deploy
+```
+
+### 4) Start the app
+
+```bash
+npm run start
+```
+
+## Ops: concierge retention cleanup (scheduled)
+
+Chat history and concierge request events are retained for `CONCIERGE_RETENTION_DAYS` (default **180** in `.env.local.example`) and can be cleaned up by calling:
+
+- `GET` or `POST /api/concierge/retention/run?token=...` (or header `x-internal-token: ...`)
+
+Auth options:
+
+- **Vercel Cron:** set `CRON_SECRET` on the project; Vercel sends `Authorization: Bearer <CRON_SECRET>` (see `vercel.json` — weekly schedule on this repo).
+- **Token:** `CONCIERGE_RETENTION_SECRET` (or legacy `INTERNAL_CRON_SECRET`) must match `?token=` / `x-internal-token`.
+
+### Hostinger VPS cron example (weekly or daily)
+
+Set `CONCIERGE_RETENTION_SECRET` in your server environment, then configure a cron job that calls your production domain.
+
+Example:
+
+```bash
+15 4 * * 0 curl -fsS -X POST "https://YOUR_DOMAIN/api/concierge/retention/run?token=$CONCIERGE_RETENTION_SECRET" >/dev/null 2>&1
+```
+
+Notes:
+- The endpoint returns `401` if the token is missing/wrong.
+- The endpoint deletes old:
+  - `ConciergeMessage` (by `createdAt`)
+  - `ConciergeThread` (by `updatedAt`)
+  - `ConciergeRequestEvent` (by `createdAt`)
+  - old `RateLimitCounter` rows (keeps only a few days for debugging)
+- Keep the token secret. Prefer passing it via an env var on the server (as above).
+
+## Ops: Knowledge Bank (KB-1) RSS ingestion (scheduled)
+
+Raw HK beauty “news/trends” sources should ingest into **Tier `T3` + Status `staging`** only (no auto-publish). Trigger ingestion by calling:
+
+- `POST /api/knowledge/ingest/run?token=...`
+
+Set `KB_INGEST_CRON_SECRET` in your server environment.
+
+### Run manually (admin)
+
+If you are signed in (Clerk) and have access to `/admin/knowledge`, you can trigger ingestion without exposing the cron secret:
+
+- `POST /api/knowledge/ingest/admin/run`
+
+## Ops: Knowledge Bank (KB-1) HTML ingestion (scheduled)
+
+For HK beauty sites that don’t publish RSS feeds (she.com / ELLE HK / Cosmo HK / U Beauty / TopBeauty), trigger HTML ingestion by calling:
+
+- `POST /api/knowledge/ingest/html/run?token=...`
+
+Or run manually when signed in:
+
+- `POST /api/knowledge/ingest/html/admin/run`
+
+### Promotion / approval (governance)
+
+Ingestion writes **Tier `T3` + Status `staging`**. To publish anything from staging, use the admin UI (`/admin/knowledge`) or call:
+
+- Activate staged doc: `POST /api/knowledge/documents/:id/promote/activate`
+- Approve raw T3 doc into curated T2: `POST /api/knowledge/documents/:id/promote/approve-t3-to-t2`
+
+### Hostinger VPS cron example (daily)
+
+```bash
+20 3 * * * curl -fsS -X POST "https://YOUR_DOMAIN/api/knowledge/ingest/run?token=$KB_INGEST_CRON_SECRET" >/dev/null 2>&1
+```
+
+## Ops: Knowledge Bank (KB-3) rollup generation (scheduled)
+
+Trend rollups summarize recent **active** T2/T3 documents (same logic as `/admin/trends` → `POST /api/knowledge/rollups/generate`). For production automation:
+
+- `GET` or `POST /api/knowledge/rollups/cron/run`
+- **Vercel:** add `CRON_SECRET` to the project (matches `vercel.json` daily schedule) **or** call with `?token=` equal to `KB_ROLLUP_CRON_SECRET` or `KB_INGEST_CRON_SECRET`.
+- Optional: `KB_ROLLUP_TOPICS_JSON` — JSON array of `{ "topic", "language?", "days?" }` (max 12). If unset, a default `zh-HK` topic is used.
+
 ## Documentation
 
 - **Strategic / Hermes Agent revamp:** [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md)

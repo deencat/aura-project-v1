@@ -1,0 +1,53 @@
+[
+  {
+    "id": "zhhk-01-acne-sensitive",
+    "locale": "zh-HK",
+    "prompt": "我皮膚偏敏感，但近排暗瘡同印好明顯，想改善，同埋唔想太大停工期。"
+  },
+  {
+    "id": "zhhk-02-pigmentation",
+    "locale": "zh-HK",
+    "prompt": "我想淡斑同提亮，膚色唔均勻，有時會乾。你會點建議？"
+  },
+  {
+    "id": "zhhk-03-redness",
+    "locale": "zh-HK",
+    "prompt": "我面頰易紅，做完去角質會刺痛，想舒緩同穩定皮膚。"
+  },
+  {
+    "id": "zhhk-04-pores-texture",
+    "locale": "zh-HK",
+    "prompt": "毛孔粗大同膚質唔夠滑，想改善但怕敏感。"
+  },
+  {
+    "id": "zhhk-05-pregnancy-safety",
+    "locale": "zh-HK",
+    "prompt": "我而家懷孕中，但想做啲溫和保濕/舒緩護理，可以嗎？"
+  },
+  {
+    "id": "zhhk-06-trend-query",
+    "locale": "zh-HK",
+    "prompt": "最近香港護膚有咩趨勢？有無啲新產品/新技術值得留意？"
+  },
+  {
+    "id": "zhhk-07-english-mix",
+    "locale": "zh-HK",
+    "prompt": "I want brightening but my skin is sensitive. 用繁體中文同我講建議。"
+  },
+  {
+    "id": "zhhk-08-aftercare",
+    "locale": "zh-HK",
+    "prompt": "如果我做咗換膚/去角質，術後一般要注意啲咩？"
+  },
+  {
+    "id": "zhhk-09-booking",
+    "locale": "zh-HK",
+    "prompt": "我想快啲預約，請你幫我整理要點同下一步。"
+  },
+  {
+    "id": "zhhk-10-skin-type-clarify",
+    "locale": "zh-HK",
+    "prompt": "我唔肯定自己係乾定油，但成日又乾又出油，你會問我咩問題先？"
+  }
+]
+

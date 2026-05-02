@@ -33,6 +33,10 @@ model KnowledgeDocument {
   trustScore  Float?
   topics      String[]        @default([])
 
+  // KB-1 governance: human approval audit (optional)
+  approvedAt       DateTime?
+  approvedByUserId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -41,6 +45,7 @@ model KnowledgeDocument {
   @@index([tier, status])
   @@index([language])
   @@index([publishedAt])
+  @@index([approvedAt])
 }
 
 model KnowledgeChunk {

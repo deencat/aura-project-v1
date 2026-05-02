@@ -7,6 +7,8 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhook/clerk',
   '/api/services(.*)',  // Add services API routes as public
   '/api/concierge(.*)', // Public concierge APIs (chat/transcribe/synthesize)
+  '/api/knowledge/ingest(.*)', // Secret-protected; allow cron without Clerk
+  '/api/knowledge/rollups/cron(.*)', // Secret-protected; Vercel / external cron
   '/about',
   '/contact',
   '/concierge',

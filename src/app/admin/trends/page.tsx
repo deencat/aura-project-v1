@@ -78,7 +78,10 @@ export default function TrendsAdminPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
           <p className="mt-2 text-sm text-foreground/70">
-            Generate weekly rollups from recent T2/T3 documents. Concierge uses rollups for “trends” questions.
+            Generate weekly rollups from recent T2/T3 documents. Concierge uses rollups for “trends” questions. Production
+            scheduling: <code className="text-xs">vercel.json</code> calls{" "}
+            <code className="text-xs">/api/knowledge/rollups/cron/run</code> daily (see <code className="text-xs">CRON_SECRET</code> /{" "}
+            <code className="text-xs">KB_ROLLUP_TOPICS_JSON</code> in env).
           </p>
         </div>
         <Button variant="outline" onClick={load} disabled={isLoading}>

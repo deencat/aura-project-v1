@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { z } from "zod"
+import { prisma } from "@/lib/prisma"
 import {
   deleteKnowledgeDocument,
   getKnowledgeDocumentById,
@@ -34,6 +35,12 @@ export async function PATCH(request: Request, ctx: { params: { id: string } }) {
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 })
 
+  const existing = await prisma.knowledgeDocument.findUnique({
+    where: { id: ctx.params.id },
+    select: { id: true, tier: true },
+  })
+  if (!existing) return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 })
+
   let body: unknown
   try {
     body = await request.json()
@@ -44,6 +51,18 @@ export async function PATCH(request: Request, ctx: { params: { id: string } }) {
   const parsed = patchSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json({ ok: false, error: "validation_error", issues: parsed.error.flatten() }, { status: 400 })
+  }
+
+  // KB-1 governance: T3 tier/status changes must go through promote endpoints.
+  if (existing.tier === "T3" && (parsed.data.tier !== undefined || parsed.data.status !== undefined)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "governance_violation",
+        message: "T3 documents cannot change tier/status via PATCH. Use promote endpoints from /admin/knowledge.",
+      },
+      { status: 400 }
+    )
   }
 
   try {

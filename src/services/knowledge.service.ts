@@ -641,7 +641,22 @@ export async function listKnowledgeDocuments(args: {
     },
     orderBy: [{ updatedAt: "desc" }],
     take: limit,
-    include: {
+    select: {
+      id: true,
+      tier: true,
+      status: true,
+      language: true,
+      sourceUrl: true,
+      title: true,
+      publishedAt: true,
+      fetchedAt: true,
+      hash: true,
+      trustScore: true,
+      topics: true,
+      approvedAt: true,
+      approvedByUserId: true,
+      createdAt: true,
+      updatedAt: true,
       chunks: {
         select: { id: true },
       },

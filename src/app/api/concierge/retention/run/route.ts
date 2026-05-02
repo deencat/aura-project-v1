@@ -1,25 +1,29 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { isInternalCronAuthorized } from "@/lib/internal-cron-auth"
 
-function getRetentionSecret() {
-  return process.env.CONCIERGE_RETENTION_SECRET || process.env.INTERNAL_CRON_SECRET || ""
+function retentionTokenSecrets(): string[] {
+  return [
+    process.env.CONCIERGE_RETENTION_SECRET?.trim(),
+    process.env.INTERNAL_CRON_SECRET?.trim(),
+  ].filter((s): s is string => Boolean(s))
 }
 
 function getRetentionDays() {
-  const raw = Number(process.env.CONCIERGE_RETENTION_DAYS ?? 90)
-  return Number.isFinite(raw) && raw > 0 ? raw : 90
+  const raw = Number(process.env.CONCIERGE_RETENTION_DAYS ?? 180)
+  return Number.isFinite(raw) && raw > 0 ? raw : 180
 }
 
 function isAuthorized(req: Request) {
-  const secret = getRetentionSecret()
-  if (!secret) return false
-
+  const tokens = retentionTokenSecrets()
+  if (isInternalCronAuthorized(req, tokens)) return true
   const url = new URL(req.url)
-  const token = req.headers.get("x-internal-token") || url.searchParams.get("token") || ""
-  return token === secret
+  const legacy =
+    req.headers.get("x-internal-token")?.trim() || url.searchParams.get("token")?.trim() || ""
+  return tokens.some((t) => t === legacy)
 }
 
-export async function POST(req: Request) {
+async function runRetention(req: Request) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 })
   }
@@ -48,5 +52,14 @@ export async function POST(req: Request) {
       rateLimitCounters: counters.count,
     },
   })
+}
+
+/** Vercel Cron issues GET by default; manual runs may use POST. */
+export async function GET(req: Request) {
+  return runRetention(req)
+}
+
+export async function POST(req: Request) {
+  return runRetention(req)
 }
 

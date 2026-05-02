@@ -65,6 +65,14 @@ export async function POST(request: Request) {
     )
   }
 
+  // KB-1 governance: T3 is staging-only unless promoted.
+  if (parsed.data.tier === "T3" && parsed.data.status && parsed.data.status !== "staging") {
+    return NextResponse.json(
+      { ok: false, error: "governance_violation", message: "T3 documents must be created with status=staging." },
+      { status: 400 }
+    )
+  }
+
   try {
     const result = await createKnowledgeDocument(parsed.data)
     return NextResponse.json({ ok: true, ...result }, { status: 201 })

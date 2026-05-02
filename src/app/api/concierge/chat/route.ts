@@ -6,6 +6,27 @@ import { enforceConciergeRateLimit, logConciergeRequestEvent } from "@/services/
 type Locale = "zh-HK" | "en" | "zh-Hans" | "zh-Hant"
 type OpenRouterMessage = { role: "system" | "user" | "assistant"; content: string }
 
+function asciiLetterRatio(text: string) {
+  const letters = (text.match(/[A-Za-z]/g) || []).length
+  const nonSpace = text.replace(/\s+/g, "").length || 1
+  return letters / nonSpace
+}
+
+function looksLikeZhLocaleDrift(locale: Locale, reply: string) {
+  if (!(locale === "zh-HK" || locale === "zh-Hant")) return false
+  const ratio = asciiLetterRatio(reply)
+  // allow some English brand/model names but block mostly-English outputs
+  if (ratio > 0.28) return true
+  if (ratio > 0.18 && !/[\u4E00-\u9FFF]/.test(reply)) return true
+  return false
+}
+
+function getHardLocaleInstruction(locale: Locale) {
+  if (locale === "zh-Hans") return "重要：请只用简体中文回答，不要使用英文（除非是品牌/专有名词）。"
+  if (locale === "en") return "Important: reply only in English."
+  return "重要：請只用香港常用繁體中文回答，唔好用英文（品牌/專有名詞除外）。"
+}
+
 function normalizeLocale(locale: unknown): Locale {
   if (locale === "zh-HK" || locale === "en" || locale === "zh-Hans" || locale === "zh-Hant") return locale
   return (process.env.DEFAULT_CHAT_LOCALE as Locale) || "zh-HK"
@@ -203,31 +224,50 @@ async function callOpenRouter(args: {
   locale: Locale
   userMessage: string
   kbContext?: string
+  extraSystemInstruction?: string
+  temperature?: number
+  timeoutMs?: number
 }) {
   const { apiKey, model, locale, userMessage, kbContext } = args
 
   const messages: OpenRouterMessage[] = [
-    { role: "system", content: getSystemPrompt(locale) },
+    { role: "system", content: [getSystemPrompt(locale), args.extraSystemInstruction].filter(Boolean).join("\n") },
     ...(kbContext ? [{ role: "system" as const, content: kbContext }] : []),
     { role: "user", content: `${getLocaleNote(locale)}\n\n${userMessage}` },
   ]
 
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      // Optional but recommended by OpenRouter for attribution/analytics
-      "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
-      "X-Title": process.env.OPENROUTER_APP_NAME || "Aura",
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature: 0.6,
-      max_tokens: 500,
-    }),
-  })
+  const timeoutMs =
+    typeof args.timeoutMs === "number"
+      ? args.timeoutMs
+      : Number(process.env.CONCIERGE_MODEL_TIMEOUT_MS ?? 25000)
+
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  let res: Response
+  try {
+    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        // Optional but recommended by OpenRouter for attribution/analytics
+        "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
+        "X-Title": process.env.OPENROUTER_APP_NAME || "Aura",
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature: typeof args.temperature === "number" ? args.temperature : 0.6,
+        max_tokens: 500,
+      }),
+      signal: controller.signal,
+    })
+  } catch (e: any) {
+    if (e?.name === "AbortError") throw new Error("OPENROUTER_TIMEOUT")
+    throw e
+  } finally {
+    clearTimeout(timer)
+  }
 
   const data: any = await res.json().catch(() => ({}))
   if (!res.ok) {
@@ -381,13 +421,26 @@ export async function POST(request: Request) {
       rollupSources = []
     }
 
-    const reply = await callOpenRouter({
+    let reply = await callOpenRouter({
       apiKey: openRouterKey,
       model: openRouterModel,
       locale,
       userMessage: message,
       kbContext: [rollupContext, kbContext].filter(Boolean).join("\n\n") || undefined,
     })
+
+    // KB-2 quality hardening: if zh-HK drifts to English, do one retry with stricter instruction + lower temperature.
+    if (looksLikeZhLocaleDrift(locale, reply)) {
+      reply = await callOpenRouter({
+        apiKey: openRouterKey,
+        model: openRouterModel,
+        locale,
+        userMessage: message,
+        kbContext: [rollupContext, kbContext].filter(Boolean).join("\n\n") || undefined,
+        extraSystemInstruction: getHardLocaleInstruction(locale),
+        temperature: 0.2,
+      })
+    }
 
     const copy = getCopy(locale)
     const links = { treatments: "/treatments", contact: "/contact" }
@@ -409,16 +462,9 @@ export async function POST(request: Request) {
       { headers: { "X-RateLimit-Remaining": String(decision.remaining) } }
     )
   } catch (e: any) {
-    await logConciergeRequestEvent({
-      route: "/api/concierge/chat",
-      method: "POST",
-      locale,
-      ipHash,
-      userId,
-      statusCode: 500,
-      rateLimited: false,
-    })
-    // Fail safe: if OpenRouter errors, degrade to stub with a gentle hint.
+    const isTimeout = String(e?.message ?? "").includes("OPENROUTER_TIMEOUT")
+
+    // Fail safe: if OpenRouter is slow/errors, degrade to stub with a gentle hint.
     const stub = getStubResponse(locale, message)
     const hint =
       locale === "en"
@@ -426,9 +472,31 @@ export async function POST(request: Request) {
         : locale === "zh-Hans"
           ? "\n\n（临时：AI 服务繁忙。先用这个引导流程，我们稍后再试。）"
           : "\n\n（暫時：AI 服務繁忙。先用呢個引導流程，我哋稍後再試。）"
+
+    await logConciergeRequestEvent({
+      route: "/api/concierge/chat",
+      method: "POST",
+      locale,
+      ipHash,
+      userId,
+      statusCode: 200,
+      rateLimited: false,
+    })
+
     return NextResponse.json(
-      { ...stub, reply: `${stub.reply}${hint}` },
-      { headers: { "X-RateLimit-Remaining": String(decision.remaining) } }
+      {
+        ...stub,
+        reply: `${stub.reply}${hint}`,
+        mode: "fallback",
+        fallbackReason: isTimeout ? "timeout" : "error",
+        model: openRouterModel,
+      },
+      {
+        headers: {
+          "X-RateLimit-Remaining": String(decision.remaining),
+          "X-Concierge-Fallback": isTimeout ? "timeout" : "error",
+        },
+      }
     )
   }
 }
