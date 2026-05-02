@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useRef, useState } from "react"
+import { encodeRecordingBlobAsWav16kMono } from "@/lib/concierge-recording-wav"
 
 function pickRecorderMime(): string {
   if (typeof MediaRecorder === "undefined") return ""
@@ -115,9 +116,17 @@ export function useConciergeServerStt() {
           setBusy(true)
           setError(null)
           try {
-            const ext = extensionForMime(mime)
+            let uploadBlob: Blob = blob
+            let uploadName = `recording.${extensionForMime(mime)}`
+            try {
+              uploadBlob = await encodeRecordingBlobAsWav16kMono(blob)
+              uploadName = "recording.wav"
+            } catch {
+              /* decode/resample can fail on exotic codecs; fall back to raw container */
+            }
+
             const fd = new FormData()
-            fd.append("audio", blob, `recording.${ext}`)
+            fd.append("audio", uploadBlob, uploadName)
             fd.append("locale", locale)
 
             const res = await fetch("/api/concierge/transcribe", {

@@ -18,14 +18,16 @@ export function whisperLanguageForLocale(locale: ConciergeTranscribeLocale): str
 
 function sttFormatFromFile(file: File): string {
   const name = (file.name || "").toLowerCase()
+  if (name.endsWith(".wav")) return "wav"
   if (name.endsWith(".webm")) return "webm"
-  if (name.endsWith(".mp4")) return "m4a"
+  if (name.endsWith(".mp4")) return "mp4"
   if (name.endsWith(".m4a")) return "m4a"
   if (name.endsWith(".aac")) return "aac"
   if (name.endsWith(".mp3")) return "mp3"
   const t = (file.type || "").toLowerCase()
+  if (t.includes("wav")) return "wav"
   if (t.includes("webm")) return "webm"
-  if (t.includes("mp4")) return "m4a"
+  if (t.includes("mp4")) return "mp4"
   if (t.includes("aac")) return "aac"
   if (t.includes("mpeg")) return "mp3"
   return "webm"
@@ -63,6 +65,48 @@ function openRouterUsesDedicatedSttEndpoint(model: string): boolean {
   const m = model.toLowerCase()
   if (!m.startsWith("openai/")) return false
   return m.includes("whisper") || m.includes("transcribe")
+}
+
+function openRouterErrorMessage(args: { status: number; statusText: string; data: unknown; requestId: string | null }): string {
+  const { status, statusText, data, requestId } = args
+
+  let message = statusText || `HTTP ${status}`
+  let code: string | number | undefined
+  let metadata: unknown
+
+  if (typeof data === "object" && data !== null && "error" in data) {
+    const err = (data as { error?: { message?: unknown; code?: unknown; metadata?: unknown } }).error
+    if (err) {
+      if (typeof err.message === "string" && err.message.trim()) message = err.message.trim()
+      if (typeof err.code === "string" || typeof err.code === "number") code = err.code
+      metadata = err.metadata
+    }
+  }
+
+  let provider: string | undefined
+  if (typeof metadata === "object" && metadata !== null) {
+    const m = metadata as Record<string, unknown>
+    if (typeof m.provider === "string") provider = m.provider
+    if (typeof m.provider_name === "string") provider = m.provider_name
+  }
+
+  let metadataSnippet: string | undefined
+  if (metadata !== undefined && metadata !== null) {
+    try {
+      const raw = JSON.stringify(metadata)
+      if (raw && raw !== "{}") metadataSnippet = raw.length > 700 ? `${raw.slice(0, 700)}…` : raw
+    } catch {
+      // ignore JSON stringify failures
+    }
+  }
+
+  const parts = [`OpenRouter ${status}`]
+  if (code !== undefined) parts.push(`code=${code}`)
+  if (provider) parts.push(`provider=${provider}`)
+  if (requestId) parts.push(`requestId=${requestId}`)
+  if (metadataSnippet) parts.push(`meta=${metadataSnippet}`)
+  parts.push(message)
+  return parts.join(" | ")
 }
 
 export async function transcribeAudioWithOpenAIWhisper(args: {
@@ -138,11 +182,14 @@ async function transcribeWithOpenRouterDedicatedStt(args: {
 
   const data: unknown = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const msg =
-      typeof data === "object" && data !== null && "error" in data
-        ? String((data as { error?: { message?: string } }).error?.message ?? res.statusText)
-        : res.statusText
-    throw new Error(msg || `OpenRouter STT failed (${res.status})`)
+    throw new Error(
+      openRouterErrorMessage({
+        status: res.status,
+        statusText: res.statusText,
+        data,
+        requestId: res.headers.get("x-request-id"),
+      })
+    )
   }
 
   const text =
@@ -199,11 +246,14 @@ async function transcribeWithOpenRouterChatAudio(args: {
 
   const data: unknown = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const msg =
-      typeof data === "object" && data !== null && "error" in data
-        ? String((data as { error?: { message?: string } }).error?.message ?? res.statusText)
-        : res.statusText
-    throw new Error(msg || `OpenRouter chat transcription failed (${res.status})`)
+    throw new Error(
+      openRouterErrorMessage({
+        status: res.status,
+        statusText: res.statusText,
+        data,
+        requestId: res.headers.get("x-request-id"),
+      })
+    )
   }
 
   const text = textFromChatCompletionBody(data)
