@@ -131,11 +131,11 @@ Trend rollups summarize recent **active** T2/T3 documents (same logic as `/admin
 - **Vercel:** add `CRON_SECRET` to the project (matches `vercel.json` daily schedule) **or** call with `?token=` equal to `KB_ROLLUP_CRON_SECRET` or `KB_INGEST_CRON_SECRET`.
 - Optional: `KB_ROLLUP_TOPICS_JSON` — JSON array of `{ "topic", "language?", "days?" }` (max 12). If unset, a default `zh-HK` topic is used.
 
-## Concierge: voice & TTS (browser)
+## Concierge: voice & TTS
 
 - Set `NEXT_PUBLIC_CONCIERGE_VOICE_UI=true` (default in `.env.local.example`) to show **mic** + **朗讀** on `/concierge` and the floating widget.
-- **Voice-0** uses the browser **Web Speech API** where available; **iPhone Safari** usually has **no** `SpeechRecognition` — users see an inline notice and type instead.
-- **Voice-1** (server STT) will use `POST /api/concierge/transcribe` (currently returns `501` until a provider is configured).
+- **Voice-0:** Web Speech API where the browser supports it (e.g. desktop Chrome).
+- **Voice-1 (iPhone / Safari):** the mic **records** audio; on stop, audio is sent to `POST /api/concierge/transcribe` (OpenAI Whisper). Set **`OPENAI_API_KEY`**. For real devices, prefer **HTTPS** (or a tunnel to localhost); iOS may block or limit the microphone on plain `http://` LAN URLs.
 
 ## Documentation
 

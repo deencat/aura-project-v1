@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useConciergeWebSpeech } from "@/hooks/useConciergeWebSpeech"
+import { useConciergeServerStt, supportsServerSttRecording } from "@/hooks/useConciergeServerStt"
 import { speakText, stopSpeaking, supportsSpeechSynthesis } from "@/lib/concierge/tts-client"
 
 type Locale = "zh-HK" | "en" | "zh-Hans"
@@ -45,6 +46,60 @@ function languageToLocale(lang: string): Locale {
   if (lang === "zh-Hans") return "zh-Hans"
   if (lang === "en") return "en"
   return "zh-HK"
+}
+
+function formatServerSttError(error: string, locale: Locale): string {
+  const byCode: Record<string, Record<Locale, string>> = {
+    mic_denied: {
+      "zh-HK": "未能使用咪高峰權限。",
+      "zh-Hans": "未获得麦克风权限。",
+      en: "Microphone permission denied.",
+    },
+    no_recorder: {
+      "zh-HK": "此裝置不支援錄音。",
+      "zh-Hans": "此设备不支持录音。",
+      en: "Recording is not supported on this device.",
+    },
+    no_mime: {
+      "zh-HK": "不支援的音訊格式。",
+      "zh-Hans": "不支持的音频格式。",
+      en: "No supported audio format for recording.",
+    },
+    empty_audio: {
+      "zh-HK": "錄音太短或無聲，請再試。",
+      "zh-Hans": "录音太短或无声，请重试。",
+      en: "Recording was too short or silent. Try again.",
+    },
+    empty_transcript: {
+      "zh-HK": "未能辨識語音，請再試或改打字。",
+      "zh-Hans": "未能识别语音，请重试或改用文字。",
+      en: "Could not transcribe speech. Try again or type your message.",
+    },
+    transcribe_failed: {
+      "zh-HK": "語音轉文字失敗，請稍後再試。",
+      "zh-Hans": "语音转文字失败，请稍后再试。",
+      en: "Transcription failed. Try again later.",
+    },
+  }
+  if (byCode[error]) return byCode[error][locale]
+  if (
+    error.includes("Server transcription is not configured") ||
+    error.includes("OPENAI_API_KEY")
+  ) {
+    return locale === "en"
+      ? "Server voice is not configured. Add OPENAI_API_KEY."
+      : locale === "zh-Hans"
+        ? "伺服器未配置语音转写，请设置 OPENAI_API_KEY。"
+        : "伺服器未設定語音轉寫，請加入 OPENAI_API_KEY。"
+  }
+  if (error.startsWith("HTTP 429")) {
+    return locale === "en"
+      ? "Too many requests. Wait a moment and try again."
+      : locale === "zh-Hans"
+        ? "请求过于频繁，请稍后再试。"
+        : "請求過於頻繁，請稍後再試。"
+  }
+  return error
 }
 
 function uid() {
@@ -92,8 +147,11 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         voiceStop: "停止收音",
         voiceListening: "聆聽中…",
         voiceUnsupported:
-          "此裝置或瀏覽器不支援語音輸入（例如 iPhone Safari 多數情況）。請打字輸入；進階版本將支援伺服器語音辨識。",
-        voiceConsent: "語音只作轉成文字，內容經同一聊天流程處理。",
+          "此瀏覽器不支援即時語音辨識。手機請用下方麥克風：點一下錄音、再點停止（語音會經伺服器轉成文字，需設定 OPENAI_API_KEY；建議用 HTTPS 網址）。",
+        voiceConsent:
+          "語音只作轉成文字。手機錄音會短暫傳到伺服器再轉文字，不另存錄音檔；內容經同一聊天流程處理。",
+        voiceTranscribing: "語音轉文字中…",
+        voiceRecorderUnavailable: "此瀏覽器無法錄音，請改以鍵盤輸入。",
         readAloud: "朗讀",
         stopRead: "停止朗讀",
       }
@@ -114,8 +172,11 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         voiceMic: "语音输入",
         voiceStop: "停止",
         voiceListening: "正在聆听…",
-        voiceUnsupported: "当前浏览器不支持语音输入，请改用文字。服务器语音识别将后续提供。",
-        voiceConsent: "语音仅用于转成文字，并走同一套对话流程。",
+        voiceUnsupported:
+          "本浏览器不支持即时语音识别。手机请用麦克风：点一下录音、再点停止（语音经服务器转文字，需配置 OPENAI_API_KEY；建议 HTTPS）。",
+        voiceConsent: "语音仅用于转文字；手机录音会短暂上传至服务器转写，不单独存储录音。",
+        voiceTranscribing: "正在转写…",
+        voiceRecorderUnavailable: "此浏览器无法录音，请改用键盘输入。",
         readAloud: "朗读",
         stopRead: "停止朗读",
       }
@@ -136,8 +197,11 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
       voiceStop: "Stop",
       voiceListening: "Listening…",
       voiceUnsupported:
-        "Voice input is not supported in this browser (e.g. iPhone Safari). Please type your message; server STT will follow.",
-      voiceConsent: "Voice is converted to text only and sent through the same chat flow.",
+        "No live speech recognition in this browser. On mobile, use the mic: tap to record, tap again to stop (audio is sent to the server for Whisper; set OPENAI_API_KEY; HTTPS recommended).",
+      voiceConsent:
+        "Voice is for text only. On mobile, a short recording is sent to the server for transcription and is not kept as a separate audio file.",
+      voiceTranscribing: "Transcribing…",
+      voiceRecorderUnavailable: "This browser cannot record audio. Please type your message.",
       readAloud: "Read aloud",
       stopRead: "Stop",
     }
@@ -324,7 +388,29 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
     onFinalTranscript: onVoiceFinalStable,
   })
 
+  const serverStt = useConciergeServerStt()
+
   const [ttsPlayingId, setTtsPlayingId] = useState<string | null>(null)
+
+  const canUseServerMic = !voice.supported && supportsServerSttRecording()
+  const micDisabled =
+    isSending ||
+    serverStt.busy ||
+    (voice.supported ? false : !supportsServerSttRecording())
+
+  async function onMicClick() {
+    if (voice.supported) {
+      if (voice.listening) voice.stop()
+      else voice.start()
+      return
+    }
+    if (serverStt.recording) {
+      const text = await serverStt.stopRecordingAndTranscribe(locale)
+      if (text) onVoiceFinalStable(text)
+    } else {
+      await serverStt.startRecording()
+    }
+  }
 
   const playAssistantTts = useCallback(
     (messageId: string, text: string) => {
@@ -511,11 +597,23 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         <p className="text-xs text-foreground/60">{ui.disclaimer}</p>
 
         {voiceUiEnabled ? <p className="text-[11px] leading-snug text-foreground/55">{ui.voiceConsent}</p> : null}
-        {voiceUiEnabled && !voice.supported ? (
+        {voiceUiEnabled && !voice.supported && canUseServerMic ? (
           <p className="text-xs leading-relaxed text-foreground/70">{ui.voiceUnsupported}</p>
+        ) : null}
+        {voiceUiEnabled && !voice.supported && !canUseServerMic ? (
+          <p className="text-xs leading-relaxed text-foreground/70">{ui.voiceRecorderUnavailable}</p>
         ) : null}
         {voiceUiEnabled && voice.supported && voice.listening ? (
           <p className="text-xs font-medium text-primary">{ui.voiceListening}</p>
+        ) : null}
+        {voiceUiEnabled && !voice.supported && serverStt.recording ? (
+          <p className="text-xs font-medium text-primary">{ui.voiceListening}</p>
+        ) : null}
+        {voiceUiEnabled && !voice.supported && serverStt.busy ? (
+          <p className="text-xs font-medium text-primary">{ui.voiceTranscribing}</p>
+        ) : null}
+        {voiceUiEnabled && serverStt.error ? (
+          <p className="text-xs text-destructive">{formatServerSttError(serverStt.error, locale)}</p>
         ) : null}
 
         <form
@@ -532,15 +630,21 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
             {voiceUiEnabled ? (
               <Button
                 type="button"
-                variant={voice.listening ? "default" : "outline"}
+                variant={voice.listening || serverStt.recording ? "default" : "outline"}
                 className="h-11 w-11 shrink-0 rounded-full p-0"
-                disabled={isSending || !voice.supported}
-                onClick={() => (voice.listening ? voice.stop() : voice.start())}
-                aria-pressed={voice.listening}
-                aria-label={voice.listening ? ui.voiceStop : ui.voiceMic}
-                title={!voice.supported ? ui.voiceUnsupported : undefined}
+                disabled={micDisabled}
+                onClick={() => void onMicClick()}
+                aria-pressed={voice.listening || serverStt.recording}
+                aria-label={
+                  voice.listening || serverStt.recording ? ui.voiceStop : ui.voiceMic
+                }
+                title={!voice.supported && !supportsServerSttRecording() ? ui.voiceRecorderUnavailable : undefined}
               >
-                {voice.listening ? <Square className="h-4 w-4 fill-current" /> : <Mic className="h-4 w-4" />}
+                {voice.listening || serverStt.recording ? (
+                  <Square className="h-4 w-4 fill-current" />
+                ) : (
+                  <Mic className="h-4 w-4" />
+                )}
               </Button>
             ) : null}
             <input
