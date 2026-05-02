@@ -21,6 +21,13 @@ This project works fine on a generic Linux VPS. The minimum production pieces ar
 - Environment variables (Clerk + DB + OpenRouter, plus concierge ops vars)
 - Running Prisma migrations during deploy
 
+### Dependency manifest (Node.js, not Python)
+
+- There is **no** `requirements.txt` (that file is for Python). All app libraries are declared in **`package.json`** and pinned in **`package-lock.json`**.
+- On the VPS, install **Node.js LTS** and **npm**, clone the repo, then run **`npm ci`** (recommended for production) or **`npm install`** — that installs every dependency the app needs, including **`lamejs`** (client-side MP3 encoding for mic uploads).
+- You do **not** need to install the system **`lame`** CLI, **ffmpeg**, or similar for concierge **Voice-1** STT: encoding happens in the browser; the server only forwards audio to OpenRouter.
+- **`cloudflared`** is optional and only for **local** iPhone HTTPS tunneling (`npm run iphone:tunnel`); production VPS traffic uses your real domain + TLS as usual.
+
 ### 1) Set environment variables
 
 Use `.env.local.example` as the source of truth. On VPS, configure env vars via your process manager (systemd / pm2 / Docker), not by committing `.env`.
