@@ -80,6 +80,16 @@ function formatServerSttError(error: string, locale: Locale): string {
       "zh-Hans": "语音转文字失败，请稍后再试。",
       en: "Transcription failed. Try again later.",
     },
+    needs_https: {
+      "zh-HK": "請用 HTTPS 網址開啟本站（或用 localhost 隧道），手機先允許咪高峰，再試錄音。",
+      "zh-Hans": "请使用 HTTPS 打开本站（或用 localhost 隧道），再在手机上允许麦克风后重试。",
+      en: "Open this site over HTTPS (or tunnel localhost) so the microphone can be used, then try again.",
+    },
+    mic_unavailable: {
+      "zh-HK": "此瀏覽器無法使用咪高峰錄音。",
+      "zh-Hans": "此浏览器无法使用麦克风录音。",
+      en: "This browser cannot access the microphone for recording.",
+    },
   }
   if (byCode[error]) return byCode[error][locale]
   if (

@@ -12,7 +12,19 @@ export function getSpeechRecognitionCtor(): (new () => SpeechRecognition) | null
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null
 }
 
+function isLikelyIOSWebKit(): boolean {
+  if (typeof navigator === "undefined") return false
+  const ua = navigator.userAgent
+  if (/iP(hone|ad|od)/i.test(ua)) return true
+  // iPadOS 13+ often reports as MacIntel with touch
+  if (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) return true
+  return false
+}
+
 export function supportsWebSpeechRecognition(): boolean {
+  if (typeof window === "undefined") return false
+  // iOS Safari: ctor may exist but live recognition is unreliable; use server STT (tap to record).
+  if (isLikelyIOSWebKit()) return false
   return getSpeechRecognitionCtor() !== null
 }
 

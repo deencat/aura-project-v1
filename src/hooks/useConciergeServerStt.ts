@@ -4,11 +4,12 @@ import { useCallback, useRef, useState } from "react"
 
 function pickRecorderMime(): string {
   if (typeof MediaRecorder === "undefined") return ""
+  // Prefer MP4/AAC first: iOS Safari often has no WebM MediaRecorder; Whisper accepts mp4/m4a.
   const candidates = [
-    "audio/webm;codecs=opus",
-    "audio/webm",
     "audio/mp4",
     "audio/aac",
+    "audio/webm;codecs=opus",
+    "audio/webm",
   ]
   for (const c of candidates) {
     if (MediaRecorder.isTypeSupported(c)) return c
@@ -16,13 +17,14 @@ function pickRecorderMime(): string {
   return ""
 }
 
+/**
+ * Whether the browser can attempt MediaRecorder-based capture.
+ * Do not require `navigator.mediaDevices` here: on non-HTTPS URLs (e.g. http://LAN-IP:3000)
+ * Safari hides `mediaDevices`, so the mic would stay disabled — we enable the control and
+ * show an error on tap instead (see startRecording).
+ */
 export function supportsServerSttRecording(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    typeof navigator !== "undefined" &&
-    Boolean(navigator.mediaDevices?.getUserMedia) &&
-    typeof MediaRecorder !== "undefined"
-  )
+  return typeof window !== "undefined" && typeof MediaRecorder !== "undefined"
 }
 
 function extensionForMime(mime: string): string {
@@ -61,6 +63,12 @@ export function useConciergeServerStt() {
       return
     }
     mimeRef.current = mime
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError(typeof window !== "undefined" && window.isSecureContext === false ? "needs_https" : "mic_unavailable")
+      return
+    }
+
     let stream: MediaStream
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true })
