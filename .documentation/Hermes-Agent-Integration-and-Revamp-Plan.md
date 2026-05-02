@@ -22,7 +22,7 @@
 
 **Recently landed in repo (high level):** KB-1 RSS + HTML ingest → T3 staging; promote endpoints + audit fields; admin knowledge actions; rollup generation extracted to `knowledge-rollup-generation.service.ts`; scheduled rollup + retention routes + `internal-cron-auth`; README ops; optional `vercel.json` schedules.
 
-**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects (see [.documentation/IA-redirect-map.md](./IA-redirect-map.md)), (2) ~~admin retention run UI~~ **done**, (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke. **Defer to after dev:** bulk content QA. **Defer later:** voice/TTS (unless prioritized), Hermes gateway, loyalty.
+**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects (see [.documentation/IA-redirect-map.md](./IA-redirect-map.md)), (2) ~~admin retention run UI~~ **done** (`/admin/concierge`), (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke. **Defer to after dev:** bulk content QA. **Defer later:** voice/TTS (unless prioritized), Hermes gateway, loyalty.
 
 ### Shipped / implemented in repo
 
