@@ -75,6 +75,8 @@ Example:
 15 4 * * 0 curl -fsS -X POST "https://YOUR_DOMAIN/api/concierge/retention/run?token=$CONCIERGE_RETENTION_SECRET" >/dev/null 2>&1
 ```
 
+**Admin (signed in):** open `/admin/concierge` and use **立即執行 retention 清理** — calls `POST /api/admin/concierge/retention/run` (same DB logic as the cron endpoint; no token in the browser).
+
 Notes:
 - The endpoint returns `401` if the token is missing/wrong.
 - The endpoint deletes old:

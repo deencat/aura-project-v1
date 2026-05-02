@@ -12,14 +12,17 @@
 
 ### Progress tracking (snapshot)
 
+**Priority order (agreed):** **Finish development first** — IA, ops UI, optional trend pages, quality gates (evals, smoke tests), voice/TTS and Hermes only as scoped. **Website content QA** (broken images, copy passes) is **explicitly last** after dev milestones are closed.
+
 | Track | Current focus | Notes |
 |-------|----------------|-------|
-| **Website / Next.js** | Ship KB + concierge reliability; then **content QA** (broken images route-by-route) | Hermes / WhatsApp / MCP bridge on VPS = **deferred** until site is production-ready |
-| **Ops on Hostinger** | Use **`curl` + cron secrets** for ingest, rollup, retention (same routes as README); `vercel.json` cron is optional if you deploy on Vercel | Set `KB_INGEST_CRON_SECRET`, optional `KB_ROLLUP_*`, `CONCIERGE_RETENTION_SECRET`, `CRON_SECRET` only if your host sends Bearer |
+| **Development (Next.js)** | Close remaining checklist items below; pick **one slice per sprint** from “Next engineering slices” | Content/image fixes **deferred** until dev slice is done |
+| **Content QA** | **Last** — broken images route-by-route, editorial pass | Run after dev checklist for launch is satisfied |
+| **Ops on Hostinger** | **`curl` + cron secrets** for ingest, rollup, retention (README); `vercel.json` optional on Vercel | `KB_INGEST_CRON_SECRET`, optional `KB_ROLLUP_*`, `CONCIERGE_RETENTION_SECRET`, `CRON_SECRET` if host sends Bearer |
 
 **Recently landed in repo (high level):** KB-1 RSS + HTML ingest → T3 staging; promote endpoints + audit fields; admin knowledge actions; rollup generation extracted to `knowledge-rollup-generation.service.ts`; scheduled rollup + retention routes + `internal-cron-auth`; README ops; optional `vercel.json` schedules.
 
-**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects, (2) admin **retention run** UI, (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke. **Defer:** voice/TTS, Hermes gateway, loyalty until core site + content pass.
+**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects (see [.documentation/IA-redirect-map.md](./IA-redirect-map.md)), (2) ~~admin retention run UI~~ **done**, (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke. **Defer to after dev:** bulk content QA. **Defer later:** voice/TTS (unless prioritized), Hermes gateway, loyalty.
 
 ### Shipped / implemented in repo
 
@@ -59,7 +62,7 @@
   - Locale drift guard (zh-HK): one retry with stricter instruction if reply drifts to English
   - Citations UI trims long lists (top sources + “+N more”)
   - Server-side model timeout + graceful fallback (`CONCIERGE_MODEL_TIMEOUT_MS`, `fallbackReason: "timeout"`)
-- [ ] **Concierge ops**: admin/manual **retention run** UI (cron is wired via `vercel.json`)
+- [x] **Concierge ops**: admin **retention run** UI — `/admin/concierge` → `POST /api/admin/concierge/retention/run` (Clerk); cron/secret routes unchanged (`README`)
 - [ ] **Voice input (Voice-0/1)** and **TTS (TTS-0/1)** for concierge
 - [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
 - [ ] **Loyalty** (closed-loop points) + deferred crypto/NFT exploration
@@ -679,7 +682,7 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 - **Day 2 — Concierge safety baseline**
   - ✅ Rate limiting + abuse monitoring shipped
   - ✅ Retention policy set to **180 days** + cleanup endpoint shipped
-  - ✅ **Vercel Cron** hits `GET /api/concierge/retention/run` weekly (set `CRON_SECRET` to match project env); ⏳ optional admin/manual run UI
+  - ✅ **Vercel Cron** hits `GET /api/concierge/retention/run` weekly (set `CRON_SECRET` to match project env); ✅ admin manual run: `/admin/concierge`
 - **Day 3 — KB-2 quality step**
   - Create a minimal **eval set** (20–40 `zh-HK` prompts) and track regressions before prompt changes
   - Tighten citations formatting (clearer titles + tier labels; avoid long noisy lists)
