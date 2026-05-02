@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useRef, useState } from "react"
-import { encodeRecordingBlobAsWav16kMono } from "@/lib/concierge-recording-wav"
+import { encodeRecordingBlobForSttUpload } from "@/lib/concierge-recording-stt"
 
 function pickRecorderMime(): string {
   if (typeof MediaRecorder === "undefined") return ""
@@ -119,8 +119,9 @@ export function useConciergeServerStt() {
             let uploadBlob: Blob = blob
             let uploadName = `recording.${extensionForMime(mime)}`
             try {
-              uploadBlob = await encodeRecordingBlobAsWav16kMono(blob)
-              uploadName = "recording.wav"
+              const encoded = await encodeRecordingBlobForSttUpload(blob)
+              uploadBlob = encoded.blob
+              uploadName = encoded.filename
             } catch {
               /* decode/resample can fail on exotic codecs; fall back to raw container */
             }

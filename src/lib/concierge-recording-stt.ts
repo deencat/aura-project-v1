@@ -1,6 +1,6 @@
 /**
- * Re-encode recorded blobs (e.g. iOS AAC-in-MP4) to 16-bit PCM WAV at 16 kHz mono.
- * Mistral / Voxtral via OpenRouter rejects non-mp3/wav containers; Whisper still accepts WAV.
+ * Client-side re-encode for concierge STT uploads.
+ * Mistral / Voxtral accepts mp3 or wav only. Prefer MP3 (smaller over the wire); fall back to WAV if encoding fails.
  */
 
 function writeString(view: DataView, offset: number, s: string) {
@@ -42,17 +42,13 @@ function pcm16MonoWavBuffer(samples: Float32Array, sampleRate: number): ArrayBuf
   return buffer
 }
 
-/**
- * Decode browser recording, resample to 16 kHz mono, return WAV blob.
- */
-export async function encodeRecordingBlobAsWav16kMono(input: Blob): Promise<Blob> {
+async function decodeResampleTo16kMonoFloat(input: Blob): Promise<Float32Array> {
   const arrayBuffer = await input.arrayBuffer()
   const ctx = new AudioContext()
   let audioBuffer: AudioBuffer
   try {
     if (ctx.state === "suspended") await ctx.resume()
-    const copy = arrayBuffer.slice(0)
-    audioBuffer = await ctx.decodeAudioData(copy)
+    audioBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0))
   } finally {
     void ctx.close()
   }
@@ -73,7 +69,41 @@ export async function encodeRecordingBlobAsWav16kMono(input: Blob): Promise<Blob
   source.connect(offline.destination)
   source.start(0)
   const rendered = await offline.startRendering()
-  const samples = rendered.getChannelData(0)
+  return rendered.getChannelData(0)
+}
 
-  return new Blob([pcm16MonoWavBuffer(samples, targetRate)], { type: "audio/wav" })
+/** 16 kHz mono speech: 64 kbps MP3 is a good size/quality tradeoff. */
+const STT_MP3_KBPS = 64
+const LAME_CHUNK = 1152
+
+async function int16MonoToMp3Blob(pcm: Int16Array, sampleRate: number): Promise<Blob> {
+  const { Mp3Encoder } = await import("lamejs")
+  const enc = new Mp3Encoder(1, sampleRate, STT_MP3_KBPS)
+  const chunks: Uint8Array[] = []
+  for (let i = 0; i < pcm.length; i += LAME_CHUNK) {
+    const block = pcm.subarray(i, Math.min(i + LAME_CHUNK, pcm.length))
+    const mp3buf = enc.encodeBuffer(block)
+    if (mp3buf.length > 0) chunks.push(new Uint8Array(mp3buf))
+  }
+  const end = enc.flush()
+  if (end.length > 0) chunks.push(new Uint8Array(end))
+  return new Blob(chunks, { type: "audio/mpeg" })
+}
+
+/**
+ * Decode + resample, then MP3 if possible, else WAV (still Mistral-compatible).
+ */
+export async function encodeRecordingBlobForSttUpload(input: Blob): Promise<{ blob: Blob; filename: string }> {
+  const samples = await decodeResampleTo16kMonoFloat(input)
+  const pcm = floatTo16BitPCM(samples)
+  try {
+    const mp3 = await int16MonoToMp3Blob(pcm, 16_000)
+    if (mp3.size < 32) throw new Error("empty_mp3")
+    return { blob: mp3, filename: "recording.mp3" }
+  } catch {
+    return {
+      blob: new Blob([pcm16MonoWavBuffer(samples, 16_000)], { type: "audio/wav" }),
+      filename: "recording.wav",
+    }
+  }
 }
