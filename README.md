@@ -135,7 +135,9 @@ Trend rollups summarize recent **active** T2/T3 documents (same logic as `/admin
 
 - Set `NEXT_PUBLIC_CONCIERGE_VOICE_UI=true` (default in `.env.local.example`) to show **mic** + **朗讀** on `/concierge` and the floating widget.
 - **Voice-0:** Web Speech API where the browser supports it (e.g. desktop Chrome).
-- **Voice-1 (iPhone / Safari):** the mic **records** audio; on stop, audio is sent to `POST /api/concierge/transcribe` (OpenAI Whisper). Set **`OPENAI_API_KEY`**. For real devices, prefer **HTTPS** (or a tunnel to localhost); iOS may block or limit the microphone on plain `http://` LAN URLs.
+- **Voice-1 (iPhone / Safari):** the mic **records** audio; on stop, audio is sent to `POST /api/concierge/transcribe` (OpenAI Whisper). Set **`OPENAI_API_KEY`**. Safari needs a **secure context** (HTTPS). Two ways to get that while developing:
+  - **LAN HTTPS:** `npm run gen:dev-tls-certs -- YOUR_LAN_IP` then `npm run dev:https:local` (or `:3443` if 3000 is busy). This is **not** tunneling—your phone must be on the **same Wi‑Fi**, and the Mac firewall must allow the port. Use `https://YOUR_LAN_IP:3000/concierge`.
+  - **Tunnel (easiest on iPhone):** Terminal 1: `npm run dev`. Terminal 2: install [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/) then `npm run tunnel:cloudflare`. Open the printed **`https://*.trycloudflare.com`** URL on the phone and add `/concierge`. The tunnel gives real HTTPS; no self-signed cert on the phone.
 
 ## Documentation
 

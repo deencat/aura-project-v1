@@ -8,6 +8,7 @@
     "dev:https:local": "next dev -H 0.0.0.0 -p 3000 --experimental-https-key ./certificates/dev-key.pem --experimental-https-cert ./certificates/dev-cert.pem",
     "dev:https:local:3443": "next dev -H 0.0.0.0 -p 3443 --experimental-https-key ./certificates/dev-key.pem --experimental-https-cert ./certificates/dev-cert.pem",
     "gen:dev-tls-certs": "bash scripts/gen-dev-tls-certs.sh",
+    "tunnel:cloudflare": "cloudflared tunnel --url http://localhost:3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
