@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
-import {
-  transcribeAudioWithOpenAIWhisper,
-  type ConciergeTranscribeLocale,
-} from "@/services/concierge-transcribe.service"
+import { transcribeConciergeAudio, type ConciergeTranscribeLocale } from "@/services/concierge-transcribe.service"
 import { enforceConciergeRateLimit, logConciergeRequestEvent } from "@/services/concierge-guard.service"
 
 export const maxDuration = 60
@@ -46,7 +43,9 @@ export async function POST(request: Request) {
     )
   }
 
-  if (!process.env.OPENAI_API_KEY?.trim()) {
+  const hasStt =
+    Boolean(process.env.OPENAI_API_KEY?.trim()) || Boolean(process.env.OPENROUTER_API_KEY?.trim())
+  if (!hasStt) {
     await logConciergeRequestEvent({
       route: ROUTE,
       method: "POST",
@@ -59,7 +58,8 @@ export async function POST(request: Request) {
       {
         ok: false,
         error: "stt_not_configured",
-        message: "Server transcription is not configured. Add OPENAI_API_KEY for Whisper.",
+        message:
+          "Server transcription is not configured. Set OPENAI_API_KEY (OpenAI Whisper) or OPENROUTER_API_KEY (OpenRouter STT).",
       },
       { status: 503 }
     )
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { text } = await transcribeAudioWithOpenAIWhisper({ file, locale })
+    const { text } = await transcribeConciergeAudio({ file, locale })
     await logConciergeRequestEvent({
       route: ROUTE,
       method: "POST",
