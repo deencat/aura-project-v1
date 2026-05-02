@@ -1,12 +1,15 @@
 "use client"
 
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useAuth } from "@clerk/nextjs"
+import { Mic, Square, Volume2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/contexts/LanguageContext"
+import { useConciergeWebSpeech } from "@/hooks/useConciergeWebSpeech"
+import { speakText, stopSpeaking, supportsSpeechSynthesis } from "@/lib/concierge/tts-client"
 
 type Locale = "zh-HK" | "en" | "zh-Hans"
 
@@ -85,6 +88,14 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         treatments: "睇療程",
         ariaLive: "聊天訊息",
         sources: "來源",
+        voiceMic: "語音輸入",
+        voiceStop: "停止收音",
+        voiceListening: "聆聽中…",
+        voiceUnsupported:
+          "此裝置或瀏覽器不支援語音輸入（例如 iPhone Safari 多數情況）。請打字輸入；進階版本將支援伺服器語音辨識。",
+        voiceConsent: "語音只作轉成文字，內容經同一聊天流程處理。",
+        readAloud: "朗讀",
+        stopRead: "停止朗讀",
       }
     }
     if (locale === "zh-Hans") {
@@ -100,6 +111,13 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         treatments: "看疗程",
         ariaLive: "聊天消息",
         sources: "來源",
+        voiceMic: "语音输入",
+        voiceStop: "停止",
+        voiceListening: "正在聆听…",
+        voiceUnsupported: "当前浏览器不支持语音输入，请改用文字。服务器语音识别将后续提供。",
+        voiceConsent: "语音仅用于转成文字，并走同一套对话流程。",
+        readAloud: "朗读",
+        stopRead: "停止朗读",
       }
     }
     return {
@@ -114,6 +132,14 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
       treatments: "Browse treatments",
       ariaLive: "Chat messages",
       sources: "Sources",
+      voiceMic: "Voice input",
+      voiceStop: "Stop",
+      voiceListening: "Listening…",
+      voiceUnsupported:
+        "Voice input is not supported in this browser (e.g. iPhone Safari). Please type your message; server STT will follow.",
+      voiceConsent: "Voice is converted to text only and sent through the same chat flow.",
+      readAloud: "Read aloud",
+      stopRead: "Stop",
     }
   }, [locale])
 
@@ -282,6 +308,41 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
     }
   }
 
+  const voiceUiEnabled = process.env.NEXT_PUBLIC_CONCIERGE_VOICE_UI !== "false"
+
+  const onVoiceFinalRef = useRef<(text: string) => void>(() => {})
+  onVoiceFinalRef.current = (text: string) => {
+    void send(text)
+  }
+  const onVoiceFinalStable = useCallback((text: string) => {
+    onVoiceFinalRef.current(text)
+  }, [])
+
+  const voice = useConciergeWebSpeech({
+    locale,
+    disabled: isSending || !voiceUiEnabled,
+    onFinalTranscript: onVoiceFinalStable,
+  })
+
+  const [ttsPlayingId, setTtsPlayingId] = useState<string | null>(null)
+
+  const playAssistantTts = useCallback(
+    (messageId: string, text: string) => {
+      if (!supportsSpeechSynthesis() || !text.trim() || text === "…") return
+      if (ttsPlayingId === messageId) {
+        stopSpeaking()
+        setTtsPlayingId(null)
+        return
+      }
+      stopSpeaking()
+      setTtsPlayingId(messageId)
+      const u = speakText(text, locale)
+      u.onend = () => setTtsPlayingId((p) => (p === messageId ? null : p))
+      u.onerror = () => setTtsPlayingId((p) => (p === messageId ? null : p))
+    },
+    [locale, ttsPlayingId]
+  )
+
   const maxHeightClass = variant === "widget" ? "max-h-[55vh]" : "max-h-[65vh]"
 
   return (
@@ -353,6 +414,26 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
                   >
                     {m.content}
                   </div>
+
+                  {voiceUiEnabled &&
+                  m.role === "assistant" &&
+                  m.content &&
+                  m.content !== "…" &&
+                  supportsSpeechSynthesis() ? (
+                    <div className="mt-1.5">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-xs text-foreground/80"
+                        onClick={() => playAssistantTts(m.id, m.content)}
+                        aria-pressed={ttsPlayingId === m.id}
+                      >
+                        <Volume2 className="mr-1.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                        {ttsPlayingId === m.id ? ui.stopRead : ui.readAloud}
+                      </Button>
+                    </div>
+                  ) : null}
 
                   {m.role === "assistant" && (m.rollupSources?.length || m.sources?.length) ? (
                     <details className="mt-2 rounded-2xl border border-white/45 bg-white/35 px-4 py-3 text-xs text-foreground/80 shadow-sm shadow-pink-500/10 backdrop-blur-md">
@@ -429,8 +510,16 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
       <CardFooter className="flex flex-col gap-3 border-t border-white/50 p-5">
         <p className="text-xs text-foreground/60">{ui.disclaimer}</p>
 
+        {voiceUiEnabled ? <p className="text-[11px] leading-snug text-foreground/55">{ui.voiceConsent}</p> : null}
+        {voiceUiEnabled && !voice.supported ? (
+          <p className="text-xs leading-relaxed text-foreground/70">{ui.voiceUnsupported}</p>
+        ) : null}
+        {voiceUiEnabled && voice.supported && voice.listening ? (
+          <p className="text-xs font-medium text-primary">{ui.voiceListening}</p>
+        ) : null}
+
         <form
-          className="flex w-full flex-col gap-3 sm:flex-row"
+          className="flex w-full flex-col gap-3"
           onSubmit={(e) => {
             e.preventDefault()
             send(input)
@@ -439,16 +528,32 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
           <label className="sr-only" htmlFor={variant === "widget" ? "concierge-input-widget" : "concierge-input-page"}>
             Message
           </label>
-          <input
-            ref={inputRef}
-            id={variant === "widget" ? "concierge-input-widget" : "concierge-input-page"}
-            className="h-11 w-full rounded-full border border-white/60 bg-white/55 px-4 text-sm text-foreground shadow-sm shadow-pink-500/10 backdrop-blur-md outline-none placeholder:text-foreground/45 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            placeholder={ui.placeholder}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isSending}
-            autoComplete="off"
-          />
+          <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+            {voiceUiEnabled ? (
+              <Button
+                type="button"
+                variant={voice.listening ? "default" : "outline"}
+                className="h-11 w-11 shrink-0 rounded-full p-0"
+                disabled={isSending || !voice.supported}
+                onClick={() => (voice.listening ? voice.stop() : voice.start())}
+                aria-pressed={voice.listening}
+                aria-label={voice.listening ? ui.voiceStop : ui.voiceMic}
+                title={!voice.supported ? ui.voiceUnsupported : undefined}
+              >
+                {voice.listening ? <Square className="h-4 w-4 fill-current" /> : <Mic className="h-4 w-4" />}
+              </Button>
+            ) : null}
+            <input
+              ref={inputRef}
+              id={variant === "widget" ? "concierge-input-widget" : "concierge-input-page"}
+              className="h-11 min-w-0 flex-1 rounded-full border border-white/60 bg-white/55 px-4 text-sm text-foreground shadow-sm shadow-pink-500/10 backdrop-blur-md outline-none placeholder:text-foreground/45 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              placeholder={ui.placeholder}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isSending}
+              autoComplete="off"
+            />
+          </div>
           <div className="flex gap-2">
             <Button type="submit" className="h-11 flex-1 px-6" disabled={isSending}>
               {ui.send}

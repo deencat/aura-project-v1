@@ -63,7 +63,8 @@
   - Citations UI trims long lists (top sources + “+N more”)
   - Server-side model timeout + graceful fallback (`CONCIERGE_MODEL_TIMEOUT_MS`, `fallbackReason: "timeout"`)
 - [x] **Concierge ops**: admin **retention run** UI — `/admin/concierge` → `POST /api/admin/concierge/retention/run` (Clerk); cron/secret routes unchanged (`README`)
-- [ ] **Voice input (Voice-0/1)** and **TTS (TTS-0/1)** for concierge
+- [x] **Voice-0 / TTS-0 (client)** — Web Speech + `speechSynthesis` on `ConciergeChat` (`NEXT_PUBLIC_CONCIERGE_VOICE_UI`); iPhone Safari: mic disabled + copy; **TTS-0** per assistant message. Stub: `POST /api/concierge/transcribe` → 501 (Voice-1 server STT later)
+- [ ] **Voice-1 / TTS-1 (production)** — vendor STT + optional cloud TTS; rate limits; legal copy
 - [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
 - [ ] **Loyalty** (closed-loop points) + deferred crypto/NFT exploration
 

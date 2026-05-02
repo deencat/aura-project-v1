@@ -131,6 +131,12 @@ Trend rollups summarize recent **active** T2/T3 documents (same logic as `/admin
 - **Vercel:** add `CRON_SECRET` to the project (matches `vercel.json` daily schedule) **or** call with `?token=` equal to `KB_ROLLUP_CRON_SECRET` or `KB_INGEST_CRON_SECRET`.
 - Optional: `KB_ROLLUP_TOPICS_JSON` — JSON array of `{ "topic", "language?", "days?" }` (max 12). If unset, a default `zh-HK` topic is used.
 
+## Concierge: voice & TTS (browser)
+
+- Set `NEXT_PUBLIC_CONCIERGE_VOICE_UI=true` (default in `.env.local.example`) to show **mic** + **朗讀** on `/concierge` and the floating widget.
+- **Voice-0** uses the browser **Web Speech API** where available; **iPhone Safari** usually has **no** `SpeechRecognition` — users see an inline notice and type instead.
+- **Voice-1** (server STT) will use `POST /api/concierge/transcribe` (currently returns `501` until a provider is configured).
+
 ## Documentation
 
 - **Strategic / Hermes Agent revamp:** [.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md](.documentation/Hermes-Agent-Integration-and-Revamp-Plan.md)
