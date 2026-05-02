@@ -44,7 +44,9 @@ export async function POST(request: Request) {
   }
 
   const hasStt =
-    Boolean(process.env.OPENAI_API_KEY?.trim()) || Boolean(process.env.OPENROUTER_API_KEY?.trim())
+    Boolean(process.env.OPENAI_API_KEY?.trim()) ||
+    Boolean(process.env.GROQ_API_KEY?.trim()) ||
+    Boolean(process.env.OPENROUTER_API_KEY?.trim())
   if (!hasStt) {
     await logConciergeRequestEvent({
       route: ROUTE,
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
         ok: false,
         error: "stt_not_configured",
         message:
-          "Server transcription is not configured. Set OPENAI_API_KEY (OpenAI Whisper) or OPENROUTER_API_KEY (OpenRouter STT).",
+          "Server transcription is not configured. Set OPENAI_API_KEY, GROQ_API_KEY (e.g. if OpenRouter/OpenAI Whisper is region-blocked), or OPENROUTER_API_KEY.",
       },
       { status: 503 }
     )
@@ -146,10 +148,12 @@ export async function GET() {
     return NextResponse.json({ ok: false }, { status: 404 })
   }
   const openai = Boolean(process.env.OPENAI_API_KEY?.trim())
+  const groq = Boolean(process.env.GROQ_API_KEY?.trim())
   const openrouter = Boolean(process.env.OPENROUTER_API_KEY?.trim())
+  const sttProvider = openai ? "openai" : groq ? "groq" : openrouter ? "openrouter" : "none"
   return NextResponse.json({
     ok: true,
-    sttConfigured: openai || openrouter,
-    sttProvider: openai ? "openai" : openrouter ? "openrouter" : "none",
+    sttConfigured: openai || groq || openrouter,
+    sttProvider,
   })
 }

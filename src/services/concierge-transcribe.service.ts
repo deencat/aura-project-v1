@@ -1,7 +1,9 @@
 /**
- * Voice-1: server STT.
- * - Prefer OPENAI_API_KEY → OpenAI Whisper (multipart upload).
- * - Else OPENROUTER_API_KEY → OpenRouter POST /api/v1/audio/transcriptions (base64 JSON).
+ * Voice-1: server STT (first available key wins):
+ * 1) OPENAI_API_KEY → OpenAI Whisper (direct).
+ * 2) GROQ_API_KEY → Groq Whisper (OpenAI-compatible upload; often works where OpenAI geo-blocks, e.g. HK).
+ * 3) OPENROUTER_API_KEY → OpenRouter /audio/transcriptions (usually routes to OpenAI → same geo/ToS as OpenAI).
+ *
  * Audio is not stored in Aura; forwarded only for transcription.
  */
 
@@ -70,6 +72,49 @@ export async function transcribeAudioWithOpenAIWhisper(args: {
   return { text }
 }
 
+/** Groq speech-to-text (OpenAI-compatible multipart): https://console.groq.com/docs/speech-to-text */
+export async function transcribeAudioWithGroq(args: {
+  file: File
+  locale: ConciergeTranscribeLocale
+}): Promise<{ text: string }> {
+  const apiKey = process.env.GROQ_API_KEY?.trim()
+  if (!apiKey) {
+    throw new Error("GROQ_API_KEY is not set (required for Groq transcription).")
+  }
+
+  const model = process.env.CONCIERGE_GROQ_STT_MODEL?.trim() || "whisper-large-v3-turbo"
+  const language = whisperLanguageForLocale(args.locale)
+
+  const form = new FormData()
+  form.append("file", args.file, args.file.name || "audio.webm")
+  form.append("model", model)
+  form.append("language", language)
+
+  const res = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: form,
+  })
+
+  const data: unknown = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    const msg =
+      typeof data === "object" && data !== null && "error" in data
+        ? String((data as { error?: { message?: string } }).error?.message ?? res.statusText)
+        : res.statusText
+    throw new Error(msg || `Groq transcription failed (${res.status})`)
+  }
+
+  const text =
+    typeof data === "object" && data !== null && "text" in data
+      ? String((data as { text?: string }).text ?? "").trim()
+      : ""
+  if (!text) throw new Error("Empty transcription result.")
+  return { text }
+}
+
 /** OpenRouter STT: https://openrouter.ai/docs/guides/overview/multimodal/stt */
 export async function transcribeAudioWithOpenRouter(args: {
   file: File
@@ -122,7 +167,7 @@ export async function transcribeAudioWithOpenRouter(args: {
 }
 
 /**
- * Use OpenAI Whisper when OPENAI_API_KEY is set; otherwise OpenRouter STT when OPENROUTER_API_KEY is set.
+ * STT provider order: OpenAI direct → Groq → OpenRouter (OpenRouter Whisper often hits OpenAI upstream).
  */
 export async function transcribeConciergeAudio(args: {
   file: File
@@ -131,8 +176,13 @@ export async function transcribeConciergeAudio(args: {
   if (process.env.OPENAI_API_KEY?.trim()) {
     return transcribeAudioWithOpenAIWhisper(args)
   }
+  if (process.env.GROQ_API_KEY?.trim()) {
+    return transcribeAudioWithGroq(args)
+  }
   if (process.env.OPENROUTER_API_KEY?.trim()) {
     return transcribeAudioWithOpenRouter(args)
   }
-  throw new Error("No transcription API key: set OPENAI_API_KEY or OPENROUTER_API_KEY.")
+  throw new Error(
+    "No transcription API key: set OPENAI_API_KEY, GROQ_API_KEY (recommended in restricted regions), or OPENROUTER_API_KEY."
+  )
 }

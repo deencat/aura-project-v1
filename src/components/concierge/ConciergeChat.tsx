@@ -92,16 +92,25 @@ function formatServerSttError(error: string, locale: Locale): string {
     },
   }
   if (byCode[error]) return byCode[error][locale]
+  const lower = error.toLowerCase()
+  if (lower.includes("terms of service") || lower.includes("violation of provider")) {
+    return locale === "en"
+      ? "Whisper via OpenRouter is blocked for your region (OpenAI upstream). Add GROQ_API_KEY from console.groq.com and restart the dev server — Aura will use Groq for mic transcription."
+      : locale === "zh-Hans"
+        ? "经 OpenRouter 的语音转写被上游拒绝（常见于部分地区）。请在 .env 配置 GROQ_API_KEY（console.groq.com），并重启服务。"
+        : "經 OpenRouter 的語音轉寫被上游拒絕（常見於部分地區）。請喺 .env 加入 GROQ_API_KEY（console.groq.com），並重啟伺服器。"
+  }
   if (
     error.includes("Server transcription is not configured") ||
     error.includes("OPENAI_API_KEY") ||
-    error.includes("OPENROUTER_API_KEY")
+    error.includes("OPENROUTER_API_KEY") ||
+    error.includes("GROQ_API_KEY")
   ) {
     return locale === "en"
-      ? "Server voice is not configured. Set OPENAI_API_KEY or OPENROUTER_API_KEY."
+      ? "Server voice is not configured. Set OPENAI_API_KEY, GROQ_API_KEY, or OPENROUTER_API_KEY."
       : locale === "zh-Hans"
-        ? "伺服器未配置语音转写，请设置 OPENAI_API_KEY 或 OPENROUTER_API_KEY。"
-        : "伺服器未設定語音轉寫，請設定 OPENAI_API_KEY 或 OPENROUTER_API_KEY。"
+        ? "伺服器未配置语音转写，请设置 OPENAI_API_KEY、GROQ_API_KEY 或 OPENROUTER_API_KEY。"
+        : "伺服器未設定語音轉寫，請設定 OPENAI_API_KEY、GROQ_API_KEY 或 OPENROUTER_API_KEY。"
   }
   if (error.startsWith("HTTP 429")) {
     return locale === "en"
@@ -158,7 +167,7 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         voiceStop: "停止收音",
         voiceListening: "聆聽中…",
         voiceUnsupported:
-          "此瀏覽器不支援即時語音辨識。手機請用下方麥克風：點一下錄音、再點停止（語音經伺服器轉文字，需 OPENAI_API_KEY 或 OPENROUTER_API_KEY；建議 HTTPS）。",
+          "此瀏覽器不支援即時語音辨識。手機請用下方麥克風：點一下錄音、再點停止（語音經伺服器轉文字；建議 GROQ_API_KEY 或 OPENROUTER_API_KEY；香港等地 OpenRouter Whisper 或受限，可用 Groq）。",
         voiceConsent:
           "語音只作轉成文字。手機錄音會短暫傳到伺服器再轉文字，不另存錄音檔；內容經同一聊天流程處理。",
         voiceTranscribing: "語音轉文字中…",
@@ -184,7 +193,7 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
         voiceStop: "停止",
         voiceListening: "正在聆听…",
         voiceUnsupported:
-          "本浏览器不支持即时语音识别。手机请用麦克风：点一下录音、再点停止（语音经服务器转文字，需 OPENAI_API_KEY 或 OPENROUTER_API_KEY；建议 HTTPS）。",
+          "本浏览器不支持即时语音识别。手机请用麦克风：点一下录音、再点停止（语音经服务器转文字；建议 GROQ_API_KEY 或 OPENROUTER_API_KEY；部分地区 OpenRouter Whisper 受限可用 Groq）。",
         voiceConsent: "语音仅用于转文字；手机录音会短暂上传至服务器转写，不单独存储录音。",
         voiceTranscribing: "正在转写…",
         voiceRecorderUnavailable: "此浏览器无法录音，请改用键盘输入。",
@@ -208,7 +217,7 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
       voiceStop: "Stop",
       voiceListening: "Listening…",
       voiceUnsupported:
-        "No live speech recognition in this browser. On mobile, use the mic: tap to record, tap again to stop (server STT needs OPENAI_API_KEY or OPENROUTER_API_KEY; HTTPS recommended).",
+        "No live speech recognition in this browser. On mobile, use the mic: tap to record, tap again to stop. Server STT: GROQ_API_KEY (works in more regions) or OPENROUTER_API_KEY; HTTPS recommended.",
       voiceConsent:
         "Voice is for text only. On mobile, a short recording is sent to the server for transcription and is not kept as a separate audio file.",
       voiceTranscribing: "Transcribing…",
