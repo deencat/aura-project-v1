@@ -40,6 +40,7 @@ openssl req -x509 -newkey rsa:2048 -nodes \
   -config "${CONF}"
 
 echo "OK: ${CERT_DIR}/dev-key.pem and dev-cert.pem (SAN: ${LAN_IP}, 127.0.0.1, localhost)"
-echo "Run: npm run dev:https:local   (stop any other dev server on port 3000 first)"
-echo "     or: npm run dev:https:local:3443   if 3000 is already in use"
-echo "Then on your phone: https://${LAN_IP}:3000/concierge or :3443 (accept the certificate warning)."
+echo "Run: npm run dev:https:local       (HTTPS on :3000)"
+echo "     npm run dev:https:local:3003   (HTTPS on :3003 — same port as dev:lan:3003)"
+echo "     npm run dev:https:local:3443   if 3000 is busy"
+echo "On your phone use the SAME port, e.g. https://${LAN_IP}:3003/concierge (accept cert warning)."
