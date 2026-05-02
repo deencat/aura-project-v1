@@ -136,3 +136,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "transcription_failed", message }, { status: 502 })
   }
 }
+
+/**
+ * Development only: confirms whether this Node process sees STT env vars (no secret values).
+ * Open GET /api/concierge/transcribe in the browser or curl while `next dev` is running.
+ */
+export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ ok: false }, { status: 404 })
+  }
+  const openai = Boolean(process.env.OPENAI_API_KEY?.trim())
+  const openrouter = Boolean(process.env.OPENROUTER_API_KEY?.trim())
+  return NextResponse.json({
+    ok: true,
+    sttConfigured: openai || openrouter,
+    sttProvider: openai ? "openai" : openrouter ? "openrouter" : "none",
+  })
+}
