@@ -10,3 +10,5 @@
 | Booking CTAs | Various treatment pages | Align footer + header + homepage cards after IA pass |
 
 **When ready:** add `async redirects()` in `next.config.js` and test affected internal links.
+
+**Related:** `tests/concierge.spec.ts` is a minimal Playwright smoke for `/concierge` (not a substitute for IA redirect tests).

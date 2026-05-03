@@ -13,6 +13,10 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Copy `.env.local.example` to `.env.local` and set Clerk (and any other) keys. Do not commit `.env` or `.env.local`.
 
+### Tests (Playwright)
+
+With the dev server running, execute `npx playwright test`. The default `baseURL` is `http://localhost:3000`; if you use another port (e.g. `npm run dev:lan:3003`), set **`PLAYWRIGHT_BASE_URL`** (for example `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3003 npx playwright test`). Concierge smoke: `tests/concierge.spec.ts`.
+
 ## Deploy to VPS later (Hostinger / Ubuntu) — checklist
 
 This project works fine on a generic Linux VPS. The minimum production pieces are:

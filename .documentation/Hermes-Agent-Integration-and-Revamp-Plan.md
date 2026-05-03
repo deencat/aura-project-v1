@@ -8,7 +8,7 @@
 
 ## Implementation status (living checklist)
 
-**Last updated:** 2026-05-02
+**Last updated:** 2026-05-03
 
 ### Progress tracking (snapshot)
 
@@ -22,7 +22,7 @@
 
 **Recently landed in repo (high level):** KB-1 RSS + HTML ingest → T3 staging; promote endpoints + audit fields; admin knowledge actions; rollup generation extracted to `knowledge-rollup-generation.service.ts`; scheduled rollup + retention routes + `internal-cron-auth`; README ops; optional `vercel.json` schedules.
 
-**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects (see [.documentation/IA-redirect-map.md](./IA-redirect-map.md)), (2) ~~admin retention run UI~~ **done** (`/admin/concierge`), (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke. **Defer to after dev:** bulk content QA. **Defer later:** voice/TTS (unless prioritized), Hermes gateway, loyalty.
+**Next engineering slices (pick one per sprint):** (1) navigation / IA audit + redirects (see [.documentation/IA-redirect-map.md](./IA-redirect-map.md)), (2) ~~admin retention run UI~~ **done** (`/admin/concierge`), (3) optional **trend topic pages**, (4) expand golden set + Playwright smoke — **starter:** `tests/concierge.spec.ts` (page load + composer). **Defer to after dev:** bulk content QA. **Defer later:** Hermes gateway, loyalty; **Voice-1 baseline shipped** (see §0 below).
 
 ### Shipped / implemented in repo
 
@@ -63,8 +63,9 @@
   - Citations UI trims long lists (top sources + “+N more”)
   - Server-side model timeout + graceful fallback (`CONCIERGE_MODEL_TIMEOUT_MS`, `fallbackReason: "timeout"`)
 - [x] **Concierge ops**: admin **retention run** UI — `/admin/concierge` → `POST /api/admin/concierge/retention/run` (Clerk); cron/secret routes unchanged (`README`)
-- [x] **Voice-0 / TTS-0 (client)** — Web Speech + `speechSynthesis` on `ConciergeChat` (`NEXT_PUBLIC_CONCIERGE_VOICE_UI`); iPhone Safari: mic disabled + copy; **TTS-0** per assistant message. Stub: `POST /api/concierge/transcribe` → 501 (Voice-1 server STT later)
-- [ ] **Voice-1 / TTS-1 (production)** — vendor STT + optional cloud TTS; rate limits; legal copy
+- [x] **Voice-0 / TTS-0 (client)** — Web Speech + `speechSynthesis` on `ConciergeChat` (`NEXT_PUBLIC_CONCIERGE_VOICE_UI`); **TTS-0** per assistant message.
+- [x] **Voice-1 (baseline)** — `POST /api/concierge/transcribe`: OpenRouter chat + default Voxtral (`input_audio`); client re-encode to **MP3** (lamejs) or **WAV** fallback for Mistral-compatible uploads; rate limits on route. **Still open for “production hardening”:** optional cloud TTS (**TTS-1**), expanded legal/consent copy, STT vendor DPAs where required.
+- [ ] **TTS-1 (production)** — optional cloud neural TTS route + quotas + contract review (§4.2.3)
 - [ ] **Hermes gateway** (Phase 3–4) and messaging channels (WhatsApp/Telegram)
 - [ ] **Loyalty** (closed-loop points) + deferred crypto/NFT exploration
 
@@ -671,7 +672,7 @@ Internal: **Memory MCP** in this repo remains a **developer memory tool**, not t
 | Accessibility or voice/STT vendor change | Update §4.2, §6 Phases 1–2, §9 rows, §10 voice bullets, §11 items 15–17. |
 | TTS vendor or consent policy change | Update §4.2.3, §6 Phase 2–3, §9 TTS row, §10 TTS bullets, §11 items 18–20. |
 
-**Last updated:** 2026-05-02
+**Last updated:** 2026-05-03
 
 ---
 
