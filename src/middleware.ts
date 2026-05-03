@@ -23,6 +23,8 @@ const isPublicRoute = createRouteMatcher([
   '/testimonials',
   '/blog',
   '/blog/(.*)',
+  '/trends',
+  '/trends/(.*)',
   // Images and static files
   '/images/(.*)',
   '/_next/static/(.*)',

@@ -55,7 +55,7 @@
 
 ### In progress / next
 
-- [ ] **KB-3 public trend pages** (optional): marketing/SEO routes fed primarily from rollups (concierge already prefers rollups for trend-style queries)
+- [x] **KB-3 public trend pages** (baseline): **`/trends`** index (`?lang=zh-HK|en|zh-Hans|zh-Hant`) + **`/trends/[id]`** detail from `KnowledgeRollup`; ISR `revalidate=3600`; footer link. Optional later: topic slug routes, archive job for aged T3.
 - [ ] **KB-1 polish** (optional): dedicated **staging inbox** / stronger filters in admin (workflow is already enforceable via API + current list)
 - [x] **KB-2 quality hardening (baseline)**:
   - Golden set runner `npm run eval:concierge` (starter set)
@@ -601,7 +601,7 @@ Ideas from market / strategy research, **classified**:
 7. ✅ **KB-0:** Prisma models for `knowledge_documents`, `knowledge_chunks`, `knowledge_rollups`, `ingestion_runs`; admin upload for **T0** files — **shipped** (see §0 checklist).
 8. ✅ **KB-1:** RSS + HTML ingest → **T3 `staging`**; `IngestionRun` logging; Clerk + cron routes; **promote** APIs + audit fields; `/admin/knowledge` actions — **shipped**. Optional follow-up: dedicated staging inbox / filters; expand curated source packs.
 9. ✅ **KB-2:** Hybrid retrieval + re-rank + `chat` with **citations** + tier filters — **shipped**. Ongoing: §7.7 golden set, p95 latency / load tests as needed.
-10. 🟡 **KB-3:** ✅ Scheduled rollup cron (`/api/knowledge/rollups/cron/run`, `vercel.json`); concierge trends path exists. **Next:** optional public trend pages; archive job for aged T3.
+10. 🟡 **KB-3:** ✅ Scheduled rollup cron (`/api/knowledge/rollups/cron/run`, `vercel.json`); concierge trends path; **public** `/trends` + `/trends/[id]` (see §0). **Next:** archive job for aged T3; optional topic slugs / SEO polish.
 
 **Golden set & quality (§7.7)**
 

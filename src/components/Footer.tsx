@@ -145,12 +145,15 @@ export default function Footer() {
             <p className="text-sm text-gray-500">
               © {new Date().getFullYear()} Freshen Page. All rights reserved.
             </p>
-            <div className="mt-4 flex space-x-6 md:mt-0">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 md:mt-0 md:justify-end">
+              <Link href="/trends" className="text-sm text-gray-500 hover:text-primary">
+                Trends · 趨勢
+              </Link>
               {['Terms', 'Privacy Policy', 'Cookies'].map((item) => (
                 <Link key={item} href="#" className="text-sm text-gray-500 hover:text-primary">
-                {item}
-              </Link>
-            ))}
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

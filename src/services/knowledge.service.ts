@@ -768,6 +768,11 @@ export async function listKnowledgeRollups(args: {
   })
 }
 
+/** Public trend pages: fetch a single rollup by id (no auth). */
+export async function getKnowledgeRollupById(id: string) {
+  return await prisma.knowledgeRollup.findUnique({ where: { id } })
+}
+
 export async function createKnowledgeRollup(args: {
   topic: string
   language: string
