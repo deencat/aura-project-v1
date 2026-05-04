@@ -236,7 +236,9 @@ export default function PlaceholderImage({
         return (
           <>
             <div className="absolute left-1/2 top-6 -translate-x-1/2 text-sm font-medium text-gray-500">Map Location</div>
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium text-primary">7/F, Cameron Commercial Building</div>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium text-primary">
+              旺角彌敦道 555 號九龍行 6 樓 602 室
+            </div>
           </>
         )
       default:

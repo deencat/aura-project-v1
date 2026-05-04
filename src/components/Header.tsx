@@ -97,13 +97,13 @@ export default function Header() {
       <div className="bg-primary text-white py-2 text-sm">
         <div className="container mx-auto flex justify-between items-center px-4">
           <div className="hidden md:flex items-center gap-6">
-            <a href="tel:+85212345678" className="flex items-center gap-1 hover:opacity-80 transition">
+            <a href="tel:+85223646018" className="flex items-center gap-1 hover:opacity-80 transition">
               <Phone className="h-3 w-3" />
-              <span>+852 1234 5678</span>
+              <span>2364 6018 / 2300 1810</span>
             </a>
-            <a href="mailto:info@freshenpage.com" className="flex items-center gap-1 hover:opacity-80 transition">
+            <a href="mailto:info@swbeauty.hk" className="flex items-center gap-1 hover:opacity-80 transition">
               <Mail className="h-3 w-3" />
-              <span>info@freshenpage.com</span>
+              <span>info@swbeauty.hk</span>
             </a>
           </div>
           <div className="flex items-center gap-4">

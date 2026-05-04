@@ -97,21 +97,21 @@ export default function Footer() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 mt-1 flex-shrink-0 text-gray-600"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div className="text-sm text-gray-600">
                   <p className="font-semibold">Main Store</p>
-                  <p>7/F, Cameron Commercial Building,</p>
-                  <p>18-20 Cameron Road, Tsim Sha Tsui</p>
+                  <p>旺角彌敦道 555 號九龍行 6 樓 602 室</p>
+                  <p>Rm 602, 6/F, Kowloon Building, 555 Nathan Road, Mong Kok</p>
                 </div>
               </div>
               <div className="mb-3 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 flex-shrink-0 text-gray-600"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                <p className="text-sm text-gray-600">+852 9831 3610</p>
+                <p className="text-sm text-gray-600">2364 6018 / 2300 1810 / WhatsApp 6137 3411</p>
               </div>
               <div className="mb-6 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 flex-shrink-0 text-gray-600"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
-                <p className="text-sm text-gray-600">info@freshenpage.com</p>
+                <p className="text-sm text-gray-600">info@swbeauty.hk</p>
               </div>
               <div>
                 <p className="mb-2 text-sm font-semibold text-gray-900">Opening Hours</p>
-                <p className="text-sm text-gray-600">Monday - Saturday: 12:00 – 21:00</p>
+                <p className="text-sm text-gray-600">星期一至五 12pm–9pm；星期六 11am–8pm；星期日休息</p>
               </div>
             </address>
           </div>
