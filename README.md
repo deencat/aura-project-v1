@@ -144,6 +144,14 @@ Trend rollups summarize recent **active** T2/T3 documents (same logic as `/admin
 - **Vercel:** add `CRON_SECRET` to the project (matches `vercel.json` daily schedule) **or** call with `?token=` equal to `KB_ROLLUP_CRON_SECRET` or `KB_INGEST_CRON_SECRET`.
 - Optional: `KB_ROLLUP_TOPICS_JSON` — JSON array of `{ "topic", "language?", "days?" }` (max 12). If unset, a default `zh-HK` topic is used.
 
+## Ops: Knowledge Bank (KB-3) archive old T3 staging docs (scheduled)
+
+To keep the raw T3 staging inbox clean, you can archive T3 documents that have been in `staging` for too long:
+
+- `GET` or `POST /api/knowledge/archive/cron/run`
+- Auth: same internal-cron rules as rollups (set `CRON_SECRET` for Vercel Bearer auth, or call with `?token=` that matches `KB_ARCHIVE_CRON_SECRET` or `KB_INGEST_CRON_SECRET`).
+- Optional query: `olderThanDays=60` (defaults to `KB_T3_STAGING_ARCHIVE_DAYS`).
+
 ## Concierge: voice & TTS
 
 - Set `NEXT_PUBLIC_CONCIERGE_VOICE_UI=true` (default in `.env.local.example`) to show **mic** + **朗讀** on `/concierge` and the floating widget.

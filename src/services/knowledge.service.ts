@@ -791,6 +791,26 @@ export async function createKnowledgeRollup(args: {
   })
 }
 
+export async function archiveOldStagingT3Documents(args?: { olderThanDays?: number }) {
+  const fallbackDays = Number(process.env.KB_T3_STAGING_ARCHIVE_DAYS ?? 60)
+  const olderThanDays = Math.max(
+    1,
+    Math.min(args?.olderThanDays ?? (Number.isFinite(fallbackDays) ? fallbackDays : 60), 3650)
+  )
+  const cutoff = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000)
+
+  const res = await prisma.knowledgeDocument.updateMany({
+    where: {
+      tier: "T3",
+      status: "staging",
+      createdAt: { lt: cutoff },
+    },
+    data: { status: "archived" },
+  })
+
+  return { archived: res.count, cutoffIso: cutoff.toISOString(), olderThanDays }
+}
+
 export async function getRollupContext(args: {
   query: string
   locale: string
