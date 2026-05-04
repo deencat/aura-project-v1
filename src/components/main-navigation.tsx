@@ -70,7 +70,7 @@ export function MainNavigation() {
     },
     { 
       title: 'New Doublo', 
-      href: '/new-doublo',
+      href: '/treatments/new-doublo',
       submenu: newDoubloTreatments
     },
     {

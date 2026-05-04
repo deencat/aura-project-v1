@@ -56,6 +56,16 @@ const nextConfig = {
       }
     ]
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/new-doublo',
+        destination: '/treatments/new-doublo',
+        permanent: true,
+      },
+    ]
+  },
   
   typescript: {
     // Skip type checking during build for faster deployment

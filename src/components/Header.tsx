@@ -44,7 +44,7 @@ const menuData = [
   {
     title: 'New Doublo',
     titleKey: 'new_doublo',
-    href: '/new-doublo',
+    href: '/treatments/new-doublo',
     submenu: [
       { title: 'Sculpt & Lift', titleKey: 'sculpt_lift', href: '/new-doublo/sculpt-lift' },
       { title: 'V-Line Perfection', titleKey: 'v_line', href: '/new-doublo/v-line' },
