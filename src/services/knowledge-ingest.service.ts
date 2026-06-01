@@ -157,7 +157,7 @@ async function fetchText(url: string) {
   try {
     const res = await fetch(url, {
       headers: {
-        "User-Agent": process.env.KB_INGEST_USER_AGENT || "AuraKBIngest/1.0 (+http://localhost:3000)",
+        "User-Agent": process.env.KB_INGEST_USER_AGENT || "SWBeautyKBIngest/1.0 (+http://localhost:3000)",
         Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, text/plain, */*",
       },
       cache: "no-store",

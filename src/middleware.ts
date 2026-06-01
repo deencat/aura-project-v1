@@ -41,9 +41,13 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    // Only skip true Next internals. Do NOT skip all *.jpg/*.png paths: missing assets still
-    // render the app shell + not-found, and Clerk needs clerkMiddleware() to have run for auth().
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // Clerk recommended matcher: skip Next internals + static files (unless in search params).
+    // This avoids "auth() was called but Clerk can't detect usage of clerkMiddleware()"
+    // when Next renders not-found for missing assets/routes.
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
     '/(api|trpc)(.*)',
+    // Always run for Clerk-specific frontend API routes
+    '/__clerk/(.*)',
   ],
 };

@@ -16,7 +16,7 @@ export default function ConciergePage() {
     }
     if (language === "en") {
       return {
-        title: "Aura Beauty AI Concierge",
+        title: "Aura — SW Beauty AI Concierge",
         subtitle: "A quick, guided match to the right treatments (preview)",
       }
     }

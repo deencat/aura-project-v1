@@ -90,7 +90,8 @@ test.describe('TreatmentImage Cross-Page Testing', () => {
                   img.src.includes('placeholder') || 
                   img.src.includes('via.placeholder') ||
                   img.src.includes('/images/placeholders/') ||
-                  img.src.includes('logo.svg')
+                  img.src.includes('logo.svg') ||
+                  img.src.includes('scintillaworld-logo.png')
                 ).length;
             });
           } catch (e) {

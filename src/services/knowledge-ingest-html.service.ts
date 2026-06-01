@@ -98,7 +98,7 @@ function getDefaultStatus(): KnowledgeStatus {
 }
 
 function getUserAgent() {
-  return process.env.KB_INGEST_USER_AGENT || "AuraKBIngest/1.0 (+http://localhost:3000)"
+  return process.env.KB_INGEST_USER_AGENT || "SWBeautyKBIngest/1.0 (+http://localhost:3000)"
 }
 
 function sha256Hex(s: string) {

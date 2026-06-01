@@ -78,7 +78,7 @@ export default function AdminLayout({
         <div className="container flex h-16 items-center justify-between py-4">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <span className="font-serif text-xl font-bold">Aura</span>
+              <span className="font-serif text-xl font-bold">SW Beauty</span>
               <span className="rounded-md bg-primary px-2 py-1 text-xs font-medium text-white">
                 Admin
               </span>

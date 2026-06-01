@@ -313,10 +313,31 @@ export default function PlaceholderImage({
   
   // If using a real image and we should attempt to load it
   if (shouldUseRealImage) {
+    const cachedImagePath = getCacheBustedImageUrl(imagePath);
+
+    // For simple local placeholders (e.g. homepage "treatment" cards),
+    // using a plain <img> avoids occasional next/image decode/onError flakiness.
+    if (type === 'treatment') {
+      return (
+        <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
+          <img
+            src={cachedImagePath}
+            alt={imageLabel}
+            className="h-full w-full object-cover"
+            loading={number === 1 ? 'eager' : 'lazy'}
+            onError={() => setImageError(true)}
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-black/30 p-2 text-center">
+            <div className="text-center text-base font-medium text-white">{imageLabel}</div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-lg ${className}`}>
         <Image 
-          src={imagePath}
+          src={cachedImagePath}
           alt={imageLabel}
           fill
           style={{objectFit: 'cover'}}

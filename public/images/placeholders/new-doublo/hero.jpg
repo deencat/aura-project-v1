@@ -1,2 +1,3 @@
-This is a placeholder for new-doublo/hero. 
-Replace with an actual image of appropriate dimensions.
+// This is a text file that serves as a placeholder for an image file
+// In a production environment, this would be a real image file
+// For development purposes, the TreatmentImage component will handle this appropriately 

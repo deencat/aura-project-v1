@@ -1,3 +1,5 @@
+ 'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -7,6 +9,7 @@ import PlaceholderImage from '@/components/PlaceholderImage'
 import { FeaturedContent } from '@/components/FeaturedContent'
 import { BlogPost } from '@/utils/blogUtils'
 import { Testimonial } from '@/utils/testimonialUtils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 // Mock blog posts data - in a real app, this would come from your API
 const mockBlogPosts: BlogPost[] = [
@@ -176,6 +179,139 @@ const mockTestimonials: Testimonial[] = [
 ]
 
 export default function Home() {
+  const { language, t } = useLanguage()
+
+  const copy =
+    language === 'zh-Hant'
+      ? {
+          heroTitle: '煥亮你的肌膚',
+          heroDescription:
+            '運用前沿科技，進行高效美肌療程，襯托你天生的自然光采。',
+          heroExplore: '探索療程',
+          heroBook: '預約諮詢',
+
+          storyPrefix: '我們的',
+          storyEmphasis: '故事',
+          storyP1:
+            'SW Beauty 致力提供多元、有效且安全的美肌療程。匯聚來自世界各地的專業設備與技術，為每位客戶呈獻最貼心、最合適、最理想的服務體驗。',
+          storyP2:
+            '我們由內而外呵護每一吋肌膚，透過度身訂造的護理方案，陪你達成美麗目標。',
+          aboutLearnMore: '了解更多我們的理念',
+
+          signaturePrefix: '招牌',
+          signatureEmphasis: '療程',
+          treatment1Desc: '先進科技，精準針對各類色斑、膚色不均與肌膚瑕疵。',
+          treatment2Desc: '革新式療程，打造絲滑細緻、宛如天生般的亮滑膚質與光采。',
+          treatment3Desc: '提升肌膚自然膠原生成，改善彈性與年輕感。',
+          viewAllTreatments: '查看所有療程',
+
+          servicesPrefix: '我們的',
+          servicesEmphasis: '服務',
+          categoryPremium: '尊貴美容療程',
+          categoryBody: '身體護理療程',
+          categoryAi: 'AI 面部濾鏡療程',
+          categoryCell: '細胞美容科技',
+          exploreLabel: '探索',
+
+          offersPrefix: '限量',
+          offersEmphasis: '優惠',
+          offerTitle: '新客專享',
+          offerDescription: '首趟即享 20% 折扣，體驗我們的尊貴美肌療程。感受專業護理帶來的不同。',
+          offerBullets: ['只限首次客戶使用', '適用於任何 $100 以上的療程', '優惠至 2023 年 12 月 31 日止'],
+          offerBook: '立即預約',
+
+          contactTitle: '準備好煥亮你的美麗？',
+          contactDescription: '預約與我們的美肌專家會面，為你量身尋找最合適的療程建議。',
+          contactButton: '立即聯絡我們',
+        }
+      : language === 'zh-Hans'
+        ? {
+            heroTitle: '焕亮你的肌肤',
+            heroDescription: '运用前沿科技，进行高效美肌疗程，衬托你天生的自然光采。',
+            heroExplore: '探索疗程',
+            heroBook: '预约咨询',
+
+            storyPrefix: '我们的',
+            storyEmphasis: '故事',
+            storyP1:
+              'SW Beauty 致力提供多元、有效且安全的美肌疗程。汇聚来自世界各地的专业设备与技术，为每位客户呈献最贴心、最合适、最理想的服务体验。',
+            storyP2: '我们由内而外呵护每一寸肌肤，通过量身定制的护理方案，陪你达成美丽目标。',
+            aboutLearnMore: '了解更多我们的理念',
+
+            signaturePrefix: '招牌',
+            signatureEmphasis: '疗程',
+            treatment1Desc: '先进科技，精准针对各类色斑、肤色不均与肌肤瑕疵。',
+            treatment2Desc: '革新式疗程，打造丝滑细致、如同天生般的亮滑肤质与光采。',
+            treatment3Desc: '提升肌肤自然胶原生成，改善弹性与年轻感。',
+            viewAllTreatments: '查看所有疗程',
+
+            servicesPrefix: '我们的',
+            servicesEmphasis: '服务',
+            categoryPremium: '尊贵美容疗程',
+            categoryBody: '身体护理疗程',
+            categoryAi: 'AI 面部滤镜疗程',
+            categoryCell: '细胞美容科技',
+            exploreLabel: '探索',
+
+            offersPrefix: '限量',
+            offersEmphasis: '优惠',
+            offerTitle: '新客专享',
+            offerDescription: '首趟即享 20% 折扣，体验我们的尊贵美肌疗程。感受专业护理带来的不同。',
+            offerBullets: ['仅限首次客户使用', '适用于任何 $100 以上的疗程', '优惠至 2023 年 12 月 31 日止'],
+            offerBook: '立即预约',
+
+            contactTitle: '准备好焕亮你的美丽？',
+            contactDescription: '预约与我们美肌专家会面，为你量身寻找最合适的疗程建议。',
+            contactButton: '立即联系我们',
+          }
+        : {
+            heroTitle: 'Transform Your Skin',
+            heroDescription: 'Advanced beauty treatments using cutting-edge technology to enhance your natural beauty.',
+            heroExplore: 'Explore Treatments',
+            heroBook: 'Book a Consultation',
+
+            storyPrefix: 'Our',
+            storyEmphasis: 'Story',
+            storyP1:
+              'SW Beauty is dedicated to providing diverse, effective, and safe beauty treatments. We bring together professional equipment and techniques from around the world to deliver the most caring, suitable, and optimal service experience for every client.',
+            storyP2: 'We protect and enhance every inch of your skin, inside and out, helping you achieve your beauty goals with personalized care.',
+            aboutLearnMore: 'Learn More About Us',
+
+            signaturePrefix: 'Signature',
+            signatureEmphasis: 'Treatments',
+            treatment1Desc:
+              'Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.',
+            treatment2Desc:
+              'Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.',
+            treatment3Desc: "Boost your skin's natural collagen production for improved elasticity and youthful appearance.",
+            viewAllTreatments: 'View All Treatments',
+
+            servicesPrefix: 'Our',
+            servicesEmphasis: 'Services',
+            categoryPremium: 'Premium Beauty Treatments',
+            categoryBody: 'Body Care Treatments',
+            categoryAi: 'AI Facial Filters',
+            categoryCell: 'Cell Beauty Technology',
+            exploreLabel: 'Explore',
+
+            offersPrefix: 'Limited',
+            offersEmphasis: 'Offers',
+            offerTitle: 'New Client Special',
+            offerDescription:
+              'Experience our premium treatments with 20% off your first visit. Discover the difference professional care can make.',
+            offerBullets: [
+              'Valid for first-time clients only',
+              'Applicable to any treatment over $100',
+              'Offer expires December 31, 2023',
+            ],
+            offerBook: 'Book Now',
+
+            contactTitle: 'Ready to Transform Your Beauty?',
+            contactDescription:
+              'Book a consultation with our beauty experts and discover the perfect treatments for your unique needs.',
+            contactButton: 'Contact Us Today',
+          }
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -183,21 +319,21 @@ export default function Home() {
         <div className="container mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 py-16">
           <div className="relative z-10 mx-auto max-w-4xl text-center">
             <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-foreground md:text-6xl lg:text-7xl">
-              <span className="block">Aura Beauty</span>
-              <span className="mt-2 block text-primary">Transform Your Skin</span>
+              <span className="block">SW Beauty</span>
+              <span className="mt-2 block text-primary">{copy.heroTitle}</span>
             </h1>
             <p className="mt-6 text-xl leading-relaxed text-foreground/70">
-              Advanced beauty treatments using cutting-edge technology to enhance your natural beauty.
+              {copy.heroDescription}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
               <Link href="/treatments">
                 <Button className="px-8 py-6 text-base font-medium uppercase tracking-wide">
-                  Explore Treatments
+                  {copy.heroExplore}
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button variant="outline" className="px-8 py-6 text-base font-medium uppercase tracking-wide">
-                  Book a Consultation
+                  {copy.heroBook}
                 </Button>
               </Link>
             </div>
@@ -210,20 +346,20 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Our <span className="text-primary">Story</span>
+              {copy.storyPrefix} <span className="text-primary">{copy.storyEmphasis}</span>
             </h2>
             <div className="mt-6 text-lg leading-relaxed text-foreground/70">
               <p className="mb-4">
-                Aura Beauty is dedicated to providing diverse, effective, and safe beauty treatments. We bring together professional equipment and techniques from around the world to deliver the most caring, suitable, and optimal service experience for every client.
+                {copy.storyP1}
               </p>
               <p>
-                We protect and enhance every inch of your skin, inside and out, helping you achieve your beauty goals with personalized care.
+                {copy.storyP2}
               </p>
             </div>
             <div className="mt-10">
               <Link href="/about">
                 <Button variant="ghost" className="text-primary hover:bg-white/50 hover:text-foreground">
-                  Learn More About Us
+                  {copy.aboutLearnMore}
                 </Button>
               </Link>
             </div>
@@ -235,7 +371,7 @@ export default function Home() {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
-            Signature <span className="text-primary">Treatments</span>
+            {copy.signaturePrefix} <span className="text-primary">{copy.signatureEmphasis}</span>
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Treatment 1 */}
@@ -249,11 +385,11 @@ export default function Home() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="mb-2 text-xl font-bold">Royal Black Scan</h3>
-                <p className="mb-5 text-foreground/70">Advanced technology that targets all types of spots, pigmentation, and skin blemishes with precision.</p>
+                <h3 className="mb-2 text-xl font-bold">{t('royal_black_scan', 'Royal Black Scan')}</h3>
+                <p className="mb-5 text-foreground/70">{copy.treatment1Desc}</p>
                 <Link href="/treatments/royal-black-scan">
                   <Button className="w-full px-6 py-2 text-sm font-medium">
-                    Learn More
+                    {t('learn_more', 'Learn More')}
                   </Button>
                 </Link>
               </div>
@@ -270,16 +406,17 @@ export default function Home() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="mb-2 text-xl font-bold">Peeled Egg Skin</h3>
-                <p className="mb-5 text-foreground/70">Revolutionary treatment that creates silky smooth, flawless skin texture with a radiant complexion.</p>
+                <h3 className="mb-2 text-xl font-bold">{t('peeled_egg_skin', 'Peeled Egg Skin')}</h3>
+                <p className="mb-5 text-foreground/70">{copy.treatment2Desc}</p>
                 <Link href="/treatments/peeled-egg-skin">
                   <Button className="w-full px-6 py-2 text-sm font-medium">
-                    Learn More
+                    {t('learn_more', 'Learn More')}
                   </Button>
                 </Link>
               </div>
-              </div>
-              
+
+            </div>
+
             {/* Treatment 3 */}
             <div className="group overflow-hidden rounded-2xl border border-white/55 bg-aura-card shadow-[0_10px_40px_-25px_rgba(198,62,110,0.55)] backdrop-blur-md transition hover:shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)]">
               <div className="aspect-[4/3] w-full overflow-hidden">
@@ -291,11 +428,11 @@ export default function Home() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="mb-2 text-xl font-bold">Collagen Regeneration</h3>
-                <p className="mb-5 text-foreground/70">Boost your skin's natural collagen production for improved elasticity and youthful appearance.</p>
+                <h3 className="mb-2 text-xl font-bold">{t('collagen_regeneration', 'Collagen Regeneration')}</h3>
+                <p className="mb-5 text-foreground/70">{copy.treatment3Desc}</p>
                 <Link href="/treatments/collagen-regeneration">
                   <Button className="w-full px-6 py-2 text-sm font-medium">
-                    Learn More
+                    {t('learn_more', 'Learn More')}
                   </Button>
                 </Link>
               </div>
@@ -304,7 +441,7 @@ export default function Home() {
           <div className="mt-12 text-center">
             <Link href="/treatments">
               <Button className="px-8 py-3 text-sm font-medium">
-                View All Treatments
+                {copy.viewAllTreatments}
               </Button>
             </Link>
           </div>
@@ -315,7 +452,7 @@ export default function Home() {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-16 text-center font-serif text-3xl font-bold md:text-4xl">
-            Our <span className="text-primary">Services</span>
+            {copy.servicesPrefix} <span className="text-primary">{copy.servicesEmphasis}</span>
             </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Category 1 */}
@@ -329,10 +466,10 @@ export default function Home() {
                 />
               </div>
               <div className="p-6 text-center">
-                <h3 className="mb-2 text-xl font-bold">Premium Beauty Treatments</h3>
+                <h3 className="mb-2 text-xl font-bold">{copy.categoryPremium}</h3>
                 <Link href="/treatments">
                   <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
-                    Explore
+                    {copy.exploreLabel}
                   </Button>
                 </Link>
           </div>
@@ -349,10 +486,10 @@ export default function Home() {
                 />
               </div>
               <div className="p-6 text-center">
-                <h3 className="mb-2 text-xl font-bold">Body Care Treatments</h3>
+                <h3 className="mb-2 text-xl font-bold">{copy.categoryBody}</h3>
                 <Link href="/body-care">
                   <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
-                    Explore
+                    {copy.exploreLabel}
                   </Button>
                 </Link>
               </div>
@@ -369,10 +506,10 @@ export default function Home() {
                 />
           </div>
               <div className="p-6 text-center">
-                <h3 className="mb-2 text-xl font-bold">AI Facial Filters</h3>
+                <h3 className="mb-2 text-xl font-bold">{copy.categoryAi}</h3>
                 <Link href="/facial-filters">
                   <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
-                    Explore
+                    {copy.exploreLabel}
                   </Button>
                 </Link>
               </div>
@@ -389,10 +526,10 @@ export default function Home() {
                 />
               </div>
               <div className="p-6 text-center">
-                <h3 className="mb-2 text-xl font-bold">Cell Beauty Technology</h3>
+                <h3 className="mb-2 text-xl font-bold">{copy.categoryCell}</h3>
                 <Link href="/cell-beauty">
                   <Button variant="ghost" className="mt-2 text-primary hover:bg-white/50 hover:text-foreground">
-                    Explore
+                    {copy.exploreLabel}
                   </Button>
                 </Link>
               </div>
@@ -406,32 +543,26 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl">
             <h2 className="mb-10 text-center font-serif text-3xl font-bold md:text-4xl">
-              Limited <span className="text-primary">Offers</span>
+              {copy.offersPrefix} <span className="text-primary">{copy.offersEmphasis}</span>
             </h2>
             <div className="overflow-hidden rounded-2xl border border-white/55 bg-aura-card p-8 shadow-[0_16px_60px_-30px_rgba(198,62,110,0.70)] backdrop-blur-md">
               <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
                 <div className="w-full md:w-2/3">
-                  <h3 className="mb-4 text-2xl font-bold">New Client Special</h3>
+                  <h3 className="mb-4 text-2xl font-bold">{copy.offerTitle}</h3>
                   <p className="mb-5 text-lg text-foreground/70">
-                    Experience our premium treatments with 20% off your first visit. Discover the difference professional care can make.
+                    {copy.offerDescription}
                   </p>
                   <ul className="mb-6 space-y-2">
-                    <li className="flex items-center">
-                      <span className="mr-2 text-primary">•</span>
-                      <span>Valid for first-time clients only</span>
-                    </li>
-                    <li className="flex items-center">
-                      <span className="mr-2 text-primary">•</span>
-                      <span>Applicable to any treatment over $100</span>
-                    </li>
-                    <li className="flex items-center">
-                      <span className="mr-2 text-primary">•</span>
-                      <span>Offer expires December 31, 2023</span>
-                    </li>
+                    {copy.offerBullets.map((b) => (
+                      <li key={b} className="flex items-center">
+                        <span className="mr-2 text-primary">•</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
                   </ul>
                   <Link href="/contact">
                     <Button className="px-6 py-2 text-sm font-medium">
-                      Book Now
+                      {copy.offerBook}
                     </Button>
                   </Link>
                 </div>
@@ -462,13 +593,11 @@ export default function Home() {
       <section className="py-20 text-white">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-6 font-serif text-3xl font-bold md:text-4xl">Ready to Transform Your Beauty?</h2>
-            <p className="mb-10 text-lg">
-              Book a consultation with our beauty experts and discover the perfect treatments for your unique needs.
-            </p>
+            <h2 className="mb-6 font-serif text-3xl font-bold md:text-4xl">{copy.contactTitle}</h2>
+            <p className="mb-10 text-lg">{copy.contactDescription}</p>
             <Link href="/contact">
               <Button variant="outline" className="border-white/70 bg-white/10 px-8 py-3 text-sm font-medium text-white hover:bg-white/30">
-                Contact Us Today
+                {copy.contactButton}
               </Button>
             </Link>
           </div>

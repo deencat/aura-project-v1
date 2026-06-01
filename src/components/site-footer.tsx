@@ -10,11 +10,11 @@ export function SiteFooter() {
           {/* Logo and About Section */}
           <div className="space-y-4">
             <Link href="/" className="font-serif text-2xl font-bold text-white">
-              <span className="mr-1">Aura</span>
+              <span className="mr-1">SW</span>
               <span className="text-primary">Beauty</span>
             </Link>
             <p className="mt-4 text-sm">
-              Aura Beauty is dedicated to providing diverse, effective, and safe beauty treatments using the most advanced technology and techniques to help you achieve your beauty goals.
+              SW Beauty is dedicated to providing diverse, effective, and safe beauty treatments using the most advanced technology and techniques to help you achieve your beauty goals.
             </p>
             <div className="flex space-x-4 pt-4">
               <a href="#" className="text-gray-400 hover:text-white">
@@ -177,7 +177,7 @@ export function SiteFooter() {
         {/* Copyright */}
         <div className="mt-12 border-t border-gray-800 pt-8 text-center">
           <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Aura Beauty. All rights reserved.
+            © {new Date().getFullYear()} Scintillaworld Medica Center Limited. All rights reserved.
           </p>
         </div>
       </div>

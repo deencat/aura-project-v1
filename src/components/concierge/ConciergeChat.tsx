@@ -201,7 +201,7 @@ export function ConciergeChat(props: { variant?: "page" | "widget" }) {
       }
     }
     return {
-      title: "Aura Beauty AI Concierge",
+      title: "Aura — SW Beauty AI Concierge",
       subtitle: "A quick, guided match to the right treatments (preview)",
       placeholder: "e.g. I want brightening but my skin is sensitive…",
       send: "Send",

@@ -1,12 +1,37 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { ChevronDown, Menu, Search, X, Phone, Mail, Facebook, Instagram } from 'lucide-react'
+import {
+  ChevronDown,
+  Menu,
+  Search,
+  X,
+  Phone,
+  Mail,
+  Facebook,
+  Instagram,
+  ShoppingCart,
+} from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+
+/** Bilingual labels for desktop nav: Traditional Chinese / English (layout reference). */
+const NAV_BILINGUAL: Record<string, { zh: string; en: string }> = {
+  home: { zh: '主頁', en: 'Home' },
+  about: { zh: '關於我們', en: 'About Us' },
+  ai_concierge: { zh: 'AI 禮賓', en: 'AI Concierge' },
+  premium_beauty: { zh: '尊貴美容', en: 'Premium Beauty' },
+  body_care: { zh: '身體護理', en: 'Body Care' },
+  new_doublo: { zh: 'New Doublo™', en: 'New Doublo™' },
+  cell_beauty: { zh: '細胞美容', en: 'Cell Beauty' },
+  special_offers: { zh: '最新優惠', en: 'Special Offers' },
+  blog: { zh: '博客', en: 'Blog' },
+  contact: { zh: '聯絡我們', en: 'Contact Us' },
+}
 
 // Menu data structure with translation keys
 const menuData = [
@@ -62,14 +87,22 @@ const menuData = [
     ]
   },
   { title: 'Special Offers', titleKey: 'special_offers', href: '/offers' },
+  { title: 'Blog', titleKey: 'blog', href: '/blog' },
   { title: 'Contact Us', titleKey: 'contact', href: '/contact' },
 ]
 
 export default function Header() {
+  const pathname = usePathname() || ''
   const [currentHover, setCurrentHover] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openMobileSubmenus, setOpenMobileSubmenus] = useState<string[]>([])
   const { t } = useLanguage()
+
+  const linkIsActive = (href: string) => {
+    if (!pathname) return false
+    if (href === '/') return pathname === '/'
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
 
   const handleMouseEnter = (title: string) => {
     setCurrentHover(title)
@@ -117,106 +150,160 @@ export default function Header() {
         </div>
       </div>
       
-      {/* Main Header */}
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center">
-          <Link href="/" className="flex items-center">
-            <Image 
-              src="/logo.svg" 
-              alt="Freshen Page" 
-              width={40} 
-              height={40} 
-              className="mr-2"
+      {/* Main header: single row on lg+ (logo | nav | utilities); compact row below lg */}
+      <div className="container mx-auto px-4">
+        {/* Desktop / large screens — logo left, menu follows, icons + CTA right */}
+        <div className="hidden lg:flex items-center gap-4 xl:gap-6 py-4 min-h-[104px]">
+          <Link href="/" className="shrink-0 flex items-center pr-2">
+            <Image
+              src="/scintillaworld-logo.transparent.png"
+              alt="Scintillaworld"
+              width={200}
+              height={80}
+              className="h-18 w-auto xl:h-20"
+              priority
             />
-            <span className="text-xl font-serif font-bold">
-              <span>Aura</span>
+          </Link>
+
+          <nav className="flex-1 min-w-0 flex items-center border-l border-gray-100 pl-4 xl:pl-6">
+            <ul
+              className={cn(
+                // Note: avoid overflow containers here; they clip absolute-positioned dropdown menus.
+                'flex items-center gap-0.5 xl:gap-1 min-w-0'
+              )}
+            >
+              {menuData.map((item) => {
+                const active = linkIsActive(item.href)
+                const pair = NAV_BILINGUAL[item.titleKey]
+                return (
+                  <li
+                    key={item.title}
+                    className="relative group shrink-0"
+                    onMouseEnter={() => item.submenu && handleMouseEnter(item.title)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'flex items-center px-2 xl:px-2.5 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+                        'hover:text-primary relative',
+                        active ? 'text-primary' : 'text-gray-800'
+                      )}
+                    >
+                      {pair ? (
+                        <span className="flex items-center gap-1 font-serif text-[11px] xl:text-xs tracking-tight">
+                          <span className={cn(active ? 'text-primary' : 'text-gray-900')}>{pair.zh}</span>
+                          <span className="hidden 2xl:inline text-gray-300 font-sans font-normal">/</span>
+                          <span className={cn('hidden 2xl:inline', active ? 'text-primary' : 'text-gray-600')}>
+                            {pair.en}
+                          </span>
+                        </span>
+                      ) : (
+                        t(item.titleKey, item.title)
+                      )}
+                      {item.submenu && <ChevronDown className="ml-0.5 h-4 w-4 shrink-0 opacity-70" />}
+                      <span
+                        className={cn(
+                          'absolute bottom-0 left-2 right-2 h-0.5 bg-primary transition-transform origin-left',
+                          active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                        )}
+                      />
+                    </Link>
+
+                    {item.submenu && currentHover === item.title && (
+                      <div className="absolute left-0 top-full z-50 mt-0 min-w-[240px] bg-white shadow-lg py-3 border-t-2 border-primary">
+                        {item.submenu.map((subItem) => (
+                          <Link
+                            key={subItem.title}
+                            href={subItem.href}
+                            className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary whitespace-nowrap"
+                          >
+                            {t(subItem.titleKey, subItem.title)}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
+
+          <div className="shrink-0 flex items-center gap-1 border-l border-gray-100 pl-3 xl:pl-5">
+            <Link
+              href="/offers"
+              className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-50 hover:text-primary"
+              aria-label={t('special_offers', 'Special Offers')}
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </Link>
+            <button
+              type="button"
+              className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-50 hover:text-primary"
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+            <Link href="/contact" className="ml-1">
+              <Button
+                size="sm"
+                className="rounded-full bg-primary hover:bg-primary/90 text-white px-3.5 xl:px-4"
+                data-testid="header-book-now-desktop"
+              >
+                {t('book_now', 'Book Now')}
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Tablet & mobile — logo + wordmark, utilities, hamburger */}
+        <div className="flex lg:hidden items-center justify-between py-3 gap-3">
+          <Link href="/" className="flex min-w-0 items-center gap-2">
+            <Image
+              src="/scintillaworld-logo.transparent.png"
+              alt="Scintillaworld"
+              width={200}
+              height={80}
+              className="h-16 w-auto shrink-0"
+              priority
+            />
+            <span className="text-lg font-serif font-bold truncate">
+              <span>SW</span>
               <span className="text-primary"> Beauty</span>
             </span>
           </Link>
-        </div>
-        
-        {/* Mobile menu button */}
-        <button 
-          className="rounded-md p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-        
-        {/* Book button and search for mobile */}
-        <div className="hidden md:flex lg:hidden items-center gap-4">
-          <button className="rounded-full p-2 text-gray-600 hover:bg-gray-100">
-            <Search className="h-5 w-5" />
-          </button>
-          <Link href="/contact">
-            <Button 
-              size="sm" 
-              className="rounded-full bg-primary hover:bg-primary/90 text-white"
-              data-testid="header-book-now-tablet"
-            >
-              {t('book_now', 'Book Now')}
-            </Button>
-          </Link>
-        </div>
-      </div>
-      
-      {/* Desktop Navigation - Full width bar style like EstheClinic */}
-      <nav className="hidden lg:block bg-white border-t border-gray-100">
-        <div className="container mx-auto px-4">
-          <ul className="flex justify-between">
-            {menuData.map((item) => (
-              <li 
-                key={item.title} 
-                className="relative group"
-                onMouseEnter={() => item.submenu && handleMouseEnter(item.title)}
-                onMouseLeave={handleMouseLeave}
+
+          <div className="flex items-center gap-1 shrink-0">
+            <div className="hidden md:flex items-center gap-2">
+              <button
+                type="button"
+                className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+                aria-label="Search"
               >
-                <Link 
-                  href={item.href} 
-                  className={cn(
-                    "flex items-center px-3 py-4 text-sm font-medium transition-colors whitespace-nowrap",
-                    "hover:text-primary relative"
-                  )}
-                >
-                  {t(item.titleKey, item.title)}
-                  {item.submenu && (
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  )}
-                  {/* Hover underline effect */}
-                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                </Link>
-                
-                {item.submenu && currentHover === item.title && (
-                  <div className="absolute left-0 top-full z-50 mt-0 min-w-[240px] bg-white shadow-lg py-3 border-t-2 border-primary">
-                    {item.submenu.map((subItem) => (
-                      <Link 
-                        key={subItem.title}
-                        href={subItem.href}
-                        className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary whitespace-nowrap"
-                      >
-                        {t(subItem.titleKey, subItem.title)}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </li>
-            ))}
-            <li className="relative flex items-center">
-              <button className="p-2 text-gray-600 hover:text-primary">
                 <Search className="h-5 w-5" />
               </button>
               <Link href="/contact">
-                <Button 
-                  className="ml-4 rounded-full bg-primary hover:bg-primary/90 text-white"
-                  data-testid="header-book-now-desktop"
+                <Button
+                  size="sm"
+                  className="rounded-full bg-primary hover:bg-primary/90 text-white"
+                  data-testid="header-book-now-tablet"
                 >
                   {t('book_now', 'Book Now')}
                 </Button>
               </Link>
-            </li>
-          </ul>
+            </div>
+            <button
+              type="button"
+              className="rounded-md p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Open menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
-      </nav>
+      </div>
       
       {/* Mobile Navigation */}
       <div 
@@ -228,14 +315,15 @@ export default function Header() {
         <div className="flex items-center justify-between border-b border-gray-100 p-4">
           <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
             <Image 
-              src="/logo.svg" 
-              alt="Freshen Page" 
-              width={32} 
-              height={32} 
-              className="mr-2"
+              src="/scintillaworld-logo.transparent.png" 
+              alt="Scintillaworld" 
+              width={200} 
+              height={80} 
+              className="mr-2 h-8 w-auto"
+              priority
             />
             <span className="text-lg font-serif font-bold">
-              <span>Aura</span>
+              <span>SW</span>
               <span className="text-primary"> Beauty</span>
             </span>
           </Link>

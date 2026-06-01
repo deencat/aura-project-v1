@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -6,6 +8,7 @@ import { Sparkles, ArrowRight, CheckCircle, XCircle } from 'lucide-react'
 import Image from 'next/image'
 import ResultsGraph from '@/components/ResultsGraph'
 import TreatmentImage from '@/components/TreatmentImage'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 // Add types for component props
 interface BeforeAfterSliderProps {
@@ -13,6 +16,8 @@ interface BeforeAfterSliderProps {
   age: string;
   concern: string;
   sessions: number;
+  beforeSrc: string;
+  afterSrc: string;
 }
 
 interface FaqItemProps {
@@ -22,16 +27,49 @@ interface FaqItemProps {
 
 // Add new SkinLayersInfographic component with updated colors
 const SkinLayersInfographic = () => {
+  const { language } = useLanguage()
+  const ui =
+    language === 'zh-Hant'
+      ? {
+          title: '能量作用深度',
+          epidermis: '表皮層',
+          dermis: '真皮層',
+          subcutaneous: '皮下組織',
+          smas: 'SMAS 筋膜層',
+          muscle: '肌肉層',
+          note: 'New Doublo™ 針對多個皮膚深度同步作用，帶來更全面的提升與塑形效果',
+        }
+      : language === 'zh-Hans'
+        ? {
+            title: '能量作用深度',
+            epidermis: '表皮层',
+            dermis: '真皮层',
+            subcutaneous: '皮下组织',
+            smas: 'SMAS 筋膜层',
+            muscle: '肌肉层',
+            note: 'New Doublo™ 同时作用多个皮肤深度，带来更全面的提升与塑形效果',
+          }
+        : {
+            title: 'Treatment Penetration Depth',
+            epidermis: 'Epidermis',
+            dermis: 'Dermis',
+            subcutaneous: 'Subcutaneous',
+            smas: 'SMAS Layer',
+            muscle: 'Muscle',
+            note:
+              'New Doublo™ technology targets multiple skin depths simultaneously for comprehensive lifting and contouring effects',
+          }
+
   return (
     <div className="relative rounded-xl overflow-hidden shadow-lg bg-gradient-to-b from-white to-gray-50 p-4">
-      <h3 className="text-lg font-bold text-center mb-4">Treatment Penetration Depth</h3>
+      <h3 className="text-lg font-bold text-center mb-4">{ui.title}</h3>
       <div className="relative h-[320px]">
         {/* Skin layer visualization */}
         <div className="absolute inset-x-0 h-full flex flex-col">
           {/* Epidermis Layer */}
           <div className="h-[15%] bg-gradient-to-b from-blue-50 to-blue-100 rounded-t-lg border-b border-gray-300 relative">
             <div className="absolute inset-0 flex items-center justify-end pr-4">
-              <span className="text-xs font-medium">Epidermis</span>
+              <span className="text-xs font-medium">{ui.epidermis}</span>
             </div>
             <div className="absolute top-1/2 left-6 transform -translate-y-1/2 w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
               <span className="text-xs text-primary font-bold">0.5mm</span>
@@ -41,7 +79,7 @@ const SkinLayersInfographic = () => {
           {/* Dermis Layer */}
           <div className="h-[30%] bg-gradient-to-b from-blue-100 to-blue-200 border-b border-gray-300 relative">
             <div className="absolute inset-0 flex items-center justify-end pr-4">
-              <span className="text-xs font-medium">Dermis</span>
+              <span className="text-xs font-medium">{ui.dermis}</span>
             </div>
             <div className="absolute top-1/2 left-6 transform -translate-y-1/2 w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
               <span className="text-xs text-primary font-bold">1.5mm</span>
@@ -51,7 +89,7 @@ const SkinLayersInfographic = () => {
           {/* Subcutaneous Fat */}
           <div className="h-[20%] bg-gradient-to-b from-yellow-50 to-yellow-100 border-b border-gray-300 relative">
             <div className="absolute inset-0 flex items-center justify-end pr-4">
-              <span className="text-xs font-medium">Subcutaneous</span>
+              <span className="text-xs font-medium">{ui.subcutaneous}</span>
             </div>
             <div className="absolute top-1/2 left-6 transform -translate-y-1/2 w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
               <span className="text-xs text-primary font-bold">3.0mm</span>
@@ -61,7 +99,7 @@ const SkinLayersInfographic = () => {
           {/* SMAS Layer */}
           <div className="h-[20%] bg-gradient-to-b from-gray-100 to-gray-200 border-b border-gray-300 relative">
             <div className="absolute inset-0 flex items-center justify-end pr-4">
-              <span className="text-xs font-medium">SMAS Layer</span>
+              <span className="text-xs font-medium">{ui.smas}</span>
             </div>
             <div className="absolute top-1/2 left-6 transform -translate-y-1/2 w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
               <span className="text-xs text-primary font-bold">4.5mm</span>
@@ -71,7 +109,7 @@ const SkinLayersInfographic = () => {
           {/* Muscle Layer */}
           <div className="h-[15%] bg-gradient-to-b from-gray-200 to-gray-300 rounded-b-lg relative">
             <div className="absolute inset-0 flex items-center justify-end pr-4">
-              <span className="text-xs font-medium">Muscle</span>
+              <span className="text-xs font-medium">{ui.muscle}</span>
             </div>
           </div>
         </div>
@@ -93,14 +131,51 @@ const SkinLayersInfographic = () => {
         </div>
       </div>
       <div className="text-xs text-center mt-3 px-2 text-gray-500">
-        New Doublo™ technology targets multiple skin depths simultaneously for comprehensive lifting and contouring effects
+        {ui.note}
       </div>
     </div>
   )
 }
 
 // Update component definitions with proper TypeScript types
-const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, concern, sessions }) => {
+const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
+  clientName,
+  age,
+  concern,
+  sessions,
+  beforeSrc,
+  afterSrc,
+}) => {
+  const { language } = useLanguage()
+
+  const ui =
+    language === 'zh-Hant'
+      ? {
+          before: '療程前',
+          after: '療程後',
+          slide: '左右對比',
+          resultsAfter: `完成 ${sessions} 次療程後`,
+          concernLabel: '改善重點：',
+          noFilters: '無濾鏡／無修圖',
+        }
+      : language === 'zh-Hans'
+        ? {
+            before: '疗程前',
+            after: '疗程后',
+            slide: '左右对比',
+            resultsAfter: `完成 ${sessions} 次疗程后`,
+            concernLabel: '改善重点：',
+            noFilters: '无滤镜／无修图',
+          }
+        : {
+            before: 'BEFORE',
+            after: 'AFTER',
+            slide: 'Slide to compare',
+            resultsAfter: `Results after ${sessions} ${sessions === 1 ? 'session' : 'sessions'}`,
+            concernLabel: 'Concern:',
+            noFilters: 'No filters or editing',
+          }
+
   return (
     <div className="relative overflow-hidden rounded-lg shadow-md bg-white">
       <div className="aspect-[4/3] w-full relative">
@@ -108,31 +183,17 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, 
           {/* Before image - left side */}
           <div className="w-1/2 relative overflow-hidden border-r border-white">
             <div className="absolute top-2 left-2 bg-black/70 text-white text-xs py-1 px-2 rounded-md z-10">
-              BEFORE
+              {ui.before}
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-300 to-gray-200">
-              <PlaceholderImage 
-                page="new-doublo" 
-                section="results-before"
-                number={1} 
-                aspectRatio="aspect-[4/3]"
-              />
-            </div>
+            <Image src={beforeSrc} alt={`${clientName} before`} fill className="object-cover" />
           </div>
           
           {/* After image - right side */}
           <div className="w-1/2 relative overflow-hidden">
             <div className="absolute top-2 right-2 bg-primary/80 text-white text-xs py-1 px-2 rounded-md z-10">
-              AFTER
+              {ui.after}
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-100">
-              <PlaceholderImage 
-                page="new-doublo" 
-                section="results-after"
-                number={1} 
-                aspectRatio="aspect-[4/3]"
-              />
-            </div>
+            <Image src={afterSrc} alt={`${clientName} after`} fill className="object-cover" />
           </div>
           
           {/* Center slider line */}
@@ -149,7 +210,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, 
           
           {/* Overlay text */}
           <div className="absolute bottom-3 left-3 bg-black/60 text-white text-sm py-1 px-3 rounded-md z-10">
-            Slide to compare
+            {ui.slide}
           </div>
         </div>
       </div>
@@ -158,11 +219,13 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, 
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-primary">{clientName}, {age}</p>
-            <p className="text-xs text-gray-500">Results after {sessions} {sessions === 1 ? 'session' : 'sessions'}</p>
+            <p className="text-xs text-gray-500">{ui.resultsAfter}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm font-medium">Concern: {concern}</p>
-            <p className="text-xs text-gray-500">No filters or editing</p>
+            <p className="text-sm font-medium">
+              {ui.concernLabel} {concern}
+            </p>
+            <p className="text-xs text-gray-500">{ui.noFilters}</p>
           </div>
         </div>
       </div>
@@ -172,9 +235,50 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ clientName, age, 
 
 // Add new TreatmentAreaVisualization component
 const TreatmentAreaVisualization = () => {
+  const { language } = useLanguage()
+  const ui =
+    language === 'zh-Hant'
+      ? {
+          title: '重點改善部位',
+          forehead: '額頭',
+          foreheadDesc: '撫平紋理',
+          cheekbones: '蘋果肌／顴骨',
+          cheekbonesDesc: '提拉定型',
+          jawline: '下顎線',
+          jawlineDesc: '塑形更俐落',
+          neck: '頸部',
+          neckDesc: '緊緻鬆弛',
+          note: '針對多個區域同步改善，一次療程更全面',
+        }
+      : language === 'zh-Hans'
+        ? {
+            title: '重点改善部位',
+            forehead: '额头',
+            foreheadDesc: '抚平纹理',
+            cheekbones: '苹果肌／颧骨',
+            cheekbonesDesc: '提拉定型',
+            jawline: '下颌线',
+            jawlineDesc: '轮廓更利落',
+            neck: '颈部',
+            neckDesc: '紧致松弛',
+            note: '同时改善多个区域，一次疗程更全面',
+          }
+        : {
+            title: 'Treatment Target Areas',
+            forehead: 'Forehead',
+            foreheadDesc: 'Smooths frown lines',
+            cheekbones: 'Cheekbones',
+            cheekbonesDesc: 'Defines & lifts',
+            jawline: 'Jawline',
+            jawlineDesc: 'Contours & sharpens',
+            neck: 'Neck',
+            neckDesc: 'Tightens loose skin',
+            note: 'Our targeted approach addresses multiple areas in a single treatment',
+          }
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
-      <h3 className="text-xl font-bold text-center mb-6">Treatment Target Areas</h3>
+      <h3 className="text-xl font-bold text-center mb-6">{ui.title}</h3>
       <div className="relative aspect-[3/4] bg-gray-50 rounded-lg overflow-hidden">
         <div className="absolute inset-0">
           <PlaceholderImage 
@@ -189,8 +293,8 @@ const TreatmentAreaVisualization = () => {
         <div className="absolute top-[15%] left-[50%] transform -translate-x-1/2 w-[60%] h-[10%]">
           <div className="absolute inset-0 border-2 border-dashed border-primary/40 rounded-full"></div>
           <div className="absolute -right-24 top-0 bg-white/90 shadow-md rounded-lg p-2 text-xs">
-            <p className="font-bold text-primary">Forehead</p>
-            <p className="text-gray-600">Smooths frown lines</p>
+            <p className="font-bold text-primary">{ui.forehead}</p>
+            <p className="text-gray-600">{ui.foreheadDesc}</p>
           </div>
         </div>
         
@@ -198,16 +302,16 @@ const TreatmentAreaVisualization = () => {
         <div className="absolute top-[40%] left-[30%] transform -translate-x-1/2 w-[20%] h-[15%]">
           <div className="absolute inset-0 border-2 border-dashed border-primary/60 rounded-full"></div>
           <div className="absolute -left-24 top-0 bg-white/90 shadow-md rounded-lg p-2 text-xs">
-            <p className="font-bold text-primary">Cheekbones</p>
-            <p className="text-gray-600">Defines & lifts</p>
+            <p className="font-bold text-primary">{ui.cheekbones}</p>
+            <p className="text-gray-600">{ui.cheekbonesDesc}</p>
           </div>
         </div>
         
         <div className="absolute top-[40%] right-[30%] transform translate-x-1/2 w-[20%] h-[15%]">
           <div className="absolute inset-0 border-2 border-dashed border-primary/60 rounded-full"></div>
           <div className="absolute -right-24 top-0 bg-white/90 shadow-md rounded-lg p-2 text-xs">
-            <p className="font-bold text-primary">Cheekbones</p>
-            <p className="text-gray-600">Defines & lifts</p>
+            <p className="font-bold text-primary">{ui.cheekbones}</p>
+            <p className="text-gray-600">{ui.cheekbonesDesc}</p>
           </div>
         </div>
         
@@ -215,8 +319,8 @@ const TreatmentAreaVisualization = () => {
         <div className="absolute bottom-[25%] left-[50%] transform -translate-x-1/2 w-[70%] h-[10%]">
           <div className="absolute inset-0 border-2 border-dashed border-primary/80 rounded-full"></div>
           <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-white/90 shadow-md rounded-lg p-2 text-xs">
-            <p className="font-bold text-primary">Jawline</p>
-            <p className="text-gray-600">Contours & sharpens</p>
+            <p className="font-bold text-primary">{ui.jawline}</p>
+            <p className="text-gray-600">{ui.jawlineDesc}</p>
           </div>
         </div>
         
@@ -224,13 +328,13 @@ const TreatmentAreaVisualization = () => {
         <div className="absolute bottom-[10%] left-[50%] transform -translate-x-1/2 w-[40%] h-[8%]">
           <div className="absolute inset-0 border-2 border-dashed border-primary/40 rounded-full"></div>
           <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-white/90 shadow-md rounded-lg p-2 text-xs">
-            <p className="font-bold text-primary">Neck</p>
-            <p className="text-gray-600">Tightens loose skin</p>
+            <p className="font-bold text-primary">{ui.neck}</p>
+            <p className="text-gray-600">{ui.neckDesc}</p>
           </div>
         </div>
       </div>
       <div className="mt-4 text-center text-sm text-gray-500">
-        Our targeted approach addresses multiple areas in a single treatment
+        {ui.note}
       </div>
     </div>
   )
@@ -256,6 +360,144 @@ const FaqItem = ({ question, answer }: { question: string; answer: string }) => 
 }
 
 export default function SculptLiftPage() {
+  const { language } = useLanguage()
+
+  const copy =
+    language === 'zh-Hant'
+      ? {
+          heroPill: '革新科技',
+          heroTitleA: '體驗更高階的',
+          heroTitleB: '非手術提升',
+          heroDesc:
+            '無需開刀，即可塑造更立體、更緊緻輪廓。New Doublo™ Sculpt & Lift 以先進能量科技，配合零恢復期，從第一節起已可見改善。',
+          provenTitle: '✓ 臨床效果',
+          provenBody: '一次療程後已可見提拉感',
+          downtimeTitle: '✓ 零恢復期',
+          downtimeBody: '療程後可即時回復日常',
+          bookNow: '立即預約諮詢',
+
+          realResultsTitleA: '真實',
+          realResultsTitleB: '效果',
+          realResultsDesc: '看看客人於 New Doublo™ Sculpt & Lift 的真實轉變（療程前後對比）。',
+          clientSay: '客人分享',
+        }
+      : language === 'zh-Hans'
+        ? {
+            heroPill: '革新科技',
+            heroTitleA: '体验更高阶的',
+            heroTitleB: '非手术提升',
+            heroDesc:
+              '无需开刀，即可塑造更立体、更紧致轮廓。New Doublo™ Sculpt & Lift 以先进能量科技，配合零恢复期，从第一节起已可见改善。',
+            provenTitle: '✓ 临床效果',
+            provenBody: '一次疗程后已可见提拉感',
+            downtimeTitle: '✓ 零恢复期',
+            downtimeBody: '疗程后可即时恢复日常',
+            bookNow: '立即预约咨询',
+
+            realResultsTitleA: '真实',
+            realResultsTitleB: '效果',
+            realResultsDesc: '看看客人在 New Doublo™ Sculpt & Lift 的真实转变（疗程前后对比）。',
+            clientSay: '客户分享',
+          }
+        : {
+            heroPill: 'REVOLUTIONARY TECHNOLOGY',
+            heroTitleA: 'Experience The Next Level In',
+            heroTitleB: 'Non-Surgical Lifting',
+            heroDesc:
+              "Achieve the lifted, sculpted face you've always wanted without surgery. Our advanced Doublo Sculpt & Lift treatment delivers visible results from the first session with zero downtime.",
+            provenTitle: '✓ Clinically Proven',
+            provenBody: 'Visible lifting effect after just one treatment',
+            downtimeTitle: '✓ No Downtime',
+            downtimeBody: 'Return to daily activities immediately',
+            bookNow: 'BOOK YOUR CONSULTATION NOW',
+
+            realResultsTitleA: 'Real',
+            realResultsTitleB: 'Results',
+            realResultsDesc:
+              'See the transformation our clients experienced with the New Doublo™ Sculpt & Lift treatment.',
+            clientSay: 'What Our Clients Say',
+          }
+
+  const leftToDo =
+    language === 'zh-Hant'
+      ? {
+          // Benefits section
+          whyChooseTitle: '為何選擇',
+          whyChooseEmphasis: 'Sculpt & Lift',
+          whyChooseDesc:
+            '結合 New Doublo™ 雙重能量科技，無需開刀、無恢復期，針對輪廓提升、塑形與線條定義。',
+          satisfaction: '滿意度',
+          recoveryTime: '恢復期',
+          months: '月',
+          better: '更有效',
+          clientSatisfaction: '客戶滿意度',
+          clientSatisfactionDesc: '不少客戶於首次療程後已感受到可見改善與輪廓更立體。',
+          zeroDowntime: '零恢復期',
+          zeroDowntimeDesc: '療程後可即時回復日常活動。',
+          longLasting: '效果更持久',
+          longLastingDesc: '一般可維持約 12–18 個月（視乎膚況及保養）。',
+          moreEffective: '更高效',
+          moreEffectiveDesc: '比傳統 HIFU 更針對、更全面。',
+          instantResults: '即時可見',
+          instantResultsDesc: '首節後即可見提拉與輪廓感，適合重要日子／拍攝前。',
+          naturalLift: '自然提升',
+          naturalLiftDesc: '刺激自體膠原增生，效果自然、更易維持。',
+          multiDim: '多層次塑形',
+          multiDimDesc: '針對不同深度同步作用，全面照顧面部結構需要。',
+        }
+      : language === 'zh-Hans'
+        ? {
+            whyChooseTitle: '为何选择',
+            whyChooseEmphasis: 'Sculpt & Lift',
+            whyChooseDesc:
+              '结合 New Doublo™ 双重能量科技，无需开刀、无恢复期，针对轮廓提升、塑形与线条定义。',
+            satisfaction: '满意度',
+            recoveryTime: '恢复期',
+            months: '月',
+            better: '更有效',
+            clientSatisfaction: '客户满意度',
+            clientSatisfactionDesc: '不少客户在首次疗程后已感受到可见改善与轮廓更立体。',
+            zeroDowntime: '零恢复期',
+            zeroDowntimeDesc: '疗程后可即时恢复日常活动。',
+            longLasting: '效果更持久',
+            longLastingDesc: '一般可维持约 12–18 个月（视乎肤况及保养）。',
+            moreEffective: '更高效',
+            moreEffectiveDesc: '比传统 HIFU 更针对、更全面。',
+            instantResults: '即时可见',
+            instantResultsDesc: '首节后即可见提拉与轮廓感，适合重要日子／拍摄前。',
+            naturalLift: '自然提升',
+            naturalLiftDesc: '刺激自体胶原增生，效果自然、更易维持。',
+            multiDim: '多层次塑形',
+            multiDimDesc: '针对不同深度同步作用，全面照顾面部结构需要。',
+          }
+        : {
+            whyChooseTitle: 'Why Choose',
+            whyChooseEmphasis: 'Sculpt & Lift',
+            whyChooseDesc:
+              "Our signature treatment combines New Doublo™'s dual technologies to lift, contour, and define your features without surgery or downtime.",
+            satisfaction: 'Satisfaction',
+            recoveryTime: 'Recovery Time',
+            months: 'Months',
+            better: 'Better',
+            clientSatisfaction: 'Client Satisfaction',
+            clientSatisfactionDesc: 'Clients report high satisfaction with visible results after first treatment',
+            zeroDowntime: 'Zero Downtime',
+            zeroDowntimeDesc: 'Return to your normal activities immediately after treatment',
+            longLasting: 'Long-Lasting Results',
+            longLastingDesc: 'Results typically last 12-18 months with proper maintenance',
+            moreEffective: 'More Effective',
+            moreEffectiveDesc: '3x more effective than traditional HIFU treatments',
+            instantResults: 'Instant Results',
+            instantResultsDesc:
+              'See visible lifting and contouring immediately after your first session—perfect for special events and photoshoots.',
+            naturalLift: 'Natural Lift',
+            naturalLiftDesc:
+              "Unlike fillers or surgery, our treatment stimulates your body's natural collagen production for genuine, long-lasting results.",
+            multiDim: 'Multi-Dimensional',
+            multiDimDesc:
+              'Targets different layers of skin and muscle for comprehensive contouring that addresses all facial structure concerns.',
+          }
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -275,29 +517,29 @@ export default function SculptLiftPage() {
         <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-start">
           <div className="max-w-2xl">
             <div className="mb-3 inline-block px-4 py-1 bg-primary/80 text-white rounded-full text-sm font-medium">
-              REVOLUTIONARY TECHNOLOGY
+              {copy.heroPill}
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Experience The Next Level In <span className="text-primary">Non-Surgical Lifting</span>
+              {copy.heroTitleA} <span className="text-primary">{copy.heroTitleB}</span>
             </h1>
             <p className="text-white text-lg md:text-xl mb-8 max-w-xl">
-              Achieve the lifted, sculpted face you've always wanted without surgery. Our advanced Doublo Sculpt & Lift treatment delivers visible results from the first session with zero downtime.
+              {copy.heroDesc}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="bg-white/90 rounded-lg p-4 shadow-lg max-w-xs">
-                <h3 className="font-bold text-primary text-lg">✓ Clinically Proven</h3>
-                <p className="text-gray-700">Visible lifting effect after just one treatment</p>
+                <h3 className="font-bold text-primary text-lg">{copy.provenTitle}</h3>
+                <p className="text-gray-700">{copy.provenBody}</p>
               </div>
               <div className="bg-white/90 rounded-lg p-4 shadow-lg max-w-xs">
-                <h3 className="font-bold text-primary text-lg">✓ No Downtime</h3>
-                <p className="text-gray-700">Return to daily activities immediately</p>
+                <h3 className="font-bold text-primary text-lg">{copy.downtimeTitle}</h3>
+                <p className="text-gray-700">{copy.downtimeBody}</p>
               </div>
             </div>
             <Link
               href="/booking"
               className="mt-8 inline-block bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
             >
-              BOOK YOUR CONSULTATION NOW
+              {copy.bookNow}
             </Link>
           </div>
         </div>
@@ -308,11 +550,10 @@ export default function SculptLiftPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Why Choose <span className="text-primary">Sculpt & Lift</span>
+              {leftToDo.whyChooseTitle} <span className="text-primary">{leftToDo.whyChooseEmphasis}</span>
             </h2>
             <p className="mt-4 text-gray-600">
-              Our signature treatment combines New Doublo™'s dual technologies to lift, contour, 
-              and define your features without surgery or downtime.
+              {leftToDo.whyChooseDesc}
             </p>
           </div>
           
@@ -324,7 +565,7 @@ export default function SculptLiftPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <span className="block text-3xl font-bold text-primary">87%</span>
-                    <span className="text-sm text-gray-600">Satisfaction</span>
+                    <span className="text-sm text-gray-600">{leftToDo.satisfaction}</span>
                   </div>
                 </div>
                 <svg className="absolute inset-0" width="128" height="128" viewBox="0 0 128 128">
@@ -351,9 +592,9 @@ export default function SculptLiftPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold">Client Satisfaction</h3>
+              <h3 className="text-lg font-bold">{leftToDo.clientSatisfaction}</h3>
               <p className="text-gray-600 text-sm">
-                Clients report high satisfaction with visible results after first treatment
+                {leftToDo.clientSatisfactionDesc}
               </p>
             </div>
             
@@ -363,7 +604,7 @@ export default function SculptLiftPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <span className="block text-3xl font-bold text-primary">0</span>
-                    <span className="text-sm text-gray-600">Recovery Time</span>
+                    <span className="text-sm text-gray-600">{leftToDo.recoveryTime}</span>
                   </div>
                 </div>
                 <svg className="absolute inset-0" width="128" height="128" viewBox="0 0 128 128">
@@ -390,9 +631,9 @@ export default function SculptLiftPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold">Zero Downtime</h3>
+              <h3 className="text-lg font-bold">{leftToDo.zeroDowntime}</h3>
               <p className="text-gray-600 text-sm">
-                Return to your normal activities immediately after treatment
+                {leftToDo.zeroDowntimeDesc}
               </p>
             </div>
             
@@ -402,7 +643,7 @@ export default function SculptLiftPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <span className="block text-3xl font-bold text-primary">18</span>
-                    <span className="text-sm text-gray-600">Months</span>
+                    <span className="text-sm text-gray-600">{leftToDo.months}</span>
                   </div>
                 </div>
                 <svg className="absolute inset-0" width="128" height="128" viewBox="0 0 128 128">
@@ -429,9 +670,9 @@ export default function SculptLiftPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold">Long-Lasting Results</h3>
+              <h3 className="text-lg font-bold">{leftToDo.longLasting}</h3>
               <p className="text-gray-600 text-sm">
-                Results typically last 12-18 months with proper maintenance
+                {leftToDo.longLastingDesc}
               </p>
             </div>
             
@@ -441,7 +682,7 @@ export default function SculptLiftPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <span className="block text-3xl font-bold text-primary">3x</span>
-                    <span className="text-sm text-gray-600">Better</span>
+                    <span className="text-sm text-gray-600">{leftToDo.better}</span>
                   </div>
                 </div>
                 <svg className="absolute inset-0" width="128" height="128" viewBox="0 0 128 128">
@@ -468,9 +709,9 @@ export default function SculptLiftPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold">More Effective</h3>
+              <h3 className="text-lg font-bold">{leftToDo.moreEffective}</h3>
               <p className="text-gray-600 text-sm">
-                3x more effective than traditional HIFU treatments
+                {leftToDo.moreEffectiveDesc}
               </p>
             </div>
           </div>
@@ -480,9 +721,9 @@ export default function SculptLiftPage() {
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
               </div>
-              <h3 className="mb-3 text-xl font-bold">Instant Results</h3>
+              <h3 className="mb-3 text-xl font-bold">{leftToDo.instantResults}</h3>
               <p className="text-gray-600">
-                See visible lifting and contouring immediately after your first session—perfect for special events and photoshoots.
+                {leftToDo.instantResultsDesc}
               </p>
             </div>
             
@@ -490,9 +731,9 @@ export default function SculptLiftPage() {
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>
               </div>
-              <h3 className="mb-3 text-xl font-bold">Natural Lift</h3>
+              <h3 className="mb-3 text-xl font-bold">{leftToDo.naturalLift}</h3>
               <p className="text-gray-600">
-                Unlike fillers or surgery, our treatment stimulates your body's natural collagen production for genuine, long-lasting results.
+                {leftToDo.naturalLiftDesc}
               </p>
             </div>
             
@@ -500,9 +741,9 @@ export default function SculptLiftPage() {
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><path d="m5 7-3 5 3 5"/><path d="m19 7 3 5-3 5"/></svg>
               </div>
-              <h3 className="mb-3 text-xl font-bold">Multi-Dimensional</h3>
+              <h3 className="mb-3 text-xl font-bold">{leftToDo.multiDim}</h3>
               <p className="text-gray-600">
-                Targets different layers of skin and muscle for comprehensive contouring that addresses all facial structure concerns.
+                {leftToDo.multiDimDesc}
               </p>
             </div>
           </div>
@@ -910,10 +1151,10 @@ export default function SculptLiftPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-3xl font-bold md:text-4xl">
-              Real <span className="text-primary">Results</span>
+              {copy.realResultsTitleA} <span className="text-primary">{copy.realResultsTitleB}</span>
             </h2>
             <p className="mt-4 text-gray-600">
-              See the transformation our clients experienced with the New Doublo™ Sculpt & Lift treatment.
+              {copy.realResultsDesc}
             </p>
           </div>
           
@@ -921,21 +1162,25 @@ export default function SculptLiftPage() {
             <BeforeAfterSlider 
               clientName="Jenny"
               age="28"
-              concern="Undefined jawline"
+              concern={language === 'zh-Hant' ? '下顎線不夠立體' : language === 'zh-Hans' ? '下颌线不够立体' : 'Undefined jawline'}
               sessions={1}
+              beforeSrc="/images/treatments/new-doublo/sculpt-lift/results/jenny-before.jpg"
+              afterSrc="/images/treatments/new-doublo/sculpt-lift/results/jenny-after.jpg"
             />
             
             <BeforeAfterSlider 
               clientName="Mei"
               age="33"
-              concern="Sagging cheeks"
+              concern={language === 'zh-Hant' ? '面頰鬆弛' : language === 'zh-Hans' ? '面颊松弛' : 'Sagging cheeks'}
               sessions={2}
+              beforeSrc="/images/treatments/new-doublo/sculpt-lift/results/mei-before.jpg"
+              afterSrc="/images/treatments/new-doublo/sculpt-lift/results/mei-after.jpg"
             />
           </div>
           
           <div className="mt-16 py-6 px-8 bg-gray-50 rounded-2xl">
             <div className="text-center mb-6">
-              <h3 className="text-xl font-bold">What Our Clients Say</h3>
+              <h3 className="text-xl font-bold">{copy.clientSay}</h3>
             </div>
             
             <div className="relative overflow-hidden">

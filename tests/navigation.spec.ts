@@ -4,7 +4,7 @@ test.describe('Navigation', () => {
   test('should navigate to main pages', async ({ page }) => {
     // Home page
     await page.goto('/');
-    await expect(page).toHaveTitle(/Aura/);
+    await expect(page).toHaveTitle(/SW Beauty/);
     
     // About page
     await page.getByRole('link', { name: /about/i }).first().click();

@@ -86,7 +86,7 @@ export function MainNavigation() {
     <div className="container flex h-16 items-center px-0">
       <div className="mr-8 flex">
         <Link href="/" className="font-serif text-2xl font-bold">
-          <span className="mr-1">Aura</span>
+          <span className="mr-1">SW</span>
           <span className="text-primary">Beauty</span>
         </Link>
       </div>

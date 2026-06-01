@@ -13,17 +13,18 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center">
               <Image 
-                src="/logo.svg" 
-                alt="Freshen Page" 
-                width={32} 
-                height={32} 
-                className="mr-2"
+                src="/scintillaworld-logo.transparent.png" 
+                alt="Scintillaworld" 
+                width={200} 
+                height={80} 
+                className="mr-2 h-8 w-auto"
               />
-              <span className="text-lg font-serif font-bold">Freshen Page</span>
+              <span className="text-lg font-serif font-bold">Scintillaworld</span>
             </Link>
+            <p className="mt-1 text-xs text-gray-500">Medica Center Limited</p>
             <p className="mt-4 text-sm text-gray-600">
-              We Care. We Beautify. Eternally. <br />
-              永恆不變 持久美麗
+              Spark precision. Glow with confidence. <br />
+              精準煥活，自信耀現。
             </p>
             <div className="mt-6 flex space-x-4">
               <Link 
@@ -143,7 +144,7 @@ export default function Footer() {
         <div className="mt-12 border-t border-gray-200 pt-8">
           <div className="flex flex-col items-center justify-between md:flex-row">
             <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} Freshen Page. All rights reserved.
+              © {new Date().getFullYear()} Scintillaworld Medica Center Limited. All rights reserved.
             </p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 md:mt-0 md:justify-end">
               <Link href="/trends" className="text-sm text-gray-500 hover:text-primary">

@@ -6,7 +6,7 @@ test.describe('Cell Beauty Stretch Mark Repair Page', () => {
   })
 
   test('should display the page title and main heading', async ({ page }) => {
-    await expect(page).toHaveTitle(/Aura/)
+    await expect(page).toHaveTitle(/SW Beauty/)
     await expect(page.locator('h1')).toContainText('Stretch Mark Repair')
   })
 

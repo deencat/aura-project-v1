@@ -22,7 +22,7 @@ const nextConfig = {
   
   // Environment variables
   env: {
-    NEXT_PUBLIC_APP_NAME: 'Aura Beauty',
+    NEXT_PUBLIC_APP_NAME: 'SW Beauty',
     NEXT_PUBLIC_APP_VERSION: '1.0.0',
   },
   

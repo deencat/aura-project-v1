@@ -5,7 +5,7 @@ test.describe("Concierge (smoke)", () => {
     await page.goto("/concierge", { waitUntil: "domcontentloaded" })
     await expect(page).toHaveURL(/\/concierge/)
 
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/Aura/i)
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Aura")
 
     await expect(page.getByRole("region", { name: /Chat messages|聊天/ })).toBeVisible()
 

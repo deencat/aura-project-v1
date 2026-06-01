@@ -57,6 +57,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Common UI elements
     'view_details': 'View Details',
     'read_more': 'Read More',
+    'view_all': 'View All',
     'back': 'Back',
     'next': 'Next',
     'previous': 'Previous',
@@ -149,6 +150,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Common UI elements
     'view_details': '查看詳情',
     'read_more': '閱讀更多',
+    'view_all': '查看全部',
     'back': '返回',
     'next': '下一步',
     'previous': '上一步',
@@ -241,6 +243,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Common UI elements
     'view_details': '查看详情',
     'read_more': '阅读更多',
+    'view_all': '查看全部',
     'back': '返回',
     'next': '下一步',
     'previous': '上一步',

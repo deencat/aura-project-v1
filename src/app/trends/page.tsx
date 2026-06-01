@@ -4,7 +4,7 @@ import { listKnowledgeRollups } from "@/services/knowledge.service"
 
 /** Static metadata: Next.js 14 `generateMetadata` does not receive `searchParams` reliably for this route. */
 export const metadata: Metadata = {
-  title: "美容趨勢摘要 · Beauty trends | Aura",
+  title: "美容趨勢摘要 · Beauty trends | SW Beauty",
   description:
     "AI-generated beauty trend summaries from the knowledge bank (informational only, not medical advice).",
 }

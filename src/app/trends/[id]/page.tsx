@@ -6,14 +6,14 @@ import { getKnowledgeRollupById } from "@/services/knowledge.service"
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   try {
     const r = await getKnowledgeRollupById(params.id)
-    if (!r) return { title: "Trend | Aura" }
+    if (!r) return { title: "Trend | SW Beauty" }
     const desc = r.summaryText.replace(/\s+/g, " ").trim().slice(0, 155)
     return {
-      title: `${r.topic} | Aura`,
+      title: `${r.topic} | SW Beauty`,
       description: desc || undefined,
     }
   } catch {
-    return { title: "Trend | Aura" }
+    return { title: "Trend | SW Beauty" }
   }
 }
 

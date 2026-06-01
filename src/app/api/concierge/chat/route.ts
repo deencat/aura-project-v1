@@ -40,7 +40,7 @@ function getCopy(locale: Locale) {
   if (isTc) {
     return {
       greeting:
-        "你好，我係 Aura 美容 AI 禮賓。我可以幫你用最少問題了解需要，並推薦合適療程／提供術前術後注意事項。你想改善咩問題？（例：暗瘡、色斑、毛孔、緊緻、敏感）",
+        "你好，我係 Aura，SW Beauty（Scintillaworld）嘅美容 AI 禮賓。我可以幫你用最少問題了解需要，並推薦合適療程／提供術前術後注意事項。你想改善咩問題？（例：暗瘡、色斑、毛孔、緊緻、敏感）",
       disclaimer:
         "提示：我提供嘅內容只作一般資訊，唔係醫療診斷。如你有懷孕、皮膚病、嚴重敏感或正在服藥，建議先同治療師／醫生確認。",
       askFollowUps: "想我問你 3 條問題，幫你更準確配對療程嗎？",
@@ -60,7 +60,7 @@ function getCopy(locale: Locale) {
   if (isSc) {
     return {
       greeting:
-        "你好，我是 Aura 美容 AI 礼宾。我可以用最少问题了解你的需求，并推荐合适疗程／提供术前术后注意事项。你想改善什么问题？（例：痘痘、色斑、毛孔、紧致、敏感）",
+        "你好，我是 Aura，SW Beauty（Scintillaworld）的美容 AI 礼宾。我可以用最少问题了解你的需求，并推荐合适疗程／提供术前术后注意事项。你想改善什么问题？（例：痘痘、色斑、毛孔、紧致、敏感）",
       disclaimer:
         "提示：我提供的内容仅作一般信息，不构成医疗诊断。如你怀孕、皮肤病、严重敏感或正在用药，建议先与治疗师／医生确认。",
       askFollowUps: "要不要我问你 3 个问题，帮你更准确匹配疗程？",
@@ -78,7 +78,7 @@ function getCopy(locale: Locale) {
 
   return {
     greeting:
-      "Hi — I’m Aura’s Beauty AI concierge. Tell me what you’d like to improve (e.g. acne, pigmentation, pores, lifting, sensitivity) and I’ll suggest suitable treatments and aftercare tips.",
+      "Hi — I’m Aura, SW Beauty’s AI concierge (Scintillaworld Medica Center Limited). Tell me what you’d like to improve (e.g. acne, pigmentation, pores, lifting, sensitivity) and I’ll suggest suitable treatments and aftercare tips.",
     disclaimer:
       "Note: This is general information, not medical advice. If you’re pregnant, have skin conditions, severe allergies, or are on medication, please confirm with a therapist/doctor first.",
     askFollowUps: "Want me to ask 3 quick questions to match you more accurately?",
@@ -99,7 +99,7 @@ function getSystemPrompt(locale: Locale) {
   // Keep it short and operational. Long “brand manifestos” reduce quality and increase hallucination risk.
   if (locale === "zh-Hans") {
     return [
-      "你是 Aura（香港美容中心）的美容 AI 礼宾。默认用简体中文回答，除非用户使用英文或明确要求繁体。",
+      "你是 Aura，SW Beauty（Scintillaworld 香港醫美中心）的美容 AI 礼宾。默认用简体中文回答，除非用户使用英文或明确要求繁体。",
       "目标：用最少问题理解用户需求，给出 2–3 个可能的疗程方向/注意事项，并引导到“疗程页/联系页”预约。",
       "安全边界：不做医疗诊断；不做处方/用药建议；不承诺治疗效果；涉及怀孕、皮肤病、严重过敏、出血/感染风险、正在用药等，必须建议先与治疗师/医生确认并提供人工转介。",
       "若提供了【Aura 知识库】内容：优先依据其信息；不要编造未出现的价格、机器型号、承诺。",
@@ -109,7 +109,7 @@ function getSystemPrompt(locale: Locale) {
 
   if (locale === "en") {
     return [
-      "You are Aura’s Beauty AI concierge (Hong Kong). Reply in English unless the user writes Chinese.",
+      "You are Aura, SW Beauty’s AI concierge (Scintillaworld Medica Center Limited, Hong Kong). Reply in English unless the user writes Chinese.",
       "Goal: understand needs with minimal questions, suggest 2–3 plausible treatment directions and aftercare notes, and guide to booking links (treatments/contact).",
       "Safety: no medical diagnosis; no prescriptions/medication advice; no guaranteed outcomes. If pregnancy, skin disease, severe allergy, infection/bleeding risk, or medication is mentioned, advise human clinician/therapist confirmation and offer handoff.",
       "If you are given 【Aura Knowledge Base】 context: prioritize it; do not invent prices, device models, or guarantees not present.",
@@ -119,7 +119,7 @@ function getSystemPrompt(locale: Locale) {
 
   // zh-HK / zh-Hant default
   return [
-    "你係 Aura（香港美容中心）嘅美容 AI 禮賓。預設用香港常用繁體中文（zh-HK）回答，除非用戶用英文或明確要求簡體/英文。",
+    "你係 Aura，SW Beauty（Scintillaworld 香港醫美中心）嘅美容 AI 禮賓。預設用香港常用繁體中文（zh-HK）回答，除非用戶用英文或明確要求簡體/英文。",
     "目標：用最少問題了解需要，提供 2–3 個可能療程方向/注意事項，並引導去「療程頁/聯絡頁」完成預約。",
     "安全界線：唔做醫療診斷；唔提供處方/用藥建議；唔保證療效。提到懷孕、皮膚病、嚴重敏感、出血/感染風險、正在服藥等，必須建議先同治療師/醫生確認，並提供人工轉介。",
     "如有提供【Aura 知識庫】內容：優先以該資料為準；唔好作出未出現嘅價錢、機種型號或承諾。",

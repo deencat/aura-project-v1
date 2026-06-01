@@ -20,6 +20,34 @@ export default function NewDoubloPage() {
   const [activeIndex, setActiveIndex] = useState(0)
   const totalSlides = 3
 
+  const subTreatments = [
+    {
+      slug: 'sculpt-lift',
+      title: 'Sculpt & Lift',
+      description:
+        'Lift and contour with MFU + 4RF—targets lax skin for a firmer, more sculpted look.',
+      href: '/new-doublo/sculpt-lift',
+    },
+    {
+      slug: 'v-line',
+      title: 'V-Line Perfection',
+      description: 'Define the jawline and refine lower-face fullness for a sharper, photogenic profile.',
+      href: '/new-doublo/v-line',
+    },
+    {
+      slug: 'youth-revival',
+      title: 'Youth Revival',
+      description: 'Overall rejuvenation—collagen activation and radiance with minimal downtime.',
+      href: '/new-doublo/youth-revival',
+    },
+    {
+      slug: 'neck-rejuvenation',
+      title: 'Neck Rejuvenation',
+      description: 'Smooth and tighten the neck and décolletage where aging often shows first.',
+      href: '/new-doublo/neck-rejuvenation',
+    },
+  ] as const
+
   // Set up the carousel API and event listener
   React.useEffect(() => {
     if (!api) return
@@ -70,14 +98,57 @@ export default function NewDoubloPage() {
             </div>
             <div className="relative h-[500px] rounded-lg overflow-hidden">
               <TreatmentImage 
-                category="treatments"
-                treatment="new-doublo"
+                category="new-doublo"
+                treatment="main"
                 type="hero"
                 alt="New Doublo Treatment"
                 fill
                 className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Four specialized treatments (summary hub) */}
+      <section className="border-t border-gray-100 bg-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="font-serif text-3xl font-bold md:text-4xl">
+              Explore <span className="text-primary">New Doublo™</span> treatments
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Choose the programme that matches your goals—each treatment uses New Doublo™ MFU + 4RF with SD Synergy Dotting, tailored to face, jawline, overall rejuvenation, or neck.
+            </p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+            {subTreatments.map((item) => (
+              <Link
+                key={item.slug}
+                href={item.href}
+                className="group overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 shadow-sm transition hover:shadow-md"
+              >
+                <div className="relative aspect-[16/10] w-full overflow-hidden">
+                  <TreatmentImage
+                    category="new-doublo"
+                    treatment={item.slug}
+                    type="hero"
+                    alt={`${item.title} — New Doublo`}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-serif text-xl font-bold text-gray-900">{item.title}</h3>
+                  <p className="mt-2 text-gray-600">{item.description}</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-primary">
+                    View treatment →
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -145,24 +216,26 @@ export default function NewDoubloPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="aspect-square relative">
                   <TreatmentImage 
-                    category="treatments"
-                    treatment="new-doublo"
+                    category="new-doublo"
+                    treatment="main"
                     type="technology"
                     index={1}
                     alt="New Doublo Device"
                     fill
                     className="object-cover rounded-lg"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
                 <div className="aspect-square relative">
                   <TreatmentImage 
-                    category="treatments"
-                    treatment="new-doublo"
+                    category="new-doublo"
+                    treatment="main"
                     type="technology"
                     index={2}
                     alt="New Doublo Technology"
                     fill
                     className="object-cover rounded-lg"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
               </div>
@@ -290,13 +363,14 @@ export default function NewDoubloPage() {
                         <div className="overflow-hidden rounded-lg bg-white">
                           <div className="aspect-square relative">
                             <TreatmentImage 
-                              category="treatments"
-                              treatment="new-doublo"
+                              category="new-doublo"
+                              treatment="main"
                               type="results"
                               index={num}
                               alt={["Before & After", "V-Shape Lifting", "Skin Tightening"][num-1]}
                               fill
                               className="object-cover w-full h-full transition duration-500 hover:scale-110"
+                              sizes="(max-width: 768px) 100vw, 33vw"
                             />
                           </div>
                           <div className="p-4 text-center">

@@ -17,7 +17,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 import FloatingConciergeWidget from '@/components/concierge/FloatingConciergeWidget'
 
 export const metadata: Metadata = {
-  title: 'Aura - Tech-Forward Beauty',
+  title: 'SW Beauty - Tech-Forward Beauty',
   description: 'Advanced tech-forward beauty treatments and services',
 }
 

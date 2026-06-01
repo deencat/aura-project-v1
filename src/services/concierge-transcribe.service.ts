@@ -5,7 +5,7 @@
  *   which avoids OpenAI-only /audio/transcriptions (HK / ToS issues with openai/whisper-*).
  *   Set CONCIERGE_OPENROUTER_STT_MODEL=openai/whisper-1 (etc.) only if you explicitly want the STT endpoint.
  *
- * Audio is not stored in Aura; forwarded only for transcription.
+ * Audio is not stored by this app; forwarded only for transcription.
  */
 
 export type ConciergeTranscribeLocale = "zh-HK" | "en" | "zh-Hans"
